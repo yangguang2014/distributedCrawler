@@ -1,0 +1,16 @@
+guang/crawler/siteManager/Main.class
+guang/crawler/siteManager/jobQueue/je/JEQueueElementTransfer.class
+guang/crawler/siteManager/jobQueue/je/JEQueue.class
+guang/crawler/siteManager/docid/DocidServer.class
+guang/crawler/siteManager/jobQueue/MapQueue.class
+guang/crawler/siteManager/commandlet/URLsGetter.class
+guang/crawler/siteManager/util/WebURLTransfer.class
+guang/crawler/siteManager/jobQueue/Sync.class
+guang/crawler/siteManager/MonitorThread.class
+guang/crawler/siteManager/SiteManager.class
+guang/crawler/siteManager/SiteConfig.class
+guang/crawler/siteManager/util/IO.class
+guang/crawler/siteManager/util/Util.class
+guang/crawler/siteManager/commandlet/URLsPutter.class
+guang/crawler/siteManager/SiteManagerException.class
+guang/crawler/siteManager/commandlet/StatisticsGetter.class
