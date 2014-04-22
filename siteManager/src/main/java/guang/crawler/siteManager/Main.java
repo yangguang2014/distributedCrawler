@@ -1,7 +1,7 @@
 package guang.crawler.siteManager;
 
 import guang.crawler.controller.CrawlerController;
-import guang.crawler.controller.UnHandledSiteInfo;
+import guang.crawler.controller.SiteInfo;
 import guang.crawler.core.PortDefine;
 
 import java.util.List;
@@ -12,7 +12,7 @@ public class Main
 	{
 		CrawlerController controller = new CrawlerController(
 		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
-		List<UnHandledSiteInfo> unHandledSites = controller.getUnHandledSites();
+		List<SiteInfo> unHandledSites = controller.getUnHandledSites();
 		if ((unHandledSites == null) || (unHandledSites.size() == 0))
 		{
 			System.out.println("No site to crawl.");

@@ -65,7 +65,7 @@ public class CrawlerController
 		}
 	}
 	
-	public List<UnHandledSiteInfo> getUnHandledSites()
+	public List<SiteInfo> getUnHandledSites()
 	        throws InterruptedException
 	{
 		String path = CrawlerController.ROOT_PATH
@@ -74,11 +74,11 @@ public class CrawlerController
 		List<String> childPaths = this.connector.getChildren(path);
 		if (childPaths != null)
 		{
-			ArrayList<UnHandledSiteInfo> result = new ArrayList<>(
+			ArrayList<SiteInfo> result = new ArrayList<>(
 			        childPaths.size());
 			for (String cp : childPaths)
 			{
-				UnHandledSiteInfo info = new UnHandledSiteInfo(cp,
+				SiteInfo info = new SiteInfo(cp,
 				        this.connector);
 				result.add(info);
 			}
@@ -87,7 +87,7 @@ public class CrawlerController
 		return null;
 	}
 	
-	public boolean handleSite(UnHandledSiteInfo site)
+	public boolean handleSite(SiteInfo site)
 	{
 		// 只有处于/crawler/config/unHandledSites下的站点才是可以被移动的。
 		

@@ -5,7 +5,7 @@ import guang.crawler.connector.ZookeeperConnector;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Transaction;
 
-public class UnHandledSiteInfo implements Zookeeperable
+public class SiteInfo implements Zookeeperable
 {
 	private String	                 path;
 	private final ZookeeperConnector	connector;
@@ -15,10 +15,10 @@ public class UnHandledSiteInfo implements Zookeeperable
 	                                                  + CrawlerController.CONFIG_PATH
 	                                                  + CrawlerController.UN_HANDLED_SITES;
 	
-	public UnHandledSiteInfo(String name, ZookeeperConnector connector)
+	public SiteInfo(String name, ZookeeperConnector connector)
 	{
 		this.name = name;
-		this.path = UnHandledSiteInfo.basePath + "/" + name;
+		this.path = SiteInfo.basePath + "/" + name;
 		this.connector = connector;
 	}
 	
@@ -78,7 +78,7 @@ public class UnHandledSiteInfo implements Zookeeperable
 		boolean success = this.connector.simpleDelete(this.path, transaction);
 		if (success)
 		{
-			this.path = UnHandledSiteInfo.basePath + "/" + this.name;
+			this.path = SiteInfo.basePath + "/" + this.name;
 			String realPath = this.connector.createNode(this.path,
 			        CreateMode.PERSISTENT, this.seedSite.getBytes());
 			if (realPath != null)
