@@ -4,7 +4,7 @@ import guang.crawler.core.WebURL;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.parser.HtmlParseData;
 import guang.crawler.crawlWorker.parser.TextParseData;
-import guang.crawler.crawlWorker.util.SiteManagerConnectHelper;
+import guang.crawler.crawlWorker.util.SiteManagerConnectorManager;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class ExtractOutGoingUrlsPlugin implements DownloadPlugin
 {
-	private SiteManagerConnectHelper	siteManagerConnectHelper;
+	private SiteManagerConnectorManager	siteManagerConnectHelper;
 	private Pattern	                 filter	= Pattern
 	                                                .compile(".*(\\.(css|js|bmp|gif|jpe?g"
 	                                                        + "|png|tiff?|mid|mp2|mp3|mp4"
@@ -25,13 +25,13 @@ public class ExtractOutGoingUrlsPlugin implements DownloadPlugin
 	}
 	
 	public ExtractOutGoingUrlsPlugin(
-	        SiteManagerConnectHelper siteManagerConnectHelper)
+	        SiteManagerConnectorManager siteManagerConnectHelper)
 	{
 		this.siteManagerConnectHelper = siteManagerConnectHelper;
 	}
 	
 	public void setSiteManagerConnector(
-	        SiteManagerConnectHelper siteManagerConnectHelper)
+	        SiteManagerConnectorManager siteManagerConnectHelper)
 	{
 		this.siteManagerConnectHelper = siteManagerConnectHelper;
 	}

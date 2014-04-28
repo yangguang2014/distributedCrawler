@@ -1,23 +1,27 @@
 package guang.crawler.crawlWorker;
 
 import guang.crawler.connector.WebDataTableConnector;
+import guang.crawler.controller.CrawlerController;
 import guang.crawler.core.WebURL;
 import guang.crawler.crawlWorker.fetcher.WebGeter;
 import guang.crawler.crawlWorker.plugins.ExtractOutGoingUrlsPlugin;
 import guang.crawler.crawlWorker.plugins.SaveToHbasePlugin;
-import guang.crawler.crawlWorker.util.SiteManagerConnectHelper;
+import guang.crawler.crawlWorker.util.SiteManagerConnectorManager;
 
 import java.io.IOException;
 import java.util.LinkedList;
 
 public class Main
 {
-	public static void main(String[] args)
+	public static void main(String[] args) throws IOException
 	{
-		SiteManagerConnectHelper siteManagerConnectHelper = null;
+		CrawlerController controller = new CrawlerController(
+		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
+		SiteManagerConnectorManager siteManagerConnectHelper = null;
 		try
 		{
-			siteManagerConnectHelper = new SiteManagerConnectHelper();
+			siteManagerConnectHelper = new SiteManagerConnectorManager(
+			        controller);
 		} catch (IOException e)
 		{
 			System.out.println("Can not connect to site manager");
@@ -52,6 +56,10 @@ public class Main
 			{
 				ex.printStackTrace();
 				break;
+			} catch (InterruptedException e)
+			{
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 			if (urls != null)
 			{

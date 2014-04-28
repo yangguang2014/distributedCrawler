@@ -19,10 +19,15 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>guang.crawler</groupId>
-			<artifactId>crawlCore</artifactId>
-			<version>1.0-SNAPSHOT</version>
-		</dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crawlCore</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>crawlerController</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

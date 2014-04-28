@@ -19,15 +19,19 @@ Class-Path: lib/crawlCore-1.0-SNAPSHOT.jar lib/zookeeper-3.4.5.jar lib
  r lib/snappy-java-1.0.4.1.jar lib/jsch-0.1.42.jar lib/hadoop-auth-2.2
  .0.jar lib/hadoop-mapreduce-client-core-2.2.0.jar lib/hadoop-yarn-com
  mon-2.2.0.jar lib/hadoop-yarn-api-2.2.0.jar lib/guice-3.0.jar lib/jav
- ax.inject-1.jar lib/aopalliance-1.0.jar lib/jersey-server-1.9.jar lib
- /jersey-guice-1.9.jar lib/guice-servlet-3.0.jar lib/hadoop-annotation
- s-2.2.0.jar lib/findbugs-annotations-1.3.9-1.jar lib/log4j-1.2.14.jar
-  lib/httpclient-4.2.3.jar lib/commons-logging-1.1.1.jar lib/commons-c
- odec-1.6.jar lib/tika-parsers-1.0.jar lib/apache-mime4j-core-0.7.jar 
- lib/apache-mime4j-dom-0.7.jar lib/commons-compress-1.3.jar lib/geroni
- mo-stax-api_1.0_spec-1.0.1.jar lib/tagsoup-1.2.1.jar lib/asm-3.1.jar 
- lib/metadata-extractor-2.4.0-beta-1.jar lib/boilerpipe-1.1.0.jar lib/
- fastjson-1.1.39.jar lib/httpcore-4.2.2.jar lib/tika-core-1.0.jar
+ ax.inject-1.jar lib/jersey-server-1.9.jar lib/jersey-guice-1.9.jar li
+ b/guice-servlet-3.0.jar lib/hadoop-annotations-2.2.0.jar lib/findbugs
+ -annotations-1.3.9-1.jar lib/crawlerController-1.0-SNAPSHOT.jar lib/s
+ pring-context-4.0.3.RELEASE.jar lib/spring-aop-4.0.3.RELEASE.jar lib/
+ aopalliance-1.0.jar lib/spring-beans-4.0.3.RELEASE.jar lib/spring-cor
+ e-4.0.3.RELEASE.jar lib/spring-expression-4.0.3.RELEASE.jar lib/log4j
+ -1.2.14.jar lib/httpclient-4.2.3.jar lib/commons-logging-1.1.1.jar li
+ b/commons-codec-1.6.jar lib/tika-parsers-1.0.jar lib/apache-mime4j-co
+ re-0.7.jar lib/apache-mime4j-dom-0.7.jar lib/commons-compress-1.3.jar
+  lib/geronimo-stax-api_1.0_spec-1.0.1.jar lib/tagsoup-1.2.1.jar lib/a
+ sm-3.1.jar lib/metadata-extractor-2.4.0-beta-1.jar lib/boilerpipe-1.1
+ .0.jar lib/fastjson-1.1.39.jar lib/httpcore-4.2.2.jar lib/tika-core-1
+ .0.jar
 Build-Jdk: 1.7.0_51
 Built-By: yang
 Created-By: Maven Integration for Eclipse
