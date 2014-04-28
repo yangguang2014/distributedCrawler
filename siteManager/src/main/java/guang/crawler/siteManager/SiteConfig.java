@@ -1,5 +1,8 @@
 package guang.crawler.siteManager;
 
+import guang.crawler.controller.CrawlerController;
+import guang.crawler.controller.SiteInfo;
+
 public class SiteConfig
 {
 	private static SiteConfig	config;
@@ -13,24 +16,23 @@ public class SiteConfig
 		return SiteConfig.config;
 	}
 	
-	/**
-	 * 当前站点的种子URL列表
-	 */
-	private String	seedURL;
+	private SiteInfo	      siteToHandle;
+	private CrawlerController	crawlerController;
 	
 	/**
 	 * 当前站点管理器的工作目录
 	 */
-	private String	baseDir;
+	private String	          baseDir;
 	
 	/**
 	 * 站点管理器的监听端口
 	 */
-	private int	   listenPort;
+	private int	              listenPort;
+	
 	/**
 	 * 当前站点的唯一标识
 	 */
-	private String	siteID;
+	private String	          siteID;
 	
 	private SiteConfig()
 	{
@@ -41,14 +43,14 @@ public class SiteConfig
 		return this.baseDir;
 	}
 	
+	public CrawlerController getCrawlerController()
+	{
+		return this.crawlerController;
+	}
+	
 	public int getListenPort()
 	{
 		return this.listenPort;
-	}
-	
-	public String getSeedURL()
-	{
-		return this.seedURL;
 	}
 	
 	public String getSiteID()
@@ -56,9 +58,19 @@ public class SiteConfig
 		return this.siteID;
 	}
 	
+	public SiteInfo getSiteToHandle()
+	{
+		return this.siteToHandle;
+	}
+	
 	public void setBaseDir(String baseDir)
 	{
 		this.baseDir = baseDir;
+	}
+	
+	public void setCrawlerController(CrawlerController crawlerController)
+	{
+		this.crawlerController = crawlerController;
 	}
 	
 	public void setListenPort(int listenPort)
@@ -66,14 +78,14 @@ public class SiteConfig
 		this.listenPort = listenPort;
 	}
 	
-	public void setSeedURL(String seedURL)
-	{
-		this.seedURL = seedURL;
-	}
-	
 	public void setSiteID(String siteID)
 	{
 		this.siteID = siteID;
+	}
+	
+	public void setSiteToHandle(SiteInfo siteToHandled)
+	{
+		this.siteToHandle = siteToHandled;
 	}
 	
 }

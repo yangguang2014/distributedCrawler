@@ -1,14 +1,20 @@
 package guang.crawler.jsonServer;
 
+import java.net.InetAddress;
+
 public interface JsonServer
 {
 	
-	public abstract boolean isShutdown();
+	public InetAddress getAddress();
 	
-	public abstract void shutdown();
+	public int getPort();
 	
-	public abstract boolean start();
+	public boolean isShutdown();
 	
-	public abstract void waitForStop();
+	public void shutdown();
+	
+	public boolean start();
+	
+	public void waitForStop();
 	
 }

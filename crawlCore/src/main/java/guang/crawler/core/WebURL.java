@@ -1,9 +1,5 @@
 package guang.crawler.core;
 
-/**
- * @author Yasser Ganjisaffar <lastname at gmail dot com>
- */
-
 public class WebURL
 {
 	
@@ -14,6 +10,7 @@ public class WebURL
 	private String	anchor;
 	private byte	priority;
 	private int	   childNum;
+	private String	siteManagerName;
 	
 	@Override
 	public boolean equals(Object o)
@@ -32,10 +29,6 @@ public class WebURL
 		
 	}
 	
-	/**
-	 * Returns the anchor string. For example, in <a href="example.com">A sample
-	 * anchor</a> the anchor string is 'A sample anchor'
-	 */
 	public String getAnchor()
 	{
 		return this.anchor;
@@ -46,45 +39,31 @@ public class WebURL
 		return this.childNum;
 	}
 	
-	/**
-	 * Returns the crawl depth at which this Url is first observed. Seed Urls
-	 * are at depth 0. Urls that are extracted from seed Urls are at depth 1,
-	 * etc.
-	 */
 	public short getDepth()
 	{
 		return this.depth;
 	}
 	
-	/**
-	 * Returns the unique document id assigned to this Url.
-	 */
 	public int getDocid()
 	{
 		return this.docid;
 	}
 	
-	/**
-	 * Returns the unique document id of the parent page. The parent page is the
-	 * page in which the Url of this page is first observed.
-	 */
 	public int getParentDocid()
 	{
 		return this.parentDocid;
 	}
 	
-	/**
-	 * Returns the priority for crawling this URL. A lower number results in
-	 * higher priority.
-	 */
 	public byte getPriority()
 	{
 		return this.priority;
 	}
 	
-	/**
-	 * Returns the Url string
-	 */
+	public String getSiteManagerName()
+	{
+		return this.siteManagerName;
+	}
+	
 	public String getURL()
 	{
 		return this.url;
@@ -124,6 +103,11 @@ public class WebURL
 	public void setPriority(byte priority)
 	{
 		this.priority = priority;
+	}
+	
+	public void setSiteManagerName(String siteManagerName)
+	{
+		this.siteManagerName = siteManagerName;
 	}
 	
 	public void setURL(String url)

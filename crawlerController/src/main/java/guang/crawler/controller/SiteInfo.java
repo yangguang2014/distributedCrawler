@@ -5,88 +5,68 @@ import guang.crawler.connector.ZookeeperConnector;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.Transaction;
 
-public class SiteInfo implements Zookeeperable
+public class SiteInfo extends ZookeeperElement
 {
-	private String	                 path;
-	private final ZookeeperConnector	connector;
-	private String	                 name;
-	private String	                 seedSite;
-	private static final String	     basePath	= CrawlerController.ROOT_PATH
-	                                                  + CrawlerController.CONFIG_PATH
-	                                                  + CrawlerController.UN_HANDLED_SITES;
+	private static final String	KEY_NAME	     = "name";
+	private static final String	KEY_SEED	     = "seedSite";
+	private static final String	KEY_HANDLED	     = "handled";
+	private static final String	KEY_SITE_MANAGER	= "siteManager";
 	
-	public SiteInfo(String name, ZookeeperConnector connector)
+	public SiteInfo(String path, ZookeeperConnector connector)
 	{
-		this.name = name;
-		this.path = SiteInfo.basePath + "/" + name;
-		this.connector = connector;
+		super(path, connector);
 	}
 	
-	@Override
-	public boolean delete(Transaction transaction) throws InterruptedException
+	public String getName() throws InterruptedException
 	{
-		return this.connector.simpleDelete(this.path, transaction);
-		
-	}
-	
-	public String getName()
-	{
-		
-		return this.name;
-	}
-	
-	public String getPath()
-	{
-		return this.path;
+		return this.get(SiteInfo.KEY_NAME);
 	}
 	
 	public String getSeedSite() throws InterruptedException
 	{
-		if (this.seedSite == null)
-		{
-			this.load();
-		}
-		return this.seedSite;
+		return this.get(SiteInfo.KEY_SEED);
+	}
+	
+	public String getSiteManager() throws InterruptedException
+	{
+		return this.get(SiteInfo.KEY_SITE_MANAGER);
+	}
+	
+	public boolean isHandled() throws InterruptedException
+	{
+		return Boolean.parseBoolean(this.get(SiteInfo.KEY_HANDLED));
+	}
+	
+	public void setHandled(boolean isHandled) throws InterruptedException
+	{
+		this.put(SiteInfo.KEY_HANDLED, Boolean.toString(isHandled), true);
+	}
+	
+	public void setName(String name) throws InterruptedException
+	{
+		this.put(SiteInfo.KEY_NAME, name, true);
+	}
+	
+	public void setSeedSite(String seedSite) throws InterruptedException
+	{
+		this.put(SiteInfo.KEY_SEED, seedSite, true);
+	}
+	
+	public void setSiteManager(String addr) throws InterruptedException
+	{
+		this.put(SiteInfo.KEY_SITE_MANAGER, addr, true);
 	}
 	
 	@Override
-	public boolean load() throws InterruptedException
+	public boolean update(String key, Transaction transaction)
+	        throws InterruptedException
 	{
-		byte[] data = this.connector.getData(this.path);
-		if (data != null)
+		if (SiteInfo.KEY_SITE_MANAGER.equals(key))
 		{
-			this.seedSite = new String(data);
-			return true;
+			this.connector.createNode(this.path + "/"
+			        + SiteInfo.KEY_SITE_MANAGER, CreateMode.EPHEMERAL, this
+			        .get(key).getBytes());
 		}
-		return false;
-		
-	}
-	
-	public void setName(String name)
-	{
-		this.name = name;
-	}
-	
-	public void setSeedSite(String seedSite)
-	{
-		this.seedSite = seedSite;
-	}
-	
-	@Override
-	public boolean update(Transaction transaction) throws InterruptedException
-	{
-		boolean success = this.connector.simpleDelete(this.path, transaction);
-		if (success)
-		{
-			this.path = SiteInfo.basePath + "/" + this.name;
-			String realPath = this.connector.createNode(this.path,
-			        CreateMode.PERSISTENT, this.seedSite.getBytes());
-			if (realPath != null)
-			{
-				return true;
-			}
-		}
-		return false;
-		
+		return super.update(key, transaction);
 	}
 }

@@ -2,6 +2,7 @@ package guang.crawler.jsonServer;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -26,6 +27,32 @@ public class AcceptJsonServer implements Runnable, JsonServer
 	private Thread	               serverThread;
 	private AcceptThreadController	acceptThreadController;
 	
+	public AcceptJsonServer(int threadNum, File configFile, File schemaFile)
+	        throws ServerStartException
+	{
+		
+		this.acceptThreadController = new AcceptThreadController();
+		this.commandletLoader = new CommandletLoader(configFile, schemaFile);
+		try
+		{
+			this.commandletLoader.load();
+		} catch (InstantiationException | IllegalAccessException
+		        | ClassNotFoundException | SAXException | IOException
+		        | ParserConfigurationException e)
+		{
+			throw new ServerStartException("Load config file failed!", e);
+		}
+		try
+		{
+			this.server = new ServerSocket();
+		} catch (IOException e)
+		{
+			throw new ServerStartException("Can not open socket!", e);
+		}
+		this.threadPool = Executors.newFixedThreadPool(threadNum);
+		
+	}
+	
 	public AcceptJsonServer(int port, int backlog, int threadNum,
 	        File configFile, File schemaFile) throws ServerStartException
 	{
@@ -49,6 +76,26 @@ public class AcceptJsonServer implements Runnable, JsonServer
 		}
 		this.threadPool = Executors.newFixedThreadPool(threadNum);
 		
+	}
+	
+	@Override
+	public InetAddress getAddress()
+	{
+		if (this.server != null)
+		{
+			return this.server.getInetAddress();
+		}
+		return null;
+	}
+	
+	@Override
+	public int getPort()
+	{
+		if (this.server != null)
+		{
+			return this.server.getLocalPort();
+		}
+		return 0;
 	}
 	
 	@Override

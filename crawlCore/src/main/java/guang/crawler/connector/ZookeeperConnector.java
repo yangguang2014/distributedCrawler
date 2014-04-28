@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
+import org.apache.zookeeper.KeeperException.Code;
 import org.apache.zookeeper.Transaction;
 import org.apache.zookeeper.ZooDefs.Ids;
 import org.apache.zookeeper.ZooKeeper;
@@ -62,9 +63,49 @@ public class ZookeeperConnector
 			return realPath;
 		} catch (KeeperException e)
 		{
-			
 			e.printStackTrace();
 			return null;
+		}
+		
+	}
+	
+	public boolean createOrUpdate(String path, byte[] data,
+	        CreateMode createMode, Transaction transaction)
+	        throws InterruptedException
+	{
+		if (transaction == null)
+		{
+			boolean nodeExists = true;
+			try
+			{
+				this.zookeeper.setData(path, data, -1);
+			} catch (KeeperException e)
+			{
+				if (e.code() == Code.NONODE)
+				{
+					nodeExists = false;
+				} else
+				{
+					e.printStackTrace();
+				}
+			}
+			if (!nodeExists)
+			{
+				try
+				{
+					this.zookeeper.create(path, data, Ids.OPEN_ACL_UNSAFE,
+					        createMode);
+				} catch (KeeperException e1)
+				{
+					return false;
+				}
+			}
+			return true;
+		} else
+		{
+			transaction.delete(path, -1);
+			transaction.create(path, data, Ids.OPEN_ACL_UNSAFE, createMode);
+			return true;
 		}
 		
 	}

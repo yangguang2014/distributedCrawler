@@ -7,16 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.zookeeper.CreateMode;
-import org.apache.zookeeper.KeeperException;
 
 public class CrawlerController
 {
-	public static final String	CONFIG_PATH	       = "/config";
-	public static final String	HANDLED_SITES_PATH	= "/handledSites";
-	public static final String	ROOT_PATH	       = "/crawler";
-	public static final String	SITES_PATH	       = "/sites";
-	public static final String	UN_HANDLED_SITES	= "/unHandledSites";
-	public static final String	WORKERS_PATH	   = "/workers";
+	public static final String	CONFIG_PATH	 = "/config";
+	public static final String	ROOT_PATH	 = "/crawler";
+	public static final String	SITES_PATH	 = "/sites";
+	public static final String	WORKERS_PATH	= "/workers";
 	
 	public static void main(String[] args) throws IOException,
 	        InterruptedException
@@ -42,7 +39,7 @@ public class CrawlerController
 		{
 			this.connector.createNode(CrawlerController.ROOT_PATH
 			        + CrawlerController.CONFIG_PATH
-			        + CrawlerController.UN_HANDLED_SITES + "/" + name,
+			        + CrawlerController.SITES_PATH + "/" + name,
 			        CreateMode.PERSISTENT, seedSite.getBytes());
 			return true;
 		} catch (InterruptedException e)
@@ -65,55 +62,81 @@ public class CrawlerController
 		}
 	}
 	
-	public List<SiteInfo> getUnHandledSites()
-	        throws InterruptedException
+	public List<SiteInfo> getHandledSites() throws InterruptedException
 	{
 		String path = CrawlerController.ROOT_PATH
-		        + CrawlerController.CONFIG_PATH
-		        + CrawlerController.UN_HANDLED_SITES;
+		        + CrawlerController.CONFIG_PATH + CrawlerController.SITES_PATH;
 		List<String> childPaths = this.connector.getChildren(path);
 		if (childPaths != null)
 		{
-			ArrayList<SiteInfo> result = new ArrayList<>(
-			        childPaths.size());
+			ArrayList<SiteInfo> result = new ArrayList<>(childPaths.size());
 			for (String cp : childPaths)
 			{
-				SiteInfo info = new SiteInfo(cp,
-				        this.connector);
-				result.add(info);
+				SiteInfo info = new SiteInfo(cp, this.connector);
+				if (info.isHandled())
+				{
+					result.add(info);
+				}
+				
 			}
 			return result;
 		}
 		return null;
 	}
 	
-	public boolean handleSite(SiteInfo site)
+	public List<SiteInfo> getUnHandledSites() throws InterruptedException
 	{
-		// 只有处于/crawler/config/unHandledSites下的站点才是可以被移动的。
-		
+		String path = CrawlerController.ROOT_PATH
+		        + CrawlerController.CONFIG_PATH + CrawlerController.SITES_PATH;
+		List<String> childPaths = this.connector.getChildren(path);
+		if (childPaths != null)
+		{
+			ArrayList<SiteInfo> result = new ArrayList<>(childPaths.size());
+			for (String cp : childPaths)
+			{
+				SiteInfo info = new SiteInfo(cp, this.connector);
+				if (!info.isHandled())
+				{
+					result.add(info);
+				}
+				
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	/**
+	 * 将当前站点注册给某个站点管理器管理。
+	 * 
+	 * @param site
+	 * @return
+	 * @throws InterruptedException
+	 */
+	public boolean handleSite(SiteInfo site) throws InterruptedException
+	{
 		if (site.getPath().startsWith(
 		        CrawlerController.ROOT_PATH + CrawlerController.CONFIG_PATH
-		                + CrawlerController.UN_HANDLED_SITES))
+		                + CrawlerController.SITES_PATH))
 		{
-			String toPath = CrawlerController.ROOT_PATH
-			        + CrawlerController.CONFIG_PATH
-			        + CrawlerController.HANDLED_SITES_PATH + "/"
-			        + site.getName();
-			try
+			boolean locked = site.lock();
+			if (locked)
 			{
-				this.connector.moveTo(site.getPath(), toPath);
-				return true;
-			} catch (KeeperException | InterruptedException e)
-			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return false;
+				try
+				{
+					boolean handled = site.isHandled();
+					if (!handled)
+					{
+						site.setHandled(true);
+						return true;
+					}
+				} finally
+				{
+					site.unlock();
+				}
 			}
-			
-		} else
-		{ // 如果已经在处理了，那么就不需要考虑这个站点了。
-			return true;
 		}
+		return false;
 	}
 	
 	public boolean initConfig() throws InterruptedException
@@ -133,17 +156,9 @@ public class CrawlerController
 		{
 			path = this.connector.checkAndCreateNode(
 			        CrawlerController.ROOT_PATH + CrawlerController.CONFIG_PATH
-			                + CrawlerController.UN_HANDLED_SITES,
+			                + CrawlerController.SITES_PATH,
 			        CreateMode.PERSISTENT,
 			        "sites that haven't been handled".getBytes());
-		}
-		if (path != null)
-		{
-			path = this.connector.checkAndCreateNode(
-			        CrawlerController.ROOT_PATH + CrawlerController.CONFIG_PATH
-			                + CrawlerController.HANDLED_SITES_PATH,
-			        CreateMode.PERSISTENT,
-			        "sites that have been handled".getBytes());
 		}
 		if (path != null)
 		{

@@ -47,6 +47,9 @@ public class SiteManager
 	{
 		this.siteConfig = siteConfig;
 		this.initJSONServer(siteConfig);
+		siteConfig.getSiteToHandle().setSiteManager(
+		        this.server.getAddress().getHostAddress() + ":"
+		                + this.server.getPort());
 		this.docidServer = new DocidServer();
 		this.initJobQueue();
 		
@@ -91,15 +94,13 @@ public class SiteManager
 		long toDoCount = this.toDoTaskList.getLength();
 		if (toDoCount == 0) // 添加种子链接
 		{
-			String[] seeds = this.siteConfig.getSeedURL();
-			for (String seed : seeds)
-			{
-				WebURL url = new WebURL();
-				url.setURL(seed);
-				url.setDepth((short) 1);
-				url.setDocid(this.docidServer.next());
-				this.toDoTaskList.put(url);
-			}
+			String seed = this.siteConfig.getSiteToHandle().getSeedSite();
+			WebURL url = new WebURL();
+			url.setURL(seed);
+			url.setDepth((short) 1);
+			url.setDocid(this.docidServer.next());
+			this.toDoTaskList.put(url);
+			
 		}
 	}
 	

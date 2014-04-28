@@ -3,6 +3,7 @@ package guang.crawler.siteManager.commandlet;
 import guang.crawler.core.DataPacket;
 import guang.crawler.core.WebURL;
 import guang.crawler.jsonServer.Commandlet;
+import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.SiteManagerException;
 import guang.crawler.siteManager.docid.DocidServer;
@@ -75,7 +76,10 @@ public class URLsPutter implements Commandlet
 					        .getURL());
 					if (!contains)
 					{
+						url.setSiteManagerName(SiteConfig.getConfig()
+						        .getSiteID());
 						filteredResult.add(url);
+						
 					}
 				}
 				if (filteredResult.size() > 0)

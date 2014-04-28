@@ -2,7 +2,6 @@ package guang.crawler.siteManager;
 
 import guang.crawler.controller.CrawlerController;
 import guang.crawler.controller.SiteInfo;
-import guang.crawler.core.PortDefine;
 
 import java.util.List;
 
@@ -13,6 +12,7 @@ public class Main
 		CrawlerController controller = new CrawlerController(
 		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
 		List<SiteInfo> unHandledSites = controller.getUnHandledSites();
+		SiteInfo siteToHandle = null;
 		if ((unHandledSites == null) || (unHandledSites.size() == 0))
 		{
 			System.out.println("No site to crawl.");
@@ -20,12 +20,27 @@ public class Main
 		} else
 		{
 			
+			for (SiteInfo info : unHandledSites)
+			{
+				boolean success = controller.handleSite(info);
+				if (success)
+				{
+					siteToHandle = info;
+					break;
+				}
+			}
+			
+		}
+		if (siteToHandle == null)
+		{
+			System.out.println("No site to crawl.");
+			return;
 		}
 		SiteConfig config = SiteConfig.getConfig();
-		config.setSiteID("siteManager_0");
+		config.setSiteID(siteToHandle.getName());
 		config.setBaseDir("/home/yang/tmp/craw");
-		config.setListenPort(PortDefine.PORT_SITE_MANAGER);
-		config.setSeedURL(new String[] { "http://www.tudou.com/" });
+		config.setSiteToHandle(siteToHandle);
+		config.setCrawlerController(controller);
 		SiteManager.init(config);
 		SiteManager manager = SiteManager.getSiteManager();
 		manager.start();
