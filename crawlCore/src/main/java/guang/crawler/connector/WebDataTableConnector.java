@@ -133,7 +133,11 @@ public class WebDataTableConnector
 		boolean exists = this.hbaseAdmin.tableExists(this.tableName);
 		if (exists)
 		{
-			this.hbaseAdmin.disableTable(this.tableName);
+			boolean disabled = this.hbaseAdmin.isTableDisabled(this.tableName);
+			if (!disabled)
+			{
+				this.hbaseAdmin.disableTable(this.tableName);
+			}
 			this.hbaseAdmin.deleteTable(this.tableName);
 		}
 		HTableDescriptor tableDesc = new HTableDescriptor(

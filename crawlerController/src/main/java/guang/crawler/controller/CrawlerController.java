@@ -23,6 +23,7 @@ public class CrawlerController
 		controller.clearConfig();
 		controller.initConfig();
 		controller.addSite("quanbenNovel", "http://www.quanben.com/");
+		controller.addSite("tudou", "http://www.tudou.com/");
 		controller.shutdown();
 	}
 	
@@ -37,11 +38,14 @@ public class CrawlerController
 	{
 		try
 		{
-			this.connector.createNode(CrawlerController.ROOT_PATH
+			String path = CrawlerController.ROOT_PATH
 			        + CrawlerController.CONFIG_PATH
-			        + CrawlerController.SITES_PATH + "/" + name,
-			        CreateMode.PERSISTENT, seedSite.getBytes());
-			return true;
+			        + CrawlerController.SITES_PATH + "/" + name;
+			this.connector.createNode(path, CreateMode.PERSISTENT,
+			        "".getBytes());
+			SiteInfo siteInfo = new SiteInfo(path, name, this.connector);
+			siteInfo.setSeedSite(seedSite);
+			return siteInfo.update(null);
 		} catch (InterruptedException e)
 		{
 			e.printStackTrace();
@@ -72,7 +76,8 @@ public class CrawlerController
 			ArrayList<SiteInfo> result = new ArrayList<>(childPaths.size());
 			for (String cp : childPaths)
 			{
-				SiteInfo info = new SiteInfo(cp, this.connector);
+				SiteInfo info = new SiteInfo(path + "/" + cp, cp,
+				        this.connector);
 				if (info.isHandled())
 				{
 					result.add(info);
@@ -94,7 +99,8 @@ public class CrawlerController
 			ArrayList<SiteInfo> result = new ArrayList<>(childPaths.size());
 			for (String cp : childPaths)
 			{
-				SiteInfo info = new SiteInfo(cp, this.connector);
+				SiteInfo info = new SiteInfo(path + "/" + cp, cp,
+				        this.connector);
 				if (!info.isHandled())
 				{
 					result.add(info);

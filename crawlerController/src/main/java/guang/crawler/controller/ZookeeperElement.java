@@ -28,9 +28,9 @@ public abstract class ZookeeperElement
 		return this.connector.recursiveDelete(this.path, transaction);
 	}
 	
-	public String get(String key) throws InterruptedException
+	public String get(String key, boolean refresh) throws InterruptedException
 	{
-		if (!this.values.containsKey(key))
+		if (refresh && !this.values.containsKey(key))
 		{
 			this.load(key);
 		}
@@ -60,6 +60,7 @@ public abstract class ZookeeperElement
 	{
 		if (!this.values.containsKey(key))
 		{
+			
 			byte[] data = this.connector.getData(this.path + "/" + key);
 			if (data != null)
 			{

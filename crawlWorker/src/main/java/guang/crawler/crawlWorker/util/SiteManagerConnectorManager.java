@@ -147,6 +147,7 @@ public class SiteManagerConnectorManager
 		{
 			for (SiteInfo site : sites)
 			{
+				site.load();
 				String siteManagerAddress = site.getSiteManager();
 				if (siteManagerAddress != null)
 				{

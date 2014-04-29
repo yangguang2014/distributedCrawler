@@ -126,8 +126,13 @@ public class ZookeeperConnector
 	{
 		try
 		{
-			byte[] data = this.zookeeper.getData(path, false, null);
-			return data;
+			Stat exists = this.zookeeper.exists(path, false);
+			if (exists != null)
+			{
+				byte[] data = this.zookeeper.getData(path, false, null);
+				return data;
+			}
+			return null;
 		} catch (KeeperException e)
 		{
 			// TODO Auto-generated catch block
