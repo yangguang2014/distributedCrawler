@@ -1,7 +1,7 @@
-package guang.crawler.siteManager.util;
+package guang.crawler.siteManager.jobQueue;
 
 import guang.crawler.core.WebURL;
-import guang.crawler.siteManager.jobQueue.je.JEQueueElementTransfer;
+import guang.crawler.siteManager.util.Util;
 
 import com.sleepycat.bind.tuple.TupleInput;
 import com.sleepycat.bind.tuple.TupleOutput;
@@ -20,6 +20,7 @@ public class WebURLTransfer extends JEQueueElementTransfer<WebURL>
 		webURL.setParentDocid(input.readInt());
 		webURL.setDepth(input.readShort());
 		webURL.setPriority(input.readByte());
+		webURL.setSiteManagerName(input.readString());
 		return webURL;
 	}
 	
@@ -42,6 +43,7 @@ public class WebURLTransfer extends JEQueueElementTransfer<WebURL>
 		output.writeInt(url.getParentDocid());
 		output.writeShort(url.getDepth());
 		output.writeByte(url.getPriority());
+		output.writeString(url.getSiteManagerName());
 		
 	}
 	

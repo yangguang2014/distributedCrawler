@@ -36,6 +36,7 @@ public class Main
 			System.out.println("No site to crawl.");
 			return;
 		}
+		System.out.println("handle site " + siteToHandle.getSeedSite());
 		SiteConfig config = SiteConfig.getConfig();
 		config.setSiteID(siteToHandle.getName());
 		config.setBaseDir("/home/yang/tmp/craw");

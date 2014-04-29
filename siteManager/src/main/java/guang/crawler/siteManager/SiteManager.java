@@ -5,10 +5,10 @@ import guang.crawler.jsonServer.AcceptJsonServer;
 import guang.crawler.jsonServer.JsonServer;
 import guang.crawler.jsonServer.ServerStartException;
 import guang.crawler.siteManager.docid.DocidServer;
+import guang.crawler.siteManager.jobQueue.JEQueue;
+import guang.crawler.siteManager.jobQueue.JEQueueElementTransfer;
 import guang.crawler.siteManager.jobQueue.MapQueue;
-import guang.crawler.siteManager.jobQueue.je.JEQueue;
-import guang.crawler.siteManager.jobQueue.je.JEQueueElementTransfer;
-import guang.crawler.siteManager.util.WebURLTransfer;
+import guang.crawler.siteManager.jobQueue.WebURLTransfer;
 
 import java.io.File;
 
@@ -99,6 +99,7 @@ public class SiteManager
 			url.setURL(seed);
 			url.setDepth((short) 1);
 			url.setDocid(this.docidServer.next());
+			url.setSiteManagerName(this.siteConfig.getSiteID());
 			this.toDoTaskList.put(url);
 			
 		}

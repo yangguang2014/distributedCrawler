@@ -1,4 +1,4 @@
-package guang.crawler.siteManager.jobQueue.je;
+package guang.crawler.siteManager.jobQueue;
 
 import com.sleepycat.bind.tuple.TupleBinding;
 import com.sleepycat.je.DatabaseEntry;

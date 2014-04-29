@@ -1,7 +1,5 @@
-package guang.crawler.siteManager.jobQueue.je;
+package guang.crawler.siteManager.jobQueue;
 
-import guang.crawler.siteManager.jobQueue.MapQueue;
-import guang.crawler.siteManager.jobQueue.Sync;
 import guang.crawler.siteManager.util.IO;
 
 import java.io.File;
