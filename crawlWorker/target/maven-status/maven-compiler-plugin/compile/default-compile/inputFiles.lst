@@ -19,10 +19,10 @@
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlParseData.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/plugins/SaveToHbasePlugin.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/PageFetchResult.java
+/home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/SiteManagerConnectorManager.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlContentHandler.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/CustomFetchStatus.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/ParseData.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/url/TLDList.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/url/UrlResolver.java
-/home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/SiteManagerConnectHelper.java
 /home/yang/work/workspace/distributeCrawler/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/LinkElement.java

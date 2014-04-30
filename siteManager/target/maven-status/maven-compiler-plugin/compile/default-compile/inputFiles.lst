@@ -1,11 +1,11 @@
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/commandlet/StatisticsGetter.java
-/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/je/JEQueue.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/Sync.java
-/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/je/JEQueueElementTransfer.java
-/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/util/WebURLTransfer.java
+/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/JEQueue.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/docid/DocidServer.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/util/IO.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/Main.java
+/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/WebURLTransfer.java
+/home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/jobQueue/JEQueueElementTransfer.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/SiteConfig.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/SiteManagerException.java
 /home/yang/work/workspace/distributeCrawler/siteManager/src/main/java/guang/crawler/siteManager/MonitorThread.java

@@ -12,7 +12,8 @@ public class Main
 		MonitorThread monitorThread = null;
 		try
 		{
-			SiteManagerConnectHelper helper = new SiteManagerConnectHelper();
+			SiteManagerConnectHelper helper = new SiteManagerConnectHelper(
+			        "localhost", 9123);
 			StatisticsGetter getter = new StatisticsGetter(helper);
 			monitorThread = new MonitorThread(helper, getter);
 			monitorThread.start();

@@ -11,6 +11,7 @@ import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.WebURLTransfer;
 
 import java.io.File;
+import java.net.InetAddress;
 
 public class SiteManager
 {
@@ -48,7 +49,7 @@ public class SiteManager
 		this.siteConfig = siteConfig;
 		this.initJSONServer(siteConfig);
 		siteConfig.getSiteToHandle().setSiteManager(
-		        this.server.getAddress().getHostAddress() + ":"
+		        InetAddress.getLocalHost().getCanonicalHostName() + ":"
 		                + this.server.getPort());
 		this.docidServer = new DocidServer();
 		this.initJobQueue();

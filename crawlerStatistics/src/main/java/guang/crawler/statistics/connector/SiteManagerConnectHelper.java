@@ -2,7 +2,6 @@ package guang.crawler.statistics.connector;
 
 import guang.crawler.connector.SiteManagerConnector;
 import guang.crawler.core.DataPacket;
-import guang.crawler.core.PortDefine;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -14,10 +13,10 @@ public class SiteManagerConnectHelper
 {
 	private SiteManagerConnector	connector;
 	
-	public SiteManagerConnectHelper() throws UnknownHostException, IOException
+	public SiteManagerConnectHelper(String host, int port)
+	        throws UnknownHostException, IOException
 	{
-		this.connector = new SiteManagerConnector("localhost",
-		        PortDefine.PORT_SITE_MANAGER);
+		this.connector = new SiteManagerConnector(host, port);
 	}
 	
 	public void exit() throws IOException

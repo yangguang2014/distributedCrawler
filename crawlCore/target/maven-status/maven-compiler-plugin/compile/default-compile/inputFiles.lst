@@ -2,7 +2,6 @@
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/jsonServer/AcceptJsonServer.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/jsonServer/ServerStartException.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/connector/SiteManagerConnector.java
-/home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/core/PortDefine.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/util/StreamHelper.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/jsonServer/JsonServer.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/urlFilter/ObjectFilter.java
@@ -11,5 +10,6 @@
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/core/WebURL.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/jsonServer/AcceptThreadController.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/core/DataPacket.java
+/home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/connector/ZookeeperConnector.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/connector/WebDataTableConnector.java
 /home/yang/work/workspace/distributeCrawler/crawlCore/src/main/java/guang/crawler/jsonServer/Commandlet.java

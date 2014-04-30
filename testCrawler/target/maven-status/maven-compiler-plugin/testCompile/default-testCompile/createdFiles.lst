@@ -1,5 +1,3 @@
 guang/crawler/sitemanager/TestJSONServer.class
-guang/crawler/sitemanager/TestBits.class
 guang/crawler/sitemanager/TestBitMapFilter.class
-guang/crawler/sitemanager/TestMD5.class
 guang/crawler/crawlWorker/TestSiteManagerConnector.class
