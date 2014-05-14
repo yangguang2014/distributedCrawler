@@ -1,0 +1,1058 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="685e02a8-ff56-4404-8374-8493bb2cd735" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/css/maven-base.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/css/maven-theme.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/css/print.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/css/site.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/dependencies.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/dependency-convergence.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/dependency-info.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/distribution-management.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/close.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/collapsed.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/expanded.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/external.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/icon_error_sml.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/icon_info_sml.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/icon_success_sml.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/icon_warning_sml.gif" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/logos/build-by-maven-black.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/logos/build-by-maven-white.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/logos/maven-feather.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/images/newwindow.png" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/index.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/integration.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/issue-tracking.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/license.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/mail-lists.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/modules.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/plugin-management.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/plugins.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/project-info.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/project-summary.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/source-repository.html" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/target/site/team-list.html" afterPath="" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.classpath" afterPath="$PROJECT_DIR$/crawlerCommons/.classpath" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.gitignore" afterPath="$PROJECT_DIR$/crawlerCommons/.gitignore" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.project" afterPath="$PROJECT_DIR$/crawlerCommons/.project" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.settings/org.eclipse.core.resources.prefs" afterPath="$PROJECT_DIR$/crawlerCommons/.settings/org.eclipse.core.resources.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.settings/org.eclipse.jdt.core.prefs" afterPath="$PROJECT_DIR$/crawlerCommons/.settings/org.eclipse.jdt.core.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/.settings/org.eclipse.m2e.core.prefs" afterPath="$PROJECT_DIR$/crawlerCommons/.settings/org.eclipse.m2e.core.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/pom.xml" afterPath="$PROJECT_DIR$/crawlerCommons/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/connector/SiteManagerConnector.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/connector/SiteManagerConnector.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/connector/WebDataTableConnector.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/connector/WebDataTableConnector.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/connector/ZookeeperConnector.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/connector/ZookeeperConnector.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/core/DataPacket.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/core/DataPacket.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/core/WebURL.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/core/WebURL.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/AcceptJsonServer.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/AcceptJsonServer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/AcceptRequestHandler.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/AcceptRequestHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/AcceptThreadController.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/AcceptThreadController.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/Commandlet.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/Commandlet.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/CommandletLoader.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/CommandletLoader.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/JsonServer.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/JsonServer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/jsonServer/ServerStartException.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/jsonServer/ServerStartException.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/urlFilter/BitMapFilter.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/urlFilter/BitMapFilter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/urlFilter/ObjectFilter.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/urlFilter/ObjectFilter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/java/guang/crawler/util/StreamHelper.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/util/StreamHelper.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/main/resource/site.xsd" afterPath="$PROJECT_DIR$/crawlerCommons/src/main/resource/site.xsd" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/src/test/java/guang/crawler/crawlcore/AppTest.java" afterPath="$PROJECT_DIR$/crawlerCommons/src/test/java/guang/crawler/crawlcore/AppTest.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/META-INF/MANIFEST.MF" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/connector/SiteManagerConnector.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/connector/SiteManagerConnector.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/connector/WebDataTableConnector.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/connector/WebDataTableConnector.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/connector/ZookeeperConnector.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/connector/ZookeeperConnector.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/core/DataPacket.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/core/DataPacket.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/core/WebURL.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/core/WebURL.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/AcceptJsonServer.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/AcceptJsonServer.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/AcceptRequestHandler.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/AcceptRequestHandler.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/AcceptThreadController.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/AcceptThreadController.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/Commandlet.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/Commandlet.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/CommandletLoader.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/CommandletLoader.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/JsonServer.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/JsonServer.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/jsonServer/ServerStartException.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/jsonServer/ServerStartException.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/urlFilter/BitMapFilter.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/urlFilter/BitMapFilter.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/urlFilter/ObjectFilter.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/urlFilter/ObjectFilter.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/guang/crawler/util/StreamHelper.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/guang/crawler/util/StreamHelper.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/classes/site.xsd" afterPath="$PROJECT_DIR$/crawlerCommons/target/classes/site.xsd" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlCore/target/test-classes/guang/crawler/crawlcore/AppTest.class" afterPath="$PROJECT_DIR$/crawlerCommons/target/test-classes/guang/crawler/crawlcore/AppTest.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.classpath" afterPath="$PROJECT_DIR$/crawlerWorker/.classpath" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.gitignore" afterPath="$PROJECT_DIR$/crawlerWorker/.gitignore" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.project" afterPath="$PROJECT_DIR$/crawlerWorker/.project" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.settings/org.eclipse.core.resources.prefs" afterPath="$PROJECT_DIR$/crawlerWorker/.settings/org.eclipse.core.resources.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.settings/org.eclipse.jdt.core.prefs" afterPath="$PROJECT_DIR$/crawlerWorker/.settings/org.eclipse.jdt.core.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/.settings/org.eclipse.m2e.core.prefs" afterPath="$PROJECT_DIR$/crawlerWorker/.settings/org.eclipse.m2e.core.prefs" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/pom.xml" afterPath="$PROJECT_DIR$/crawlerWorker/pom.xml" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/Main.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/Main.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/Configurable.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/Configurable.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/CrawlConfig.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/CrawlConfig.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/CustomFetchStatus.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/CustomFetchStatus.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/IdleConnectionMonitorThread.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/IdleConnectionMonitorThread.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/Page.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/Page.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/PageFetchResult.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/PageFetchResult.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/PageFetcher.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/PageFetcher.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/fetcher/WebGeter.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/fetcher/WebGeter.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/BinaryParseData.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/BinaryParseData.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/ExtractedUrlAnchorPair.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/ExtractedUrlAnchorPair.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlContentHandler.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlContentHandler.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlContentParserPlugin.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlContentParserPlugin.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlParseData.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/HtmlParseData.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/ParseData.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/ParseData.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/Parser.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/Parser.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/parser/TextParseData.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/parser/TextParseData.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/plugins/DownloadPlugin.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/plugins/DownloadPlugin.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/plugins/ExtractOutGoingUrlsPlugin.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/plugins/ExtractOutGoingUrlsPlugin.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/plugins/SaveToHbasePlugin.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/plugins/SaveToHbasePlugin.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/url/TLDList.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/url/TLDList.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/url/URLCanonicalizer.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/url/URLCanonicalizer.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/url/UrlResolver.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/url/UrlResolver.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/IO.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/util/IO.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/LinkElement.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/util/LinkElement.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/SiteManagerConnectorManager.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/util/SiteManagerConnectorManager.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/guang/crawler/crawlWorker/util/Util.java" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/guang/crawler/crawlWorker/util/Util.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/src/main/java/tld-names.txt" afterPath="$PROJECT_DIR$/crawlerWorker/src/main/java/tld-names.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/META-INF/MANIFEST.MF" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/Main.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/Main.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/Configurable.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/Configurable.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/CrawlConfig.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/CrawlConfig.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/CustomFetchStatus.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/CustomFetchStatus.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/IdleConnectionMonitorThread.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/IdleConnectionMonitorThread.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/Page.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/Page.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetchResult.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetchResult.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher$1.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher$1.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher$GzipDecompressingEntity.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher$GzipDecompressingEntity.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/PageFetcher.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/fetcher/WebGeter.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/fetcher/WebGeter.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/BinaryParseData.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/BinaryParseData.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin$Element.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin$Element.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin$HtmlFactory.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin$HtmlFactory.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/DefaultHtmlContentPlugin.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/ExtractedUrlAnchorPair.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/ExtractedUrlAnchorPair.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlContentHandler.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlContentHandler.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlContentParserPlugin.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlContentParserPlugin.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlParseData.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/HtmlParseData.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/ParseData.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/ParseData.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/Parser.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/Parser.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/parser/TextParseData.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/parser/TextParseData.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/plugins/DownloadPlugin.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/plugins/DownloadPlugin.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/plugins/ExtractOutGoingUrlsPlugin.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/plugins/ExtractOutGoingUrlsPlugin.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/plugins/SaveToHbasePlugin.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/plugins/SaveToHbasePlugin.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/url/TLDList.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/url/TLDList.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/url/URLCanonicalizer.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/url/URLCanonicalizer.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/url/UrlResolver$Url.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/url/UrlResolver$Url.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/url/UrlResolver.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/url/UrlResolver.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/util/IO.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/util/IO.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/util/LinkElement.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/util/LinkElement.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/guang/crawler/crawlWorker/util/Util.class" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/guang/crawler/crawlWorker/util/Util.class" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/crawlWorker/target/classes/tld-names.txt" afterPath="$PROJECT_DIR$/crawlerWorker/target/classes/tld-names.txt" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/siteManager/src/main/resources/commandlet.xml" afterPath="$PROJECT_DIR$/siteManager/src/main/resources/conf/commandlet.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crawlerStatistics/.gitignore" afterPath="$PROJECT_DIR$/crawlerStatistics/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/siteManager/.gitignore" afterPath="$PROJECT_DIR$/siteManager/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/testCrawler/.gitignore" afterPath="$PROJECT_DIR$/testCrawler/.gitignore" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java" afterPath="$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/siteManager/src/main/java/guang/crawler/siteManager/SiteManager.java" afterPath="$PROJECT_DIR$/siteManager/src/main/java/guang/crawler/siteManager/SiteManager.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/crawlerController/pom.xml" afterPath="$PROJECT_DIR$/crawlerController/pom.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/siteManager/pom.xml" afterPath="$PROJECT_DIR$/siteManager/pom.xml" />
+    </list>
+    <ignored path="distributeCrawler.iws" />
+    <ignored path=".idea/workspace.xml" />
+    <option name="TRACKING_ENABLED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ChangesViewManager" flattened_view="true" show_ignored="false" />
+  <component name="CreatePatchCommitExecutor">
+    <option name="PATCH_PATH" value="" />
+  </component>
+  <component name="DaemonCodeAnalyzer">
+    <disable_hints />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
+  <component name="FavoritesManager">
+    <favorites_list name="distributeCrawler" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file leaf-file-name="AppTest.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/crawlerCommons/src/test/java/guang/crawler/crawlcore/AppTest.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.39889196" vertical-offset="0" max-vertical-offset="722">
+              <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#235#236#0" expanded="true" />
+                <element signature="e#269#270#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FindManager">
+    <FindUsagesManager>
+      <setting name="OPEN_NEW_TAB" value="true" />
+    </FindUsagesManager>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="changedFiles">
+      <list>
+        <option value="$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/connector/SiteManagerConnector.java" />
+        <option value="$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/ZookeeperElement.java" />
+        <option value="$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java" />
+        <option value="$PROJECT_DIR$/crawlerController/.classpath" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="localRepository" value="$PROJECT_DIR$/../../repository" />
+        <option name="mavenHome" value="$USER_HOME$/opt/apache-maven-3.2.1" />
+        <option name="userSettingsFile" value="$USER_HOME$/opt/apache-maven-3.2.1/conf/settings.xml" />
+      </MavenGeneralSettings>
+    </option>
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="createModuleGroups" value="true" />
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+    <option name="enabledProfiles">
+      <list>
+        <option value="jdk-1.7" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="crawlerCommons" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="crawlerAssemblies" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+      </PATH>
+      <PATH>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$RootNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="crawlerAssemblies" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$ProjectNode" />
+        </PATH_ELEMENT>
+        <PATH_ELEMENT>
+          <option name="myItemId" value="Lifecycle" />
+          <option name="myItemType" value="org.jetbrains.idea.maven.navigator.MavenProjectsStructure$LifecycleNode" />
+        </PATH_ELEMENT>
+      </PATH>
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1920" />
+    <option name="height" value="1055" />
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectReloadState">
+    <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="ProjectPane" proportions="" version="1">
+      <flattenPackages PackagesPane="true" />
+      <showMembers />
+      <showModules />
+      <showLibraryContents />
+      <hideEmptyPackages />
+      <abbreviatePackageNames />
+      <autoscrollToSource />
+      <autoscrollFromSource />
+      <sortByType />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="testCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlerCommons" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlerCommons" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="test" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlcore" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlerCommons" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value=".idea" />
+              <option name="myItemType" value="com.android.tools.idea.gradle.projectView.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="PackagesPane">
+        <subPane>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlerController" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="distributeCrawler" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="crawlerController" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageViewModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="guang.crawler.controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PackageElementNode" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+      <pane id="Scope">
+        <subPane subId="Problems">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="crawlerController">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="crawlerController">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="src/main/java">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="guang/crawler/controller">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="Production">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="distributeCrawler">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT USER_OBJECT="distributeCrawler">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+        <subPane subId="Changed Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="GoToClass.includeLibraries" value="false" />
+    <property name="GoToClass.toSaveIncludeLibraries" value="false" />
+    <property name="GoToFile.includeJavaFiles" value="false" />
+    <property name="MemberChooser.sorted" value="false" />
+    <property name="MemberChooser.showClasses" value="true" />
+    <property name="MemberChooser.copyJavadoc" value="false" />
+    <property name="options.lastSelected" value="appearance" />
+    <property name="options.splitter.main.proportions" value="0.3" />
+    <property name="options.splitter.details.proportions" value="0.2" />
+    <property name="options.searchVisible" value="true" />
+    <property name="FullScreen" value="false" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType" factoryName="Plugin">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <method />
+    </configuration>
+    <configuration default="true" type="MavenRunConfiguration" factoryName="Maven">
+      <MavenSettings>
+        <option name="myGeneralSettings">
+          <MavenGeneralSettings>
+            <option name="alwaysUpdateSnapshots" value="false" />
+            <option name="checksumPolicy" value="NOT_SET" />
+            <option name="failureBehavior" value="NOT_SET" />
+            <option name="localRepository" value="" />
+            <option name="mavenHome" value="" />
+            <option name="nonRecursive" value="false" />
+            <option name="outputLevel" value="INFO" />
+            <option name="pluginUpdatePolicy" value="DEFAULT" />
+            <option name="printErrorStackTraces" value="false" />
+            <option name="threads" />
+            <option name="usePluginRegistry" value="false" />
+            <option name="userSettingsFile" value="" />
+            <option name="workOffline" value="false" />
+          </MavenGeneralSettings>
+        </option>
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list />
+            </option>
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidTestRunConfigurationType" factoryName="Android Tests">
+      <module name="" />
+      <option name="TESTING_TYPE" value="0" />
+      <option name="INSTRUMENTATION_RUNNER_CLASS" value="" />
+      <option name="METHOD_NAME" value="" />
+      <option name="CLASS_NAME" value="" />
+      <option name="PACKAGE_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Remote" factoryName="Remote">
+      <option name="USE_SOCKET_TRANSPORT" value="true" />
+      <option name="SERVER_MODE" value="false" />
+      <option name="SHMEM_ADDRESS" value="javadebug" />
+      <option name="HOST" value="localhost" />
+      <option name="PORT" value="5005" />
+      <method />
+    </configuration>
+    <configuration default="true" type="Applet" factoryName="Applet">
+      <module name="" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="HTML_FILE_NAME" />
+      <option name="HTML_USED" value="false" />
+      <option name="WIDTH" value="400" />
+      <option name="HEIGHT" value="300" />
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <option name="VM_PARAMETERS" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method />
+    </configuration>
+    <configuration default="true" type="TestNG" factoryName="TestNG">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="SUITE_NAME" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="GROUP_NAME" />
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="OUTPUT_DIRECTORY" />
+      <option name="ANNOTATION_TYPE" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <option name="USE_DEFAULT_REPORTERS" value="false" />
+      <option name="PROPERTIES_FILE" />
+      <envs />
+      <properties />
+      <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" />
+      <option name="VM_PARAMETERS" />
+      <option name="PROGRAM_PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="ENABLE_SWING_INSPECTOR" value="false" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <module name="" />
+      <envs />
+      <method />
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <module name="" />
+      <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="false" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <option name="PACKAGE_NAME" />
+      <option name="MAIN_CLASS_NAME" />
+      <option name="METHOD_NAME" />
+      <option name="TEST_OBJECT" value="class" />
+      <option name="VM_PARAMETERS" value="-ea" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="ENV_VARIABLES" />
+      <option name="PASS_PARENT_ENVS" value="true" />
+      <option name="TEST_SEARCH_SCOPE">
+        <value defaultName="moduleWithDependencies" />
+      </option>
+      <envs />
+      <patterns />
+      <method />
+    </configuration>
+    <configuration default="true" type="AndroidRunConfigurationType" factoryName="Android Application">
+      <module name="" />
+      <option name="ACTIVITY_CLASS" value="" />
+      <option name="MODE" value="default_activity" />
+      <option name="DEPLOY" value="true" />
+      <option name="ARTIFACT_NAME" value="" />
+      <option name="TARGET_SELECTION_MODE" value="EMULATOR" />
+      <option name="USE_LAST_SELECTED_DEVICE" value="false" />
+      <option name="PREFERRED_AVD" value="" />
+      <option name="USE_COMMAND_LINE" value="true" />
+      <option name="COMMAND_LINE" value="" />
+      <option name="WIPE_USER_DATA" value="false" />
+      <option name="DISABLE_BOOT_ANIMATION" value="false" />
+      <option name="NETWORK_SPEED" value="full" />
+      <option name="NETWORK_LATENCY" value="none" />
+      <option name="CLEAR_LOGCAT" value="false" />
+      <option name="SHOW_LOGCAT_AUTOMATICALLY" value="true" />
+      <option name="FILTER_LOGCAT_AUTOMATICALLY" value="true" />
+      <method />
+    </configuration>
+    <list size="0" />
+    <configuration name="&lt;template&gt;" type="WebApp" default="true" selected="false">
+      <Host>localhost</Host>
+      <Port>5050</Port>
+    </configuration>
+  </component>
+  <component name="ShelveChangesManager" show_recycled="false" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="685e02a8-ff56-4404-8374-8493bb2cd735" name="Default" comment="" />
+      <created>1399350202392</created>
+      <updated>1399350202392</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TodoView" selected-index="0">
+    <todo-panel id="selected-file">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="default-changelist">
+      <are-packages-shown value="false" />
+      <are-modules-shown value="false" />
+      <flatten-packages value="false" />
+      <is-autoscroll-to-source value="false" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1920" height="1055" extended-state="0" />
+    <editor active="false" />
+    <layout>
+      <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21979167" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26091588" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3290735" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.18176973" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.26091588" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.21421108" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.1907001" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Thumbnails" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32916668" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+    </layout>
+  </component>
+  <component name="Vcs.Log.UiProperties">
+    <option name="RECENTLY_FILTERED_USER_GROUPS">
+      <collection />
+    </option>
+    <option name="RECENTLY_FILTERED_BRANCH_GROUPS">
+      <collection />
+    </option>
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="myTodoPanelSettings">
+      <TodoPanelSettings />
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager />
+  </component>
+  <component name="antWorkspaceConfiguration">
+    <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
+    <option name="FILTER_TARGETS" value="false" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/crawlerCommons/src/test/java/guang/crawler/crawlcore/AppTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="396">
+          <caret line="4" column="0" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#235#236#0" expanded="true" />
+            <element signature="e#269#270#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/.classpath">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="630">
+          <caret line="11" column="21" selection-start-line="11" selection-start-column="21" selection-end-line="11" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3546">
+          <caret line="158" column="19" selection-start-line="158" selection-start-column="19" selection-end-line="158" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="342" max-vertical-offset="1026">
+          <caret line="27" column="45" selection-start-line="27" selection-start-column="45" selection-end-line="27" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2955">
+          <caret line="158" column="19" selection-start-line="158" selection-start-column="19" selection-end-line="158" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="690" max-vertical-offset="885">
+          <caret line="67" column="60" selection-start-line="67" selection-start-column="60" selection-end-line="67" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2955">
+          <caret line="158" column="19" selection-start-line="158" selection-start-column="19" selection-end-line="158" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="285" max-vertical-offset="885">
+          <caret line="27" column="9" selection-start-line="27" selection-start-column="9" selection-end-line="27" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3330">
+          <caret line="45" column="23" selection-start-line="45" selection-start-column="23" selection-end-line="45" selection-end-column="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2775">
+          <caret line="25" column="61" selection-start-line="25" selection-start-column="61" selection-end-line="25" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="840">
+          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.core.resources.prefs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="935">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.settings/org.eclipse.m2e.core.prefs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="150">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerAssemblies/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="210">
+          <caret line="8" column="10" selection-start-line="8" selection-start-column="10" selection-end-line="8" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerCommons/src/main/java/guang/crawler/connector/SiteManagerConnector.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.14438502" vertical-offset="0" max-vertical-offset="935">
+          <caret line="14" column="1" selection-start-line="14" selection-start-column="1" selection-end-line="14" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/ZookeeperElement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.17073171" vertical-offset="450" max-vertical-offset="2160">
+          <caret line="50" column="39" selection-start-line="50" selection-start-column="39" selection-end-line="50" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/.settings/org.eclipse.core.resources.prefs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="180">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/.settings/org.eclipse.jdt.core.prefs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="617">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/.settings/org.eclipse.m2e.core.prefs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="617">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/pom.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.2195122" vertical-offset="0" max-vertical-offset="615">
+          <caret line="9" column="18" selection-start-line="9" selection-start-column="18" selection-end-line="9" selection-end-column="18" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/CrawlerController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2395" max-vertical-offset="3330">
+          <caret line="158" column="19" selection-start-line="158" selection-start-column="19" selection-end-line="158" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/src/main/java/guang/crawler/controller/SiteInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.3319149" vertical-offset="0" max-vertical-offset="1026">
+          <caret line="16" column="27" selection-start-line="16" selection-start-column="27" selection-end-line="16" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerController/.classpath">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.41666666" vertical-offset="0" max-vertical-offset="720">
+          <caret line="20" column="20" selection-start-line="20" selection-start-column="20" selection-end-line="20" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/crawlerCommons/src/test/java/guang/crawler/crawlcore/AppTest.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.39889196" vertical-offset="0" max-vertical-offset="722">
+          <caret line="16" column="12" selection-start-line="16" selection-start-column="12" selection-end-line="16" selection-end-column="12" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#235#236#0" expanded="true" />
+            <element signature="e#269#270#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>crawlerAssemblies</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+                <option value="0.6" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.7</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <last-edited>Maven: aopalliance:aopalliance:1.0</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
+

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false">
+    <file url="file://$PROJECT_DIR$" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerAssemblies" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerCommons" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerController" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerDist" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerStatistics" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/crawlerWorker" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/siteManager" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/testCrawler" charset="UTF-8" />
+  </component>
+</project>
+

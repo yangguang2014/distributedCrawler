@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/crawlerAssemblies/crawlerAssemblies.iml" filepath="$PROJECT_DIR$/crawlerAssemblies/crawlerAssemblies.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawlerCommons/crawlerCommons.iml" filepath="$PROJECT_DIR$/crawlerCommons/crawlerCommons.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawlerController/crawlerController.iml" filepath="$PROJECT_DIR$/crawlerController/crawlerController.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawlerDist/crawlerDist.iml" filepath="$PROJECT_DIR$/crawlerDist/crawlerDist.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawlerStatistics/crawlerStatistics.iml" filepath="$PROJECT_DIR$/crawlerStatistics/crawlerStatistics.iml" />
+      <module fileurl="file://$PROJECT_DIR$/crawlerWorker/crawlerWorker.iml" filepath="$PROJECT_DIR$/crawlerWorker/crawlerWorker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/distributeCrawler.iml" filepath="$PROJECT_DIR$/distributeCrawler.iml" />
+      <module fileurl="file://$PROJECT_DIR$/siteManager/siteManager.iml" filepath="$PROJECT_DIR$/siteManager/siteManager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/testCrawler/testCrawler.iml" filepath="$PROJECT_DIR$/testCrawler/testCrawler.iml" />
+    </modules>
+  </component>
+</project>
+

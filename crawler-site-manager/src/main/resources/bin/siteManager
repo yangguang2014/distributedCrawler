@@ -1,0 +1,19 @@
+#!/bin/bash
+CRAWLER_HOME=/home/yang/work/workspace/distributeCrawler/crawlerDist/target/release/crawlerDist-1.0-SNAPSHOT-release
+LIB_DIR=$CRAWLER_HOME/lib
+# set class path
+if [ "x$CP" = "x" ];then
+	for i in `ls $LIB_DIR/*.jar`;do 
+		if [ "x$CP" = "x" ];then 
+			CP=$i;
+		else 
+			CP=$CP:$i
+		fi;
+	done;
+fi
+
+# set main class
+MAIN=guang.crawler.siteManager.Main
+
+# run main class
+java -cp $CP $MAIN

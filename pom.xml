@@ -10,7 +10,6 @@
 		<module>crawler-worker</module>
 		<module>crawler-site-manager</module>
 		<module>crawler-commons</module>
-		<module>test-crawler</module>
 		<module>crawler-statistics</module>
 		<module>crawler-controller</module>
 		<module>crawler-launcher</module>
@@ -30,12 +29,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-	<profiles>
-		<profile>
-			<id>release</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-		</profile>
-	</profiles>
 </project>

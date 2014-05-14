@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tns:commandApp version="1.0"
+	xmlns:tns="http://guang.org/distributedCrawler/commandlet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://guang.org/distributedCrawler/commandlet site.xsd">
+	<tns:commandlets>
+		<tns:commandlet>
+			<tns:commandlet-name>URLsGetter</tns:commandlet-name>
+			<tns:commandlet-class>guang.crawler.siteManager.commandlet.URLsGetter</tns:commandlet-class>
+			<tns:load-on-startup>false</tns:load-on-startup>
+		</tns:commandlet>
+		<tns:commandlet>
+			<tns:commandlet-name>URLsPutter</tns:commandlet-name>
+			<tns:commandlet-class>guang.crawler.siteManager.commandlet.URLsPutter</tns:commandlet-class>
+			<tns:load-on-startup>false</tns:load-on-startup>
+		</tns:commandlet>
+		<tns:commandlet>
+			<tns:commandlet-name>StatisticsGetter</tns:commandlet-name>
+			<tns:commandlet-class>guang.crawler.siteManager.commandlet.StatisticsGetter</tns:commandlet-class>
+			<tns:load-on-startup>false</tns:load-on-startup>
+		</tns:commandlet>
+		
+	</tns:commandlets>
+	<tns:commandlet-mappings>
+		<tns:commandlet-mapping>
+			<tns:commandlet-name>URLsGetter</tns:commandlet-name>
+			<tns:url-pattern>/url/get</tns:url-pattern>
+		</tns:commandlet-mapping>
+		<tns:commandlet-mapping>
+			<tns:commandlet-name>URLsPutter</tns:commandlet-name>
+			<tns:url-pattern>/url/put</tns:url-pattern>
+		</tns:commandlet-mapping>
+		<tns:commandlet-mapping>
+			<tns:commandlet-name>StatisticsGetter</tns:commandlet-name>
+			<tns:url-pattern>/statistics/get</tns:url-pattern>
+		</tns:commandlet-mapping>
+	</tns:commandlet-mappings>
+
+
+
+</tns:commandApp>

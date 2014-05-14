@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<assembly
+	xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 assembly-1.1.2.xsd ">
+	<id>crawler-etc</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<baseDirectory>etc</baseDirectory>
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<sources>
+				<includeModuleDirectory>false</includeModuleDirectory>
+				<fileSets>
+					<fileSet>
+						<filtered>true</filtered>
+						
+						<directory>src/main/resources/etc</directory>
+						<useDefaultExcludes>true</useDefaultExcludes>
+						<excludes>
+							<exclude>.git/**</exclude>
+							<exclude>**/.gitignore</exclude>
+							<exclude>**/.svn</exclude>
+							<exclude>**/*.iws</exclude>
+							<exclude>**/*.ipr</exclude>
+							<exclude>**/*.iml</exclude>
+							<exclude>**/.classpath</exclude>
+							<exclude>**/.project</exclude>
+							<exclude>**/.settings</exclude>
+							<exclude>**/target</exclude>
+							<exclude>**/*.log</exclude>
+							<exclude>**/build/**</exclude>
+							<exclude>**/file:/**</exclude>
+							<exclude>**/SecurityAuth.audit*</exclude>
+						</excludes>
+					</fileSet>
+				</fileSets>
+			</sources>
+		</moduleSet>
+	</moduleSets>
+</assembly>
