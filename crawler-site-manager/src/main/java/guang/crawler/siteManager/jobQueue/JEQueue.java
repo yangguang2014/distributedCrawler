@@ -28,7 +28,6 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	protected Environment	                env;
 	protected boolean	                    resumable;
 	private final JEQueueElementTransfer<T>	transfer;
-	protected final Object	                mutex	 = new Object();
 	
 	private boolean	                        shutdown	= false;
 	
@@ -37,7 +36,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	{
 		// 每个不同的siteManager都有其自身的工作目录
 		File envHome = new File(dataHomeDir + "/"
-		        + SiteConfig.getConfig().getSiteID() + "/je-queues");
+		        + SiteConfig.me().getSiteID() + "/je-queues");
 		if (!envHome.exists())
 		{
 			if (!envHome.mkdirs())
@@ -115,59 +114,58 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	@Override
 	public synchronized List<T> get(int max) throws DatabaseException
 	{
-		synchronized (this.mutex)
+		
+		int matches = 0;
+		List<T> results = new ArrayList<>(max);
+		
+		Cursor cursor = null;
+		OperationStatus result;
+		DatabaseEntry key = new DatabaseEntry();
+		DatabaseEntry value = new DatabaseEntry();
+		Transaction txn;
+		if (this.resumable)
 		{
-			int matches = 0;
-			List<T> results = new ArrayList<>(max);
+			txn = this.env.beginTransaction(null, null);
+		} else
+		{
+			txn = null;
+		}
+		try
+		{
+			cursor = this.urlsDB.openCursor(txn, null);
+			result = cursor.getFirst(key, value, null);
 			
-			Cursor cursor = null;
-			OperationStatus result;
-			DatabaseEntry key = new DatabaseEntry();
-			DatabaseEntry value = new DatabaseEntry();
-			Transaction txn;
-			if (this.resumable)
+			while ((matches < max) && (result == OperationStatus.SUCCESS))
 			{
-				txn = this.env.beginTransaction(null, null);
-			} else
+				if (value.getData().length > 0)
+				{
+					results.add(this.transfer.entryToObject(value));
+					cursor.delete();
+					matches++;
+				}
+				result = cursor.getNext(key, value, null);
+			}
+		} catch (DatabaseException e)
+		{
+			if (txn != null)
 			{
+				txn.abort();
 				txn = null;
 			}
-			try
+			throw e;
+		} finally
+		{
+			if (cursor != null)
 			{
-				cursor = this.urlsDB.openCursor(txn, null);
-				result = cursor.getFirst(key, value, null);
-				
-				while ((matches < max) && (result == OperationStatus.SUCCESS))
-				{
-					if (value.getData().length > 0)
-					{
-						results.add(this.transfer.entryToObject(value));
-						cursor.delete();
-						matches++;
-					}
-					result = cursor.getNext(key, value, null);
-				}
-			} catch (DatabaseException e)
-			{
-				if (txn != null)
-				{
-					txn.abort();
-					txn = null;
-				}
-				throw e;
-			} finally
-			{
-				if (cursor != null)
-				{
-					cursor.close();
-				}
-				if (txn != null)
-				{
-					txn.commit();
-				}
+				cursor.close();
 			}
-			return results;
+			if (txn != null)
+			{
+				txn.commit();
+			}
 		}
+		return results;
+		
 	}
 	
 	/**
@@ -188,6 +186,23 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			e.printStackTrace();
 		}
 		return -1;
+	}
+	
+	@Override
+	public MapQueueIteraotr<T> iterator()
+	{
+		Cursor cursor = null;
+		Transaction txn;
+		if (this.resumable)
+		{
+			txn = this.env.beginTransaction(null, null);
+		} else
+		{
+			txn = null;
+		}
+		cursor = this.urlsDB.openCursor(txn, null);
+		return new JECursorIterator<>(cursor, this.transfer);
+		
 	}
 	
 	@Override

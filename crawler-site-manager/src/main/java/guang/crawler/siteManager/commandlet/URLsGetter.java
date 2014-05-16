@@ -2,11 +2,12 @@ package guang.crawler.siteManager.commandlet;
 
 import guang.crawler.core.DataPacket;
 import guang.crawler.core.WebURL;
+import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
-import guang.crawler.siteManager.SiteManagerException;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jsonServer.Commandlet;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,11 +17,19 @@ public class URLsGetter implements Commandlet
 {
 	private static final String	KEY_COUNT	 = "COUNT";
 	private static final String	KEY_URL_LIST	= "URL_LIST";
-	
+
 	@Override
 	public DataPacket doCommand(DataPacket request)
 	{
 		HashMap<String, String> data = request.getData();
+		if (SiteConfig.me().isBackupTime())// 如果当前正在进行相关文件的备份，那么就暂时不提供url了。
+		{
+			DataPacket result = new DataPacket();
+			result.setTitle("ERROR");
+			result.setData(data);
+			data.put(URLsGetter.KEY_COUNT, "0");
+			return result;
+		}
 		String count = data.get(URLsGetter.KEY_COUNT);
 		// 这里暂时只获取一个
 		int num = 1;
@@ -34,33 +43,25 @@ public class URLsGetter implements Commandlet
 				num = 1;
 			}
 		}
-		// TODO 这里获取指定数量的URL列表
-		try
+		SiteManager siteManager = SiteManager.me();
+		MapQueue<WebURL> todoList = siteManager.getToDoTaskList();
+		List<WebURL> urls = todoList.get(num);
+
+		DataPacket result = new DataPacket();
+		result.setTitle("OK");
+		result.setData(data);
+		data.put(URLsGetter.KEY_COUNT, String.valueOf(urls.size()));
+		int i = 0;
+		long currentTime = new Date().getTime();
+		for (WebURL url : urls)
 		{
-			SiteManager siteManager = SiteManager.getSiteManager();
-			MapQueue<WebURL> todoList = siteManager.getToDoTaskList();
-			List<WebURL> urls = todoList.get(num);
-			
-			DataPacket result = new DataPacket();
-			result.setTitle("OK");
-			result.setData(data);
-			data.put(URLsGetter.KEY_COUNT, String.valueOf(urls.size()));
-			int i = 0;
-			for (WebURL url : urls)
-			{
-				String urlString = JSON.toJSONString(url);
-				data.put(URLsGetter.KEY_URL_LIST + i++, urlString);
-				siteManager.getWorkingTaskList().put(url);
-			}
-			return result;
-		} catch (SiteManagerException e)
-		{
-			DataPacket result = new DataPacket();
-			result.setTitle("ERROR");
-			result.setData(data);
-			data.put(URLsGetter.KEY_COUNT, "0");
-			return result;
+			url.startTime(currentTime).increaseTryTime();
+			String urlString = JSON.toJSONString(url);
+			data.put(URLsGetter.KEY_URL_LIST + i++, urlString);
+			siteManager.getWorkingTaskList().put(url);
 		}
-		
+		return result;
+
 	}
+
 }

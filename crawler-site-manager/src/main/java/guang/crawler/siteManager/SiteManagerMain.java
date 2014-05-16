@@ -10,7 +10,7 @@ public class SiteManagerMain
 	public static void main(String[] args) throws Exception
 	{
 		CrawlerController controller = new CrawlerController(
-		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
+				"ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
 		List<SiteInfo> unHandledSites = controller.getUnHandledSites();
 		SiteInfo siteToHandle = null;
 		if ((unHandledSites == null) || (unHandledSites.size() == 0))
@@ -19,7 +19,7 @@ public class SiteManagerMain
 			return;
 		} else
 		{
-			
+
 			for (SiteInfo info : unHandledSites)
 			{
 				boolean success = controller.handleSite(info);
@@ -29,7 +29,7 @@ public class SiteManagerMain
 					break;
 				}
 			}
-			
+
 		}
 		if (siteToHandle == null)
 		{
@@ -37,14 +37,12 @@ public class SiteManagerMain
 			return;
 		}
 		System.out.println("handle site " + siteToHandle.getSeedSite());
-		SiteConfig config = SiteConfig.getConfig();
-		config.setCrawlerHome(System.getProperty("crawler.home"));
+		SiteConfig config = SiteConfig.me().init();
 		config.setSiteID(siteToHandle.getName());
 		config.setSiteToHandle(siteToHandle);
 		config.setCrawlerController(controller);
-		SiteManager.init(config);
-		SiteManager manager = SiteManager.getSiteManager();
+		SiteManager manager = SiteManager.me().init();
 		manager.start();
-		
+
 	}
 }

@@ -31,6 +31,13 @@ public abstract class MapQueue<T>
 	public abstract long getLength();
 	
 	/**
+	 * 依次遍历队列中的资源
+	 * 
+	 * @return
+	 */
+	public abstract MapQueueIteraotr<T> iterator();
+	
+	/**
 	 * 向队列中添加一个元素
 	 */
 	public abstract void put(T element);

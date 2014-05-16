@@ -11,6 +11,14 @@ public class WebURL
 	private byte	priority;
 	private int	   childNum;
 	private String	siteManagerName;
+	/**
+	 * 该URL开始爬行的时间
+	 */
+	private long	startTime	= -1;
+	/**
+	 * 该URL被尝试爬取的次数
+	 */
+	private int	   tryTime	  = 0;
 	
 	@Override
 	public boolean equals(Object o)
@@ -64,6 +72,16 @@ public class WebURL
 		return this.siteManagerName;
 	}
 	
+	public long getStartTime()
+	{
+		return this.startTime;
+	}
+	
+	public int getTryTime()
+	{
+		return this.tryTime;
+	}
+	
 	public String getURL()
 	{
 		return this.url;
@@ -73,6 +91,12 @@ public class WebURL
 	public int hashCode()
 	{
 		return this.url.hashCode();
+	}
+	
+	public WebURL increaseTryTime()
+	{
+		this.tryTime++;
+		return this;
 	}
 	
 	public void setAnchor(String anchor)
@@ -108,6 +132,12 @@ public class WebURL
 	public void setSiteManagerName(String siteManagerName)
 	{
 		this.siteManagerName = siteManagerName;
+	}
+	
+	public WebURL startTime(long startTime)
+	{
+		this.startTime = startTime;
+		return this;
 	}
 	
 	public void setURL(String url)

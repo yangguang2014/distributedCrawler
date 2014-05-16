@@ -13,31 +13,23 @@ import guang.crawler.siteManager.jsonServer.ServerStartException;
 
 import java.io.File;
 import java.net.InetAddress;
+import java.util.Timer;
 
 public class SiteManager
 {
-	public static SiteManager getSiteManager() throws SiteManagerException
+	public static SiteManager me()
 	{
 		if (SiteManager.siteManager == null)
 		{
-			throw new SiteManagerException(
-			        "Site manager should be inited first.");
+			SiteManager.siteManager = new SiteManager();
 		}
 		return SiteManager.siteManager;
 	}
-	
-	public static void init(SiteConfig siteConfig) throws Exception
-	{
-		if (SiteManager.siteManager == null)
-		{
-			SiteManager.siteManager = new SiteManager(siteConfig);
-		}
-	}
-	
+
 	private MapQueue<WebURL>	toDoTaskList;
 	private MapQueue<WebURL>	workingTaskList;
-	private MapQueue<WebURL>	finishedTaskList;
 	private MapQueue<WebURL>	failedTaskList;
+	private QueueCleanner	   cleanner;
 	private SiteConfig	       siteConfig;
 	
 	private DocidServer	       docidServer;
@@ -45,24 +37,12 @@ public class SiteManager
 	
 	private static SiteManager	siteManager;
 	
-	private SiteManager(SiteConfig siteConfig) throws Exception
+	private Timer	           siteManagerTimer;
+
+	private SiteManager()
 	{
-		this.siteConfig = siteConfig;
-		File workdir = new File(this.siteConfig.getWorkDir() + "/"
-		        + siteConfig.getSiteID());
-		if (!workdir.exists())
-		{
-			workdir.mkdirs();
-		}
-		this.initJSONServer(siteConfig);
-		siteConfig.getSiteToHandle().setSiteManager(
-		        InetAddress.getLocalHost().getCanonicalHostName() + ":"
-		                + this.server.getPort());
-		this.docidServer = new SimpleIncretmentDocidServer();
-		this.initJobQueue();
-		
 	}
-	
+
 	public DocidServer getDocidServer()
 	{
 		return this.docidServer;
@@ -71,11 +51,6 @@ public class SiteManager
 	public MapQueue<WebURL> getFailedTaskList()
 	{
 		return this.failedTaskList;
-	}
-	
-	public MapQueue<WebURL> getFinishedTaskList()
-	{
-		return this.finishedTaskList;
 	}
 	
 	public MapQueue<WebURL> getToDoTaskList()
@@ -88,13 +63,31 @@ public class SiteManager
 		return this.workingTaskList;
 	}
 	
+	public SiteManager init() throws SiteManagerException
+	{
+		try
+		{
+			this.siteConfig = SiteConfig.me();
+			this.initJSONServer(this.siteConfig);
+			this.siteConfig.getSiteToHandle().setSiteManager(
+					InetAddress.getLocalHost().getCanonicalHostName() + ":"
+							+ this.server.getPort());
+			this.docidServer = new SimpleIncretmentDocidServer();
+			this.initJobQueue();
+			return this;
+		} catch (Exception e)
+		{
+			throw new SiteManagerException(
+			        "Site manager should be inited first.");
+		}
+		
+	}
+	
 	private void initJobQueue() throws Exception
 	{
 		JEQueueElementTransfer<WebURL> transfer = new WebURLTransfer();
 		this.toDoTaskList = new JEQueue<>(this.siteConfig.getWorkDir(), "todo",
 		        false, transfer);
-		this.finishedTaskList = new JEQueue<>(this.siteConfig.getWorkDir(),
-		        "finished", false, transfer);
 		this.workingTaskList = new JEQueue<>(this.siteConfig.getWorkDir(),
 		        "working", false, transfer);
 		this.failedTaskList = new JEQueue<>(this.siteConfig.getWorkDir(),
@@ -109,8 +102,16 @@ public class SiteManager
 			url.setSiteManagerName(this.siteConfig.getSiteID());
 			url.setDocid(this.docidServer.next(url));
 			this.toDoTaskList.put(url);
-			
 		}
+		this.siteConfig.getCrawlerController();
+		this.cleanner = new QueueCleanner(this.workingTaskList,
+		        this.toDoTaskList, this.failedTaskList,
+		        this.siteConfig.getJobTimeout(),
+		        this.siteConfig.getJobTryTime());
+		this.siteManagerTimer = new Timer(true);
+		this.siteManagerTimer.schedule(this.cleanner,
+		        this.siteConfig.getJobTimeout(),
+		        this.siteConfig.getQueueCleanerPeriod());
 	}
 	
 	private void initJSONServer(SiteConfig siteConfig)
@@ -144,8 +145,9 @@ public class SiteManager
 	public void shutdown()
 	{
 		this.server.shutdown();
-		this.finishedTaskList.close();
 		this.toDoTaskList.close();
+		this.workingTaskList.close();
+		this.failedTaskList.close();
 	}
 	
 	public void start()
