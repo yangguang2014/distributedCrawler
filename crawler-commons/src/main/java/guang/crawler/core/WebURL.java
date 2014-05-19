@@ -2,7 +2,7 @@ package guang.crawler.core;
 
 public class WebURL
 {
-	
+
 	private String	url;
 	private String	docid;
 	private int	   parentDocid;
@@ -19,7 +19,7 @@ public class WebURL
 	 * 该URL被尝试爬取的次数
 	 */
 	private int	   tryTime	  = 0;
-	
+
 	@Override
 	public boolean equals(Object o)
 	{
@@ -31,124 +31,130 @@ public class WebURL
 		{
 			return false;
 		}
-		
+
 		WebURL otherUrl = (WebURL) o;
 		return (this.url != null) && this.url.equals(otherUrl.getURL());
-		
+
 	}
-	
+
 	public String getAnchor()
 	{
 		return this.anchor;
 	}
-	
+
 	public int getChildNum()
 	{
 		return this.childNum;
 	}
-	
+
 	public short getDepth()
 	{
 		return this.depth;
 	}
-	
+
 	public String getDocid()
 	{
 		return this.docid;
 	}
-	
+
 	public int getParentDocid()
 	{
 		return this.parentDocid;
 	}
-	
+
 	public byte getPriority()
 	{
 		return this.priority;
 	}
-	
+
 	public String getSiteManagerName()
 	{
 		return this.siteManagerName;
 	}
-	
+
 	public long getStartTime()
 	{
 		return this.startTime;
 	}
-	
+
 	public int getTryTime()
 	{
 		return this.tryTime;
 	}
-	
+
 	public String getURL()
 	{
 		return this.url;
 	}
-	
+
 	@Override
 	public int hashCode()
 	{
 		return this.url.hashCode();
 	}
-	
+
 	public WebURL increaseTryTime()
 	{
 		this.tryTime++;
 		return this;
 	}
-	
+
+	public WebURL resetTryTime()
+	{
+		this.tryTime = 0;
+		return this;
+	}
+
 	public void setAnchor(String anchor)
 	{
 		this.anchor = anchor;
 	}
-	
+
 	public void setChildNum(int childNum)
 	{
 		this.childNum = childNum;
 	}
-	
+
 	public void setDepth(short depth)
 	{
 		this.depth = depth;
 	}
-	
+
 	public void setDocid(String docid)
 	{
 		this.docid = docid;
 	}
-	
+
 	public void setParentDocid(int parentDocid)
 	{
 		this.parentDocid = parentDocid;
 	}
-	
+
 	public void setPriority(byte priority)
 	{
 		this.priority = priority;
 	}
-	
+
 	public void setSiteManagerName(String siteManagerName)
 	{
 		this.siteManagerName = siteManagerName;
 	}
-	
+
+	public void setURL(String url)
+	{
+		this.url = url;
+	}
+
 	public WebURL startTime(long startTime)
 	{
 		this.startTime = startTime;
 		return this;
 	}
-	
-	public void setURL(String url)
-	{
-		this.url = url;
-	}
-	
+
 	@Override
 	public String toString()
 	{
 		return this.url;
 	}
-	
+
 }

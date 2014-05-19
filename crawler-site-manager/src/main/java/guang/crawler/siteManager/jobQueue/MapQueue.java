@@ -4,7 +4,7 @@ import java.util.List;
 
 /**
  * 结合Map和Queue特点的数据结构。
- * 
+ *
  * @author yang
  * @param <T>
  */
@@ -32,7 +32,7 @@ public abstract class MapQueue<T>
 	
 	/**
 	 * 依次遍历队列中的资源
-	 * 
+	 *
 	 * @return
 	 */
 	public abstract MapQueueIteraotr<T> iterator();

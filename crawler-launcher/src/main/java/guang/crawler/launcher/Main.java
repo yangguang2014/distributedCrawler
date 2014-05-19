@@ -1,7 +1,7 @@
 package guang.crawler.launcher;
 
 import guang.crawler.crawlWorker.WorkerMain;
-import guang.crawler.siteManager.SiteManagerMain;
+import guang.crawler.siteManager.SiteManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,8 +30,8 @@ public class Main
 			{
 				// ignore this exception
 				System.out
-				        .println("[Warning] failed to load launcher init file: "
-				                + e.getMessage());
+				.println("[Warning] failed to load launcher init file: "
+						+ e.getMessage());
 			}
 		}
 		String roleP = initProperties.getProperty("crawler.roles");
@@ -52,7 +52,7 @@ public class Main
 					{
 						try
 						{
-							SiteManagerMain.main(null);
+							SiteManager.me().init().start();
 						} catch (Exception e)
 						{
 							// TODO Auto-generated catch block
@@ -80,7 +80,7 @@ public class Main
 				}.start();
 			}
 		}
-		
+
 	}
-	
+
 }

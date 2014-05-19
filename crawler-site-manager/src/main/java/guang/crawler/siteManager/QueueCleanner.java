@@ -9,27 +9,44 @@ import java.util.TimerTask;
 
 /**
  * 该类用来定时的清理working list中过时的URL
- * 
+ *
  * @author yang
- * 
+ *
  */
 public class QueueCleanner extends TimerTask
 {
 	private final MapQueue<WebURL>	workingList;
 	private final MapQueue<WebURL>	todoList;
 	private final MapQueue<WebURL>	failedList;
+	private static QueueCleanner	cleaner;
+	
+	public static QueueCleanner me()
+	{
+		if (QueueCleanner.cleaner == null)
+		{
+			SiteManager siteManager = SiteManager.me();
+			SiteConfig siteConfig = SiteConfig.me();
+			QueueCleanner.cleaner = new QueueCleanner(
+			        siteManager.getWorkingTaskList(),
+			        siteManager.getToDoTaskList(),
+			        siteManager.getFailedTaskList(),
+			        siteConfig.getJobTimeout(), siteConfig.getJobTryTime());
+		}
+		return QueueCleanner.cleaner;
+	}
+	
 	/**
 	 * 超时的时间，以毫秒计算，默认5分钟
 	 */
-	private long	               timeout	= 300000;
-	private int	                   tryTime	= 3;
-	
+	private long	timeout	= 300000;
+	private int	 tryTime	= 3;
+
 	/**
 	 * 启动一个清理任务
 	 */
-	public QueueCleanner(MapQueue<WebURL> workingList,
-	        MapQueue<WebURL> todoList, MapQueue<WebURL> failedList,
-	        long timeout, int tryTime)
+	private QueueCleanner(MapQueue<WebURL> workingList,
+			MapQueue<WebURL> todoList, MapQueue<WebURL> failedList,
+			long timeout, int tryTime)
 	{
 		this.workingList = workingList;
 		this.todoList = todoList;
@@ -43,7 +60,7 @@ public class QueueCleanner extends TimerTask
 			this.tryTime = tryTime;
 		}
 	}
-	
+
 	@Override
 	public void run()
 	{
@@ -64,7 +81,7 @@ public class QueueCleanner extends TimerTask
 						this.failedList.put(webURL);
 						it.remove();
 					} else
-					// 如果还可以继续尝试，那么就将其放在准备爬取的列表中
+						// 如果还可以继续尝试，那么就将其放在准备爬取的列表中
 					{
 						this.todoList.put(webURL);
 						it.remove();
@@ -72,6 +89,6 @@ public class QueueCleanner extends TimerTask
 				}
 			}
 		}
-		
+
 	}
 }

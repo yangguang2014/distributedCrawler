@@ -4,6 +4,7 @@ import guang.crawler.core.WebURL;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.MapQueueIteraotr;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.URI;
 import java.util.TimerTask;
@@ -35,10 +36,10 @@ public class SiteBackuper extends TimerTask
 	{
 	}
 	
-	private void backupList(MapQueue<WebURL> todoList, String path)
+	private void backupList(MapQueue<WebURL> listToBackup, String path)
 	        throws IOException
 	{
-		try (MapQueueIteraotr<WebURL> iteraor = todoList.iterator();
+		try (MapQueueIteraotr<WebURL> iteraor = listToBackup.iterator();
 		        FSDataOutputStream fsout = this.fileSystem
 		                .create(new Path(path)))
 		{
@@ -53,18 +54,85 @@ public class SiteBackuper extends TimerTask
 	
 	public SiteBackuper init() throws IOException
 	{
-		
 		Configuration configuration = new Configuration();
 		this.fileSystem = FileSystem.get(
 		        URI.create(SiteConfig.me().getHadoopURL()), configuration);
 		return this;
 	}
 	
+	/**
+	 * 加载备份的数据
+	 *
+	 * @throws IOException
+	 */
+	public boolean loadBackupData() throws IOException
+	{
+		SiteConfig config = SiteConfig.me();
+		String rootDir = config.getHadoopPath() + "/" + config.getSiteID()
+		        + "/backup";
+		Path maxVersionFilePath = new Path(rootDir + "/max-version");
+		boolean exists;
+		try
+		{
+			exists = this.fileSystem.exists(maxVersionFilePath);
+		} catch (IOException e)
+		{
+			return false;
+		}
+		if (exists)
+		{
+			int version = -1;
+			try (FSDataInputStream fsin = this.fileSystem
+			        .open(maxVersionFilePath))
+			{
+				version = fsin.readInt();
+			}
+
+			String backDir = rootDir + "/" + version;
+			SiteManager siteManager = SiteManager.me();
+			this.readBackupList(siteManager.getToDoTaskList(), backDir
+					+ "/todoList");
+			this.readBackupList(siteManager.getWorkingTaskList(), backDir
+					+ "/workingList");
+			this.readBackupList(siteManager.getFailedTaskList(), backDir
+					+ "/failedList");
+			config.setBackupVersion(version);
+			return true;
+		} else
+		{
+			return false;
+		}
+	}
+
+	public void readBackupList(MapQueue<WebURL> list, String backupFilePath)
+			throws IOException
+	{
+		try (FSDataInputStream fsin = this.fileSystem.open(new Path(
+		        backupFilePath)))
+		{
+			while (true)
+			{
+				try
+				{
+					
+					String urlJSON = fsin.readUTF();
+					WebURL weburl = JSON.parseObject(urlJSON, WebURL.class);
+					list.put(weburl);
+				} catch (EOFException e)
+				{
+					break;
+
+				}
+			}
+			
+		}
+
+	}
+
 	@Override
 	public void run()
 	{
 		SiteConfig config = SiteConfig.me();
-		
 		// 首先设置系统为backup time，从而让用户不再获取新的任务，也暂停清理线程的工作
 		config.setBackTime(true);
 		

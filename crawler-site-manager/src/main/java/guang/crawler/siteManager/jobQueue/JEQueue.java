@@ -1,7 +1,7 @@
 package guang.crawler.siteManager.jobQueue;
 
 import guang.crawler.siteManager.SiteConfig;
-import guang.crawler.siteManager.util.IO;
+import guang.crawler.siteManager.util.IOHelper;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import com.sleepycat.je.Transaction;
 
 /**
  * 工作队列
- * 
+ *
  * @author yang
  */
 public class JEQueue<T> extends MapQueue<T> implements Sync
@@ -28,26 +28,26 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	protected Environment	                env;
 	protected boolean	                    resumable;
 	private final JEQueueElementTransfer<T>	transfer;
-	
+
 	private boolean	                        shutdown	= false;
-	
+
 	public JEQueue(String dataHomeDir, String dbName, boolean resumable,
-	        JEQueueElementTransfer<T> transfer) throws Exception
+			JEQueueElementTransfer<T> transfer) throws Exception
 	{
 		// 每个不同的siteManager都有其自身的工作目录
-		File envHome = new File(dataHomeDir + "/"
-		        + SiteConfig.me().getSiteID() + "/je-queues");
+		File envHome = new File(dataHomeDir + "/" + SiteConfig.me().getSiteID()
+		        + "/je-queues");
 		if (!envHome.exists())
 		{
 			if (!envHome.mkdirs())
 			{
 				throw new Exception("Couldn't create this folder: "
-				        + envHome.getAbsolutePath());
+						+ envHome.getAbsolutePath());
 			}
 		}
 		if (!resumable)
 		{
-			IO.deleteFolderContents(envHome);
+			IOHelper.deleteFolderContents(envHome);
 		}
 		EnvironmentConfig envConfig = new EnvironmentConfig();
 		envConfig.setAllowCreate(true);
@@ -62,7 +62,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 		this.urlsDB = this.env.openDatabase(null, dbName, dbConfig);
 		this.transfer = transfer;
 	}
-	
+
 	@Override
 	public synchronized void close()
 	{
@@ -75,7 +75,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public synchronized boolean delete(T data)
 	{
@@ -91,9 +91,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			txn = null;
 		}
 		OperationStatus status = this.urlsDB.delete(txn,
-		        this.transfer.getDatabaseEntryKey(data));
+				this.transfer.getDatabaseEntryKey(data));
 		if ((status == OperationStatus.SUCCESS)
-		        || (status == OperationStatus.NOTFOUND))
+				|| (status == OperationStatus.NOTFOUND))
 		{
 			success = true;
 		}
@@ -105,19 +105,19 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			}
 		}
 		return success;
-		
+
 	}
-	
+
 	/**
 	 * 最多获取max个元素
 	 */
 	@Override
 	public synchronized List<T> get(int max) throws DatabaseException
 	{
-		
+
 		int matches = 0;
 		List<T> results = new ArrayList<>(max);
-		
+
 		Cursor cursor = null;
 		OperationStatus result;
 		DatabaseEntry key = new DatabaseEntry();
@@ -134,7 +134,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 		{
 			cursor = this.urlsDB.openCursor(txn, null);
 			result = cursor.getFirst(key, value, null);
-			
+
 			while ((matches < max) && (result == OperationStatus.SUCCESS))
 			{
 				if (value.getData().length > 0)
@@ -165,9 +165,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			}
 		}
 		return results;
-		
+
 	}
-	
+
 	/**
 	 * 获取工作队列的长度，也就是DB中存储的条目。
 	 */
@@ -187,7 +187,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 		}
 		return -1;
 	}
-	
+
 	@Override
 	public MapQueueIteraotr<T> iterator()
 	{
@@ -202,9 +202,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 		}
 		cursor = this.urlsDB.openCursor(txn, null);
 		return new JECursorIterator<>(cursor, this.transfer);
-		
+
 	}
-	
+
 	@Override
 	public synchronized void put(T data)
 	{
@@ -227,7 +227,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 			}
 		}
 	}
-	
+
 	/**
 	 * 对数据进行一下同步，从而能够使数据与磁盘的同步。
 	 */

@@ -16,12 +16,12 @@ public class WorkerMain
 	public static void main(String[] args) throws IOException
 	{
 		CrawlerController controller = new CrawlerController(
-		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8");
+				"ubuntu-3,ubuntu-6,ubuntu-8");
 		SiteManagerConnectorManager siteManagerConnectHelper = null;
 		try
 		{
 			siteManagerConnectHelper = new SiteManagerConnectorManager(
-			        controller);
+					controller);
 		} catch (IOException e)
 		{
 			System.out.println("Can not connect to site manager");
@@ -30,10 +30,10 @@ public class WorkerMain
 		WebGeter wget = new WebGeter();
 		ExtractOutGoingUrlsPlugin extractOutGoingUrlsPlugin = new ExtractOutGoingUrlsPlugin();
 		extractOutGoingUrlsPlugin
-		        .setSiteManagerConnector(siteManagerConnectHelper);
-		
+		.setSiteManagerConnector(siteManagerConnectHelper);
+
 		WebDataTableConnector webDataTableConnector = new WebDataTableConnector(
-		        "ubuntu-3,ubuntu-2,ubuntu-6,ubuntu-7,ubuntu-8", "2181");
+				"ubuntu-3,ubuntu-6,ubuntu-8", "2181");
 		try
 		{
 			webDataTableConnector.open();
@@ -42,7 +42,7 @@ public class WorkerMain
 			System.out.println("Can not open hbase connect");
 		}
 		SaveToHbasePlugin saveToHbasePlugin = new SaveToHbasePlugin(
-		        webDataTableConnector);
+				webDataTableConnector);
 		wget.addPlugin(extractOutGoingUrlsPlugin);
 		wget.addPlugin(saveToHbasePlugin);
 		for (int i = 0; i < 100000; i++)
@@ -50,7 +50,7 @@ public class WorkerMain
 			LinkedList<WebURL> urls = null;
 			try
 			{
-				
+
 				urls = siteManagerConnectHelper.getURLs(1);
 			} catch (IOException ex)
 			{
@@ -77,7 +77,7 @@ public class WorkerMain
 					// Nothing to do.
 				}
 			}
-			
+
 		}
 		try
 		{

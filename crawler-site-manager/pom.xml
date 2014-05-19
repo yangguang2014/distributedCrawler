@@ -37,6 +37,11 @@
 			<version>5.0.103</version>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.hadoop</groupId>
+			<artifactId> hadoop-client</artifactId>
+			<version>2.2.0</version>
+		</dependency>
+		<dependency>
 			<groupId>com.alibaba</groupId>
 			<artifactId>fastjson</artifactId>
 			<version>1.1.39</version>
