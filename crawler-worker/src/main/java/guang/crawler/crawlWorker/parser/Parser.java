@@ -1,8 +1,7 @@
 package guang.crawler.crawlWorker.parser;
 
 import guang.crawler.core.WebURL;
-import guang.crawler.crawlWorker.fetcher.Configurable;
-import guang.crawler.crawlWorker.fetcher.CrawlConfig;
+import guang.crawler.crawlWorker.WorkerConfig;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.url.URLCanonicalizer;
 import guang.crawler.crawlWorker.util.Util;
@@ -23,7 +22,7 @@ import org.apache.tika.parser.html.HtmlParser;
 /**
  * @author Yasser Ganjisaffar <lastname at gmail dot com>
  */
-public class Parser extends Configurable
+public class Parser
 {
 	
 	protected static final Logger	logger	= Logger.getLogger(Parser.class
@@ -31,9 +30,8 @@ public class Parser extends Configurable
 	private HtmlParser	          htmlParser;
 	private ParseContext	      parseContext;
 	
-	public Parser(CrawlConfig config)
+	public Parser()
 	{
-		super(config);
 		this.htmlParser = new HtmlParser();
 		this.parseContext = new ParseContext();
 	}
@@ -43,7 +41,7 @@ public class Parser extends Configurable
 		
 		if (Util.hasBinaryContent(page.getContentType()))
 		{
-			if (!this.config.isIncludeBinaryContentInCrawling())
+			if (!WorkerConfig.me().isIncludeBinaryContentInCrawling())
 			{
 				return false;
 			}
@@ -145,7 +143,8 @@ public class Parser extends Configurable
 					webURL.setAnchor(urlAnchorPair.getAnchor());
 					outgoingUrls.add(webURL);
 					urlCount++;
-					if (urlCount > this.config.getMaxOutgoingLinksToFollow())
+					if (urlCount > WorkerConfig.me()
+					        .getMaxOutgoingLinksToFollow())
 					{
 						break;
 					}

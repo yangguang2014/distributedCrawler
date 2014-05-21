@@ -1,6 +1,7 @@
 package guang.crawler.crawlWorker.fetcher;
 
 import guang.crawler.core.WebURL;
+import guang.crawler.crawlWorker.WorkerConfig;
 import guang.crawler.crawlWorker.url.URLCanonicalizer;
 
 import java.io.IOException;
@@ -40,10 +41,10 @@ import org.apache.log4j.Logger;
 
 /**
  * 从网上获取页面
- * 
+ *
  * @author yang
  */
-public class PageFetcher extends Configurable
+public class PageFetcher
 {
 	
 	private static class GzipDecompressingEntity extends HttpEntityWrapper
@@ -82,11 +83,10 @@ public class PageFetcher extends Configurable
 	
 	protected IdleConnectionMonitorThread	 connectionMonitorThread	= null;
 	
-	public PageFetcher(CrawlConfig config)
+	public PageFetcher()
 	{
 		
-		super(config);
-		
+		WorkerConfig config = WorkerConfig.me();
 		HttpParams params = new BasicHttpParams();
 		HttpProtocolParamBean paramsBean = new HttpProtocolParamBean(params);
 		paramsBean.setVersion(HttpVersion.HTTP_1_1);
@@ -97,9 +97,9 @@ public class PageFetcher extends Configurable
 		        CookiePolicy.BROWSER_COMPATIBILITY);
 		params.setParameter(CoreProtocolPNames.USER_AGENT,
 		        config.getUserAgentString());
-		params.setIntParameter(CoreConnectionPNames.SO_TIMEOUT,
+		params.setLongParameter(CoreConnectionPNames.SO_TIMEOUT,
 		        config.getSocketTimeout());
-		params.setIntParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
+		params.setLongParameter(CoreConnectionPNames.CONNECTION_TIMEOUT,
 		        config.getConnectionTimeout());
 		
 		params.setBooleanParameter("http.protocol.handle-redirects", false);
@@ -120,7 +120,6 @@ public class PageFetcher extends Configurable
 		this.connectionManager.setDefaultMaxPerRoute(config
 		        .getMaxConnectionsPerHost());
 		this.httpClient = new DefaultHttpClient(this.connectionManager, params);
-		
 		if (config.getProxyHost() != null)
 		{
 			
@@ -251,7 +250,7 @@ public class PageFetcher extends Configurable
 							size = -1;
 						}
 					}
-					if (size > this.config.getMaxDownloadSize())
+					if (size > WorkerConfig.me().getMaxDownloadSize())
 					{
 						fetchResult.setStatusCode(CustomFetchStatus.PageTooBig);
 						get.abort();

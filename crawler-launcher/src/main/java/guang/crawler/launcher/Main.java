@@ -1,6 +1,6 @@
 package guang.crawler.launcher;
 
-import guang.crawler.crawlWorker.WorkerMain;
+import guang.crawler.crawlWorker.CrawlerWorker;
 import guang.crawler.siteManager.SiteManager;
 
 import java.io.File;
@@ -70,7 +70,7 @@ public class Main
 					{
 						try
 						{
-							WorkerMain.main(null);
+							CrawlerWorker.me().init().start();
 						} catch (Exception e)
 						{
 							// TODO Auto-generated catch block

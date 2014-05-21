@@ -33,10 +33,9 @@ public class WebDataTableConnector
 	private boolean	                         opened	        = false;
 	private final static long	             bufferSize	    = 1024;
 	private String	                         zookeeperQuorum;
-	private String	                         zookeeperClientPort;
+	private int	                             zookeeperClientPort;
 
-	public WebDataTableConnector(String zookeeperQuorum,
-			String zookeeperClientPort)
+	public WebDataTableConnector(String zookeeperQuorum, int zookeeperClientPort)
 	{
 		this.zookeeperClientPort = zookeeperClientPort;
 		this.zookeeperQuorum = zookeeperQuorum;
@@ -203,7 +202,7 @@ public class WebDataTableConnector
 		Configuration config = new Configuration();
 		config.set("hbase.zookeeper.quorum", this.zookeeperQuorum);
 		config.set("hbase.zookeeper.property.clientPort",
-				this.zookeeperClientPort);
+				String.valueOf(this.zookeeperClientPort));
 		this.hbaseConfig = HBaseConfiguration.create(config);
 		this.hbaseAdmin = new HBaseAdmin(this.hbaseConfig);
 		this.hConnection = HConnectionManager
