@@ -1,11 +1,11 @@
 package guang.crawler.siteManager.commandlet;
 
-import guang.crawler.core.DataPacket;
 import guang.crawler.core.WebURL;
+import guang.crawler.jsonServer.Commandlet;
+import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.docid.DocidServer;
-import guang.crawler.siteManager.jsonServer.Commandlet;
 import guang.crawler.siteManager.urlFilter.BitMapFilter;
 import guang.crawler.siteManager.urlFilter.ObjectFilter;
 

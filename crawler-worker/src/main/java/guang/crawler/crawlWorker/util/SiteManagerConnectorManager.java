@@ -1,10 +1,10 @@
 package guang.crawler.crawlWorker.util;
 
-import guang.crawler.connector.SiteManagerConnector;
-import guang.crawler.controller.CrawlerController;
-import guang.crawler.controller.SiteInfo;
-import guang.crawler.core.DataPacket;
+import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerController.SiteInfo;
+import guang.crawler.connector.JSONServerConnector;
 import guang.crawler.core.WebURL;
+import guang.crawler.jsonServer.DataPacket;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -19,11 +19,11 @@ import com.alibaba.fastjson.JSON;
 
 public class SiteManagerConnectorManager
 {
-	private HashMap<String, SiteManagerConnector>	      connectors;
-	private CrawlerController	                          crawlerController;
-	private Iterator<Entry<String, SiteManagerConnector>>	connectorIterator;
+	private HashMap<String, JSONServerConnector>	      connectors;
+	private CenterConfig	                          crawlerController;
+	private Iterator<Entry<String, JSONServerConnector>>	connectorIterator;
 	
-	public SiteManagerConnectorManager(CrawlerController controller)
+	public SiteManagerConnectorManager(CenterConfig controller)
 	        throws UnknownHostException, IOException
 	{
 		this.crawlerController = controller;
@@ -40,7 +40,7 @@ public class SiteManagerConnectorManager
 		
 	}
 	
-	public void exit(SiteManagerConnector connector) throws IOException
+	public void exit(JSONServerConnector connector) throws IOException
 	{
 		connector.send(DataPacket.EXIT_DATA_PACKET);
 		
@@ -74,7 +74,7 @@ public class SiteManagerConnectorManager
 				this.connectorIterator = this.connectors.entrySet().iterator();
 			}
 			
-			SiteManagerConnector connector = this.connectorIterator.next()
+			JSONServerConnector connector = this.connectorIterator.next()
 			        .getValue();
 			connector.send(data);
 			DataPacket result = connector.read();
@@ -118,7 +118,7 @@ public class SiteManagerConnectorManager
 		}
 		requestData.put("COUNT", String.valueOf(sendSize));
 		request.setData(requestData);
-		SiteManagerConnector connector = this.connectors.get(parent
+		JSONServerConnector connector = this.connectors.get(parent
 		        .getSiteManagerName());
 		connector.send(request);
 		
@@ -132,7 +132,7 @@ public class SiteManagerConnectorManager
 		{
 			try
 			{
-				SiteManagerConnector connector = this.connectors.get(key);
+				JSONServerConnector connector = this.connectors.get(key);
 				this.exit(connector);
 				connector.shutdown();
 			} catch (IOException e)
@@ -152,10 +152,10 @@ public class SiteManagerConnectorManager
 				if (siteManagerAddress != null)
 				{
 					String[] addInfo = siteManagerAddress.split(":");
-					SiteManagerConnector connector;
+					JSONServerConnector connector;
 					try
 					{
-						connector = new SiteManagerConnector(addInfo[0],
+						connector = new JSONServerConnector(addInfo[0],
 						        Integer.parseInt(addInfo[1]));
 						this.connectors.put(site.getName(), connector);
 					} catch (NumberFormatException | IOException e)

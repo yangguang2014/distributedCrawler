@@ -1,7 +1,7 @@
 package guang.crawler.statistics.connector;
 
-import guang.crawler.connector.SiteManagerConnector;
-import guang.crawler.core.DataPacket;
+import guang.crawler.connector.JSONServerConnector;
+import guang.crawler.jsonServer.DataPacket;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -11,12 +11,12 @@ import com.alibaba.fastjson.JSONException;
 
 public class SiteManagerConnectHelper
 {
-	private SiteManagerConnector	connector;
+	private JSONServerConnector	connector;
 	
 	public SiteManagerConnectHelper(String host, int port)
 	        throws UnknownHostException, IOException
 	{
-		this.connector = new SiteManagerConnector(host, port);
+		this.connector = new JSONServerConnector(host, port);
 	}
 	
 	public void exit() throws IOException

@@ -1,6 +1,9 @@
 package guang.crawler.siteManager;
 
 import guang.crawler.core.WebURL;
+import guang.crawler.jsonServer.AcceptJsonServer;
+import guang.crawler.jsonServer.JsonServer;
+import guang.crawler.jsonServer.ServerStartException;
 import guang.crawler.siteManager.docid.DocidServer;
 import guang.crawler.siteManager.docid.SimpleIncretmentDocidServer;
 import guang.crawler.siteManager.jobQueue.JEQueue;
@@ -8,9 +11,6 @@ import guang.crawler.siteManager.jobQueue.JEQueueElementTransfer;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.MapQueueIteraotr;
 import guang.crawler.siteManager.jobQueue.WebURLTransfer;
-import guang.crawler.siteManager.jsonServer.AcceptJsonServer;
-import guang.crawler.siteManager.jsonServer.JsonServer;
-import guang.crawler.siteManager.jsonServer.ServerStartException;
 
 import java.io.File;
 import java.io.IOException;
@@ -173,13 +173,19 @@ public class SiteManager
 		} else
 		{
 			// 将种子站点添加到todo List中
-			String seed = this.siteConfig.getSiteToHandle().getSeedSite();
-			WebURL url = new WebURL();
-			url.setURL(seed);
-			url.setDepth((short) 1);
-			url.setSiteManagerName(this.siteConfig.getSiteID());
-			url.setDocid(this.docidServer.next(url));
-			this.toDoTaskList.put(url);
+			String[] seeds = this.siteConfig.getSiteToHandle().getSeedSites();
+			for(String seed:seeds){
+				if(seed.trim().equals("")){
+					continue;
+				}
+				WebURL url = new WebURL();
+				url.setURL(seed);
+				url.setDepth((short) 1);
+				url.setSiteManagerName(this.siteConfig.getSiteID());
+				url.setDocid(this.docidServer.next(url));
+				this.toDoTaskList.put(url);
+			}
+			
 		}
 		
 	}
