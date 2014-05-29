@@ -1,7 +1,7 @@
 package guang.crawler.launcher;
 
 import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.ControllerInfo;
+import guang.crawler.controller.CrawlerController;
 import guang.crawler.crawlWorker.CrawlerWorker;
 import guang.crawler.siteManager.SiteManager;
 
@@ -16,9 +16,6 @@ public class CrawlerLauncher {
 
 	private static CrawlerLauncher crawlerLauncher;
 
-	public static void main(String[] args) {
-	}
-
 	public static CrawlerLauncher me() {
 		if (CrawlerLauncher.crawlerLauncher == null) {
 			CrawlerLauncher.crawlerLauncher = new CrawlerLauncher();
@@ -29,9 +26,11 @@ public class CrawlerLauncher {
 	private CrawlerLauncher() {
 	}
 
-	public void init() throws IOException {
-		LauncherConfig.me().init();
-		CenterConfig.me().init(LauncherConfig.me().getZookeeperQuorum());
+	public CrawlerLauncher init() throws IOException, InterruptedException {
+		LauncherConfig launcherConfig = LauncherConfig.me().init();
+		CenterConfig.me().init(launcherConfig.getZookeeperQuorum());
+		return this;
+
 	}
 
 	public void launch() throws InterruptedException {
@@ -52,14 +51,19 @@ public class CrawlerLauncher {
 	}
 
 	private void launchController() throws InterruptedException {
-		CenterConfig centerConfig = CenterConfig.me();
-		ControllerInfo controllerInfo = centerConfig.getControllerInfo();
-		boolean success = controllerInfo.competeForController();
-		if (success) {
-			// TODO start controller;
-		} else {
 
-		}
+		new Thread() {
+			@Override
+			public void run() {
+				try {
+					CrawlerController.me().init().start();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+			}
+		}.start();
 	}
 
 	private void launchSiteManager() {
@@ -78,6 +82,7 @@ public class CrawlerLauncher {
 	}
 
 	private void launchWorker() {
+
 		// 这里启动爬虫工作者
 		new Thread() {
 			@Override
@@ -88,6 +93,7 @@ public class CrawlerLauncher {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+
 			}
 		}.start();
 	}

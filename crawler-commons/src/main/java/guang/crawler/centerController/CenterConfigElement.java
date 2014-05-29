@@ -2,150 +2,96 @@ package guang.crawler.centerController;
 
 import guang.crawler.connector.CenterConfigConnector;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Properties;
 
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.Transaction;
+import org.apache.zookeeper.Watcher;
 
-public abstract class CenterConfigElement
-{
-	protected final String	           path;
-	protected final CenterConfigConnector	connector;
-	private HashMap<String, String>	   values;
-	private static final String	       PATH_LOCK	= "/lock";
-	
-	public CenterConfigElement(String path, CenterConfigConnector connector)
-	{
+public abstract class CenterConfigElement {
+	protected final String path;
+	protected final CenterConfigConnector connector;
+	private Properties values;
+	private static final String PATH_LOCK = "/lock";
+
+	public CenterConfigElement(String path, CenterConfigConnector connector) {
 		this.path = path;
 		this.connector = connector;
-		this.values = new HashMap<>();
+		this.values = new Properties();
 	}
-	
-	public boolean delete(Transaction transaction) throws InterruptedException
-	{
+
+	public boolean delete(Transaction transaction) throws InterruptedException {
 		return this.connector.recursiveDelete(this.path, transaction);
 	}
-	
-	public String get(String key, boolean refresh) throws InterruptedException
-	{
-		if (refresh && !this.values.containsKey(key))
-		{
-			this.load(key);
-		}
-		return this.values.get(key);
-		
+
+	public String get(String key) {
+		return this.values.getProperty(key);
+
 	}
-	
-	public String getPath()
-	{
+
+	public String getPath() {
 		return this.path;
 	}
-	
-	public boolean load() throws InterruptedException
-	{
-		List<String> children = this.connector.getChildren(this.path);
-		if ((children != null) && (children.size() > 0))
-		{
-			for (String child : children)
-			{
-				this.load(child);
-			}
+
+	public boolean load() throws InterruptedException, IOException {
+		byte[] data = this.connector.getData(this.path);
+		if (data != null) {
+			this.values.load(new ByteArrayInputStream(data));
 		}
 		return true;
 	}
-	
-	public boolean load(String key) throws InterruptedException
-	{
-		if (!this.values.containsKey(key))
-		{
-			
-			byte[] data = this.connector.getData(this.path + "/" + key);
-			if (data != null)
-			{
-				this.values.put(key, new String(data));
-			}
-		}
-		return true;
-		
-	}
-	
-	public boolean lock()
-	{
+
+	public boolean lock() {
 		// TODO 这里应当仔细的检查该锁是否已经被当前线程获取了。
-		try
-		{
+		try {
 			String realPath = this.connector.createNode(this.path
-			        + CenterConfigElement.PATH_LOCK, CreateMode.EPHEMERAL, Long
-			        .toString(Thread.currentThread().getId()).getBytes());
-			if (realPath == null)
-			{
+					+ CenterConfigElement.PATH_LOCK, CreateMode.EPHEMERAL, Long
+					.toString(Thread.currentThread().getId()).getBytes());
+			if (realPath == null) {
 				return false;
-			} else
-			{
+			} else {
 				return true;
 			}
-			
-		} catch (InterruptedException e)
-		{
+
+		} catch (InterruptedException e) {
 			return false;
 		}
 	}
-	
+
 	public void put(String key, String value, boolean refreshNow)
-	        throws InterruptedException
-	{
+			throws InterruptedException, IOException, KeeperException {
 		this.values.put(key, value);
-		if (refreshNow)
-		{
-			this.update(key, null);
+		if (refreshNow) {
+			this.update();
 		}
-		
+
 	}
-	
-	public boolean unlock()
-	{
-		try
-		{
+
+	public boolean unlock() {
+		try {
 			return this.connector.simpleDelete(this.path
-			        + CenterConfigElement.PATH_LOCK, null);
-		} catch (InterruptedException e)
-		{
+					+ CenterConfigElement.PATH_LOCK, null);
+		} catch (InterruptedException e) {
 			return false;
 		}
 	}
-	
-	public boolean update(String key, Transaction transaction)
-	        throws InterruptedException
-	{
-		String value = this.values.get(key);
-		boolean success = false;
-		if ("".equals(value))
-		{
-			success = this.connector.simpleDelete(this.path + "/" + key,
-			        transaction);
-		} else
-		{
-			success = this.connector.createOrUpdate(this.path + "/" + key,
-			        value.getBytes(), CreateMode.PERSISTENT, transaction);
-		}
-		
-		return success;
-	}
-	
-	public boolean update(Transaction transaction) throws InterruptedException
-	{
-		Iterator<String> keys = this.values.keySet().iterator();
-		while (keys.hasNext())
-		{
-			String key = keys.next();
-			boolean success = this.update(key, transaction);
-			if (!success)
-			{
-				return false;
-			}
-		}
+
+	public boolean update() throws InterruptedException, IOException,
+			KeeperException {
+		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
+		this.values.store(byteOut, "update at " + new Date().toString());
+		byte[] data = byteOut.toByteArray();
+		this.connector.updateData(this.path, data);
 		return true;
+	}
+
+	public void watch(Watcher watcher) throws KeeperException,
+			InterruptedException {
+		this.connector.watch(this.path, watcher);
 	}
 }

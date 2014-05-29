@@ -1,12 +1,11 @@
 package guang.crawler.crawlWorker;
 
 import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerController.workers.WorkerInfo;
+import guang.crawler.localConfig.LocalConfig;
 import guang.crawler.util.PropertiesHelper;
 
-import java.io.File;
-import java.util.Properties;
-
-public class WorkerConfig {
+public class WorkerConfig extends LocalConfig {
 	private static WorkerConfig config;
 
 	public static WorkerConfig me() {
@@ -24,7 +23,7 @@ public class WorkerConfig {
 	/**
 	 * 是否爬取HTTPS的页面
 	 */
-	private boolean includeHttpsPages = false;
+	private boolean includeHttpsPages = true;
 
 	/**
 	 * 是否爬取二进制内容
@@ -44,12 +43,12 @@ public class WorkerConfig {
 	/**
 	 * 套接字超时时长，单位是ms
 	 */
-	private long socketTimeout = 20000;
+	private int socketTimeout = 20000;
 
 	/**
 	 * 连接超时时长，单位是ms
 	 */
-	private long connectionTimeout = 30000;
+	private int connectionTimeout = 30000;
 
 	/**
 	 * 每个页面抽取的最大数量的出链
@@ -62,7 +61,7 @@ public class WorkerConfig {
 	private int maxDownloadSize = 1048576;
 
 	/**
-	 * TODO 这个暂时没有考虑到，实际上是应当考虑的。Should we follow redirects?
+	 * 这个暂时没有考虑到，实际上是应当考虑的。Should we follow redirects?
 	 */
 	private boolean followRedirects = true;
 
@@ -87,40 +86,29 @@ public class WorkerConfig {
 	private String proxyPassword = null;
 
 	/**
-	 * 从配置文件加载的属性信息
-	 */
-	private Properties configProperties;
-	/**
-	 * crawler的home
-	 */
-	private String crawlerHome;
-	/**
 	 * 爬虫控制器
 	 */
 	private CenterConfig crawlerController;
-	/**
-	 * zookeeper的连接字符串
-	 */
-	private String zookeeperQuorum;
 
 	/**
-	 * zookeeper的端口号
+	 * 当前爬虫工作者的远程信息
 	 */
-	private int zookeeperClientPort = 2181;
+	private WorkerInfo workerInfo;
 
 	private WorkerConfig() {
 	}
 
-	public long getConnectionTimeout() {
+	@Override
+	protected String[] getConfigResources() {
+		return new String[] { "/conf/crawler-worker/crawler-worker.config" };
+	}
+
+	public int getConnectionTimeout() {
 		return this.connectionTimeout;
 	}
 
 	public CenterConfig getCrawlerController() {
 		return this.crawlerController;
-	}
-
-	public String getCrawlerHome() {
-		return this.crawlerHome;
 	}
 
 	public int getMaxConnectionsPerHost() {
@@ -155,7 +143,7 @@ public class WorkerConfig {
 		return this.proxyUsername;
 	}
 
-	public long getSocketTimeout() {
+	public int getSocketTimeout() {
 		return this.socketTimeout;
 	}
 
@@ -163,33 +151,17 @@ public class WorkerConfig {
 		return this.userAgentString;
 	}
 
-	public int getZookeeperClientPort() {
-		return this.zookeeperClientPort;
-	}
-
-	public String getZookeeperQuorum() {
-		return this.zookeeperQuorum;
+	public WorkerInfo getWorkerInfo() {
+		return this.workerInfo;
 	}
 
 	public WorkerConfig init() {
-		this.crawlerHome = System.getProperty("crawler.home");
-		this.initProperties();
-
 		return this;
 	}
 
-	private void initProperties() {
-		this.configProperties = new Properties();
-		PropertiesHelper.loadConfigFile(new File(this.crawlerHome
-				+ "/conf/crawler.config"), this.configProperties);
-		PropertiesHelper.loadConfigFile(new File(this.crawlerHome
-				+ "/conf/crawler-worker/crawler-worker.config"),
-				this.configProperties);
-		this.zookeeperQuorum = PropertiesHelper.readString(
-				this.configProperties, "crawler.zookeeper.quorum", null);
-		this.zookeeperClientPort = PropertiesHelper.readInt(
-				this.configProperties, "crawler.zookeeper.clientPort",
-				this.zookeeperClientPort);
+	@Override
+	protected void initProperties() {
+		super.initProperties();
 		this.includeHttpsPages = PropertiesHelper.readBoolean(
 				this.configProperties, "crawler.worker.include.https",
 				this.includeHttpsPages);
@@ -203,9 +175,9 @@ public class WorkerConfig {
 		this.userAgentString = PropertiesHelper.readString(
 				this.configProperties, "crawler.worker.fetcher.userAgent",
 				this.userAgentString);
-		this.socketTimeout = PropertiesHelper.readLong(this.configProperties,
+		this.socketTimeout = PropertiesHelper.readInt(this.configProperties,
 				"crawler.worker.fetcher.socket.timeout", this.socketTimeout);
-		this.connectionTimeout = PropertiesHelper.readLong(
+		this.connectionTimeout = PropertiesHelper.readInt(
 				this.configProperties,
 				"crawler.worker.fetcher.connection.timeout",
 				this.connectionTimeout);
@@ -220,6 +192,9 @@ public class WorkerConfig {
 		this.maxDownloadSize = PropertiesHelper.readInt(this.configProperties,
 				"crawler.worker.fetcher.downloadSizePerPage.max",
 				this.maxDownloadSize);
+		this.followRedirects = PropertiesHelper.readBoolean(
+				this.configProperties, "crawler.worker.follow.redirects",
+				this.followRedirects);
 		this.proxyHost = PropertiesHelper.readString(this.configProperties,
 				"crawler.worker.fetcher.proxy.host", this.proxyHost);
 		this.proxyPort = PropertiesHelper.readInt(this.configProperties,
@@ -229,6 +204,10 @@ public class WorkerConfig {
 		this.proxyPassword = PropertiesHelper.readString(this.configProperties,
 				"crawler.worker.fetcher.proxy.password", this.proxyPassword);
 
+	}
+
+	public boolean isFollowRedirects() {
+		return this.followRedirects;
 	}
 
 	public boolean isIncludeBinaryContentInCrawling() {
@@ -243,8 +222,8 @@ public class WorkerConfig {
 		this.crawlerController = crawlerController;
 	}
 
-	public void setCrawlerHome(String crawlerHome) {
-		this.crawlerHome = crawlerHome;
+	public void setWorkerInfo(WorkerInfo workerInfo) {
+		this.workerInfo = workerInfo;
 	}
 
 }

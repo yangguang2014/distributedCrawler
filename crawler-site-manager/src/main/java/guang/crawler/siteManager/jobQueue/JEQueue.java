@@ -19,34 +19,29 @@ import com.sleepycat.je.Transaction;
 
 /**
  * 工作队列
- *
+ * 
  * @author yang
  */
-public class JEQueue<T> extends MapQueue<T> implements Sync
-{
-	protected Database	                    urlsDB	 = null;
-	protected Environment	                env;
-	protected boolean	                    resumable;
-	private final JEQueueElementTransfer<T>	transfer;
+public class JEQueue<T> extends MapQueue<T> implements Sync {
+	protected Database urlsDB = null;
+	protected Environment env;
+	protected boolean resumable;
+	private final JEQueueElementTransfer<T> transfer;
 
-	private boolean	                        shutdown	= false;
+	private boolean shutdown = false;
 
 	public JEQueue(String dataHomeDir, String dbName, boolean resumable,
-			JEQueueElementTransfer<T> transfer) throws Exception
-	{
+			JEQueueElementTransfer<T> transfer) throws Exception {
 		// 每个不同的siteManager都有其自身的工作目录
-		File envHome = new File(dataHomeDir + "/" + SiteConfig.me().getSiteID()
-		        + "/je-queues");
-		if (!envHome.exists())
-		{
-			if (!envHome.mkdirs())
-			{
+		File envHome = new File(dataHomeDir + "/"
+				+ SiteConfig.me().getSiteManagerId() + "/je-queues");
+		if (!envHome.exists()) {
+			if (!envHome.mkdirs()) {
 				throw new Exception("Couldn't create this folder: "
 						+ envHome.getAbsolutePath());
 			}
 		}
-		if (!resumable)
-		{
+		if (!resumable) {
 			IOHelper.deleteFolderContents(envHome);
 		}
 		EnvironmentConfig envConfig = new EnvironmentConfig();
@@ -64,43 +59,34 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	}
 
 	@Override
-	public synchronized void close()
-	{
+	public synchronized void close() {
 		this.shutdown = true;
-		try
-		{
+		try {
 			this.urlsDB.close();
-		} catch (DatabaseException e)
-		{
+		} catch (DatabaseException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public synchronized boolean delete(T data)
-	{
+	public synchronized boolean delete(T data) {
 		boolean success = false;
 		DatabaseEntry value = new DatabaseEntry();
 		this.transfer.objectToEntry(data, value);
 		Transaction txn;
-		if (this.resumable)
-		{
+		if (this.resumable) {
 			txn = this.env.beginTransaction(null, null);
-		} else
-		{
+		} else {
 			txn = null;
 		}
 		OperationStatus status = this.urlsDB.delete(txn,
 				this.transfer.getDatabaseEntryKey(data));
 		if ((status == OperationStatus.SUCCESS)
-				|| (status == OperationStatus.NOTFOUND))
-		{
+				|| (status == OperationStatus.NOTFOUND)) {
 			success = true;
 		}
-		if (this.resumable)
-		{
-			if (txn != null)
-			{
+		if (this.resumable) {
+			if (txn != null) {
 				txn.commit();
 			}
 		}
@@ -112,8 +98,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	 * 最多获取max个元素
 	 */
 	@Override
-	public synchronized List<T> get(int max) throws DatabaseException
-	{
+	public synchronized List<T> get(int max) throws DatabaseException {
 
 		int matches = 0;
 		List<T> results = new ArrayList<>(max);
@@ -123,44 +108,34 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 		DatabaseEntry key = new DatabaseEntry();
 		DatabaseEntry value = new DatabaseEntry();
 		Transaction txn;
-		if (this.resumable)
-		{
+		if (this.resumable) {
 			txn = this.env.beginTransaction(null, null);
-		} else
-		{
+		} else {
 			txn = null;
 		}
-		try
-		{
+		try {
 			cursor = this.urlsDB.openCursor(txn, null);
 			result = cursor.getFirst(key, value, null);
 
-			while ((matches < max) && (result == OperationStatus.SUCCESS))
-			{
-				if (value.getData().length > 0)
-				{
+			while ((matches < max) && (result == OperationStatus.SUCCESS)) {
+				if (value.getData().length > 0) {
 					results.add(this.transfer.entryToObject(value));
 					cursor.delete();
 					matches++;
 				}
 				result = cursor.getNext(key, value, null);
 			}
-		} catch (DatabaseException e)
-		{
-			if (txn != null)
-			{
+		} catch (DatabaseException e) {
+			if (txn != null) {
 				txn.abort();
 				txn = null;
 			}
 			throw e;
-		} finally
-		{
-			if (cursor != null)
-			{
+		} finally {
+			if (cursor != null) {
 				cursor.close();
 			}
-			if (txn != null)
-			{
+			if (txn != null) {
 				txn.commit();
 			}
 		}
@@ -172,32 +147,25 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	 * 获取工作队列的长度，也就是DB中存储的条目。
 	 */
 	@Override
-	public synchronized long getLength()
-	{
-		if (this.shutdown)
-		{
+	public synchronized long getLength() {
+		if (this.shutdown) {
 			return -1;
 		}
-		try
-		{
+		try {
 			return this.urlsDB.count();
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return -1;
 	}
 
 	@Override
-	public MapQueueIteraotr<T> iterator()
-	{
+	public MapQueueIteraotr<T> iterator() {
 		Cursor cursor = null;
 		Transaction txn;
-		if (this.resumable)
-		{
+		if (this.resumable) {
 			txn = this.env.beginTransaction(null, null);
-		} else
-		{
+		} else {
 			txn = null;
 		}
 		cursor = this.urlsDB.openCursor(txn, null);
@@ -206,23 +174,18 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	}
 
 	@Override
-	public synchronized void put(T data)
-	{
+	public synchronized void put(T data) {
 		DatabaseEntry value = new DatabaseEntry();
 		this.transfer.objectToEntry(data, value);
 		Transaction txn;
-		if (this.resumable)
-		{
+		if (this.resumable) {
 			txn = this.env.beginTransaction(null, null);
-		} else
-		{
+		} else {
 			txn = null;
 		}
 		this.urlsDB.put(txn, this.transfer.getDatabaseEntryKey(data), value);
-		if (this.resumable)
-		{
-			if (txn != null)
-			{
+		if (this.resumable) {
+			if (txn != null) {
 				txn.commit();
 			}
 		}
@@ -232,23 +195,18 @@ public class JEQueue<T> extends MapQueue<T> implements Sync
 	 * 对数据进行一下同步，从而能够使数据与磁盘的同步。
 	 */
 	@Override
-	public synchronized void sync()
-	{
-		if (this.resumable)
-		{
+	public synchronized void sync() {
+		if (this.resumable) {
 			return;
 		}
-		if (this.urlsDB == null)
-		{
+		if (this.urlsDB == null) {
 			return;
 		}
-		try
-		{
+		try {
 			this.urlsDB.sync();
-		} catch (DatabaseException e)
-		{
+		} catch (DatabaseException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 }

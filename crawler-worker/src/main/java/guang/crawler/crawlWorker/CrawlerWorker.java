@@ -1,6 +1,7 @@
 package guang.crawler.crawlWorker;
 
 import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerController.workers.WorkerInfo;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.core.WebURL;
 import guang.crawler.crawlWorker.fetcher.Downloader;
@@ -10,6 +11,8 @@ import guang.crawler.crawlWorker.util.SiteManagerConnectorManager;
 
 import java.io.IOException;
 import java.util.LinkedList;
+
+import org.apache.zookeeper.KeeperException;
 
 public class CrawlerWorker implements Runnable {
 	private static CrawlerWorker crawlerWorker;
@@ -30,10 +33,14 @@ public class CrawlerWorker implements Runnable {
 	private CrawlerWorker() {
 	}
 
-	public CrawlerWorker init() throws IOException {
+	public CrawlerWorker init() throws IOException, InterruptedException {
 		this.workerConfig = WorkerConfig.me().init();
 		this.controller = CenterConfig.me().init(
 				this.workerConfig.getZookeeperQuorum());
+		WorkerInfo workerInfo = this.controller.getWorkersInfo()
+				.getOnlineWorkers().registWorker();
+		this.workerConfig.setCrawlerController(this.controller);
+		this.workerConfig.setWorkerInfo(workerInfo);
 		try {
 			this.siteManagerConnectHelper = new SiteManagerConnectorManager(
 					this.controller);
@@ -47,8 +54,7 @@ public class CrawlerWorker implements Runnable {
 				.setSiteManagerConnector(this.siteManagerConnectHelper);
 
 		this.webDataTableConnector = new WebDataTableConnector(
-				this.workerConfig.getZookeeperQuorum(),
-				this.workerConfig.getZookeeperClientPort());
+				this.workerConfig.getZookeeperQuorum());
 		try {
 			this.webDataTableConnector.open();
 		} catch (IOException e) {
@@ -74,6 +80,11 @@ public class CrawlerWorker implements Runnable {
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				break;
+			} catch (KeeperException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				break;
 			}
 			if (urls != null) {
 				for (WebURL url : urls) {

@@ -1,16 +1,16 @@
 package guang.crawler.siteManager;
 
 import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.SiteInfo;
+import guang.crawler.centerController.config.SiteInfo;
+import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.localConfig.LocalConfig;
 import guang.crawler.siteManager.util.IOHelper;
 import guang.crawler.util.PropertiesHelper;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
 
-public class SiteConfig {
+public class SiteConfig extends LocalConfig {
 	private static SiteConfig config;
 
 	public static SiteConfig me() {
@@ -21,18 +21,14 @@ public class SiteConfig {
 	}
 
 	/**
-	 * 从配置文件加载的属性信息
+	 * 当前节点是否被分配了爬取的站点
 	 */
-	private Properties configProperties;
+	private boolean dispatched;
 	/**
-	 * crawler的home
-	 */
-	private String crawlerHome;
-	/**
-	 * 将要工作的种子站点
+	 * 采集点
 	 */
 	private SiteInfo siteToHandle;
-	private CenterConfig crawlerController;
+
 	/**
 	 * 当前站点管理器的工作目录
 	 */
@@ -45,8 +41,7 @@ public class SiteConfig {
 	/**
 	 * 当前站点的唯一标识
 	 */
-	private String siteID;
-
+	private String siteManagerId;
 	/**
 	 * 作业超时的时间
 	 */
@@ -56,38 +51,24 @@ public class SiteConfig {
 	 * 作业重试的次数
 	 */
 	private int jobTryTime = 3;
-
 	/**
 	 * 工作队列的清理时间间隔
 	 */
 	private long queueCleanerPeriod = 100000;
+
 	private boolean backTime = false;
-	/**
-	 * 运行hadoop时的用户
-	 */
-	private String hadoopUser;
-
-	/**
-	 * hadoop master节点的URL
-	 */
-	private String hadoopURL;
-
-	/**
-	 * zookeeper的连接字符串
-	 */
-	private String zookeeperQuorum;
 
 	/**
 	 * 备份的版本号
 	 */
 	private int backupVersion;
 
-	private String hadoopPath = "/home/crawler";
-
 	/**
 	 * 备份的时间，默认设置为1个小时
 	 */
 	private long backupPeriod = 3600000;
+
+	private SiteManagerInfo siteManagerInfo;
 
 	private SiteConfig() {
 	}
@@ -100,24 +81,9 @@ public class SiteConfig {
 		return this.backupVersion;
 	}
 
-	public CenterConfig getCrawlerController() {
-		return this.crawlerController;
-	}
-
-	public String getCrawlerHome() {
-		return this.crawlerHome;
-	}
-
-	public String getHadoopPath() {
-		return this.hadoopPath;
-	}
-
-	public String getHadoopURL() {
-		return this.hadoopURL;
-	}
-
-	public String getHadoopUser() {
-		return this.hadoopUser;
+	@Override
+	protected String[] getConfigResources() {
+		return new String[] { "/conf/site-manager/site-manager.config" };
 	}
 
 	public long getJobTimeout() {
@@ -136,8 +102,12 @@ public class SiteConfig {
 		return this.queueCleanerPeriod;
 	}
 
-	public String getSiteID() {
-		return this.siteID;
+	public String getSiteManagerId() {
+		return this.siteManagerId;
+	}
+
+	public SiteManagerInfo getSiteManagerInfo() {
+		return this.siteManagerInfo;
 	}
 
 	public SiteInfo getSiteToHandle() {
@@ -148,59 +118,19 @@ public class SiteConfig {
 		return this.workDir;
 	}
 
-	public String getZookeeperQuorum() {
-		return this.zookeeperQuorum;
-	}
-
 	public SiteConfig init() throws SiteManagerException {
-		this.crawlerHome = System.getProperty("crawler.home");
 		this.initWorkDir();
-		this.initProperties();
-
 		try {
 			CenterConfig.me().init(this.getZookeeperQuorum());
-			this.initHandleSite();
 		} catch (IOException | InterruptedException e) {
 			throw new SiteManagerException("No site to handle", e);
 		}
 		return this;
 	}
 
-	private void initHandleSite() throws IOException, InterruptedException {
-		CenterConfig controller = CenterConfig.me();
-		List<SiteInfo> unHandledSites = controller.getUnHandledSites();
-		SiteInfo siteToHandle = null;
-		if ((unHandledSites == null) || (unHandledSites.size() == 0)) {
-			System.out.println("No site to crawl.");
-			return;
-		} else {
-
-			for (SiteInfo info : unHandledSites) {
-				boolean success = controller.handleSite(info);
-				if (success) {
-					siteToHandle = info;
-					break;
-				}
-			}
-		}
-		if (siteToHandle == null) {
-			System.out.println("No site to crawl.");
-			return;
-		}
-		this.setSiteID(siteToHandle.getName());
-		this.setSiteToHandle(siteToHandle);
-		this.setCrawlerController(controller);
-		System.out.println("handle site " + siteToHandle.getSeedSites());
-
-	}
-
-	private void initProperties() throws SiteManagerException {
-		this.configProperties = new Properties();
-		PropertiesHelper.loadConfigFile(new File(this.crawlerHome
-				+ "/conf/site-manager/site-manager.config"),
-				this.configProperties);
-		PropertiesHelper.loadConfigFile(new File(this.crawlerHome
-				+ "/conf/crawler.config"), this.configProperties);
+	@Override
+	protected void initProperties() {
+		super.initProperties();
 		this.jobTimeout = PropertiesHelper.readLong(this.configProperties,
 				"crawler.site-manager.job.timeout", this.jobTimeout);
 		this.jobTryTime = PropertiesHelper.readInt(this.configProperties,
@@ -209,34 +139,13 @@ public class SiteConfig {
 				this.configProperties,
 				"crawler.site-manager.queue.cleaner.period",
 				this.queueCleanerPeriod);
-		this.hadoopUser = PropertiesHelper.readString(this.configProperties,
-				"crawler.hadoop.user", System.getProperty("user.name"));
-		System.setProperty("HADOOP_USER_NAME", this.hadoopUser);
-		this.hadoopURL = PropertiesHelper.readString(this.configProperties,
-				"crawler.hadoop.url", null);
-		if (this.hadoopURL == null) {
-			throw new SiteManagerException(
-					"config site error!",
-					new IllegalArgumentException(
-							"crawler.site-manager.backuper.hadoop.url property should not be null!"));
-		}
-		this.hadoopPath = PropertiesHelper.readString(this.configProperties,
-				"crawler.hadoop.path", this.hadoopPath);
 		this.backupPeriod = PropertiesHelper.readLong(this.configProperties,
 				"crawler.site-manager.backuper.backup.period",
 				this.backupPeriod);
-		this.zookeeperQuorum = PropertiesHelper.readString(
-				this.configProperties, "crawler.zookeeper.quorum", null);
-		if (this.zookeeperQuorum == null) {
-			throw new SiteManagerException(
-					"config site error!",
-					new IllegalArgumentException(
-							"crawler.site-manager.zookeeper.url property should not be null!"));
-		}
 	}
 
 	private void initWorkDir() {
-		this.workDir = this.crawlerHome + "/work";
+		this.workDir = this.getCrawlerHome() + "/work";
 		File workdirFile = new File(this.workDir);
 		if (workdirFile.exists()) {
 			IOHelper.deleteFolderContents(workdirFile);
@@ -249,6 +158,10 @@ public class SiteConfig {
 		return this.backTime;
 	}
 
+	public boolean isDispatched() {
+		return this.dispatched;
+	}
+
 	public void setBackTime(boolean backTime) {
 		this.backTime = backTime;
 	}
@@ -257,24 +170,24 @@ public class SiteConfig {
 		this.backupVersion = backupVersion;
 	}
 
-	public void setCrawlerController(CenterConfig crawlerController) {
-		this.crawlerController = crawlerController;
-	}
-
-	public void setCrawlerHome(String crawlerHome) {
-		this.crawlerHome = crawlerHome;
+	public void setDispatched(boolean isDispatched) {
+		this.dispatched = isDispatched;
 	}
 
 	public void setListenPort(int listenPort) {
 		this.listenPort = listenPort;
 	}
 
-	public void setSiteID(String siteID) {
-		this.siteID = siteID;
+	public void setSiteManagerId(String siteManagerId) {
+		this.siteManagerId = siteManagerId;
 	}
 
-	public void setSiteToHandle(SiteInfo siteToHandled) {
-		this.siteToHandle = siteToHandled;
+	public void setSiteManagerInfo(SiteManagerInfo siteManagerInfo) {
+		this.siteManagerInfo = siteManagerInfo;
+	}
+
+	public void setSiteToHandle(SiteInfo siteToHandle) {
+		this.siteToHandle = siteToHandle;
 	}
 
 }
