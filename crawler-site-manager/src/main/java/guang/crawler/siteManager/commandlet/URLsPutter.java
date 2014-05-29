@@ -55,7 +55,7 @@ public class URLsPutter implements Commandlet {
 							.getURL());
 					if (!contains) {
 						url.setSiteManagerName(SiteConfig.me()
-								.getSiteManagerId());
+								.getSiteManagerInfo().getSiteManagerId());
 						filteredResult.add(url);
 
 					}

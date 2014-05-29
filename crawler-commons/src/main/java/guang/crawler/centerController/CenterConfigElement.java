@@ -29,13 +29,20 @@ public abstract class CenterConfigElement {
 		return this.connector.recursiveDelete(this.path, transaction);
 	}
 
-	public String get(String key) {
-		return this.values.getProperty(key);
-
+	public void deleteProperty(String key, boolean refreshNow)
+			throws InterruptedException, IOException, KeeperException {
+		this.values.remove(key);
+		if (refreshNow) {
+			this.update();
+		}
 	}
 
 	public String getPath() {
 		return this.path;
+	}
+
+	public String getProperty(String key) {
+		return this.values.getProperty(key);
 	}
 
 	public boolean load() throws InterruptedException, IOException {
@@ -63,7 +70,7 @@ public abstract class CenterConfigElement {
 		}
 	}
 
-	public void put(String key, String value, boolean refreshNow)
+	public void setProperty(String key, String value, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
 		this.values.put(key, value);
 		if (refreshNow) {

@@ -1,6 +1,7 @@
 package guang.crawler.controller;
 
 import guang.crawler.centerController.CenterConfig;
+import guang.crawler.controller.webservice.WebServiceDaemon;
 
 import java.io.IOException;
 import java.util.Date;
@@ -59,13 +60,19 @@ public class ControllerManagerWatcher extends Thread implements Watcher {
 			e.printStackTrace();
 		}
 		while (true) {
-			boolean success;
+			boolean success = false;
 			try {
 				Date now = new Date();
-				success = CenterConfig.me().getControllerInfo()
-						.competeForController();
+				try {
+					success = CenterConfig.me().getControllerInfo()
+							.competeForController();
+				} catch (KeeperException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				if (success) {
 					ControllerWorkThread.me().start();
+					WebServiceDaemon.me().start();
 				}
 				synchronized (this.eventTime) {
 					if (now.after(this.eventTime)) {
@@ -77,6 +84,8 @@ public class ControllerManagerWatcher extends Thread implements Watcher {
 				return;
 			} catch (IOException e) {
 				e.printStackTrace();
+			} catch (KeeperException e) {
+				return;
 			}
 		}
 

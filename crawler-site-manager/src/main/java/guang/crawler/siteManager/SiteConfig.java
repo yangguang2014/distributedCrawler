@@ -102,10 +102,6 @@ public class SiteConfig extends LocalConfig {
 		return this.queueCleanerPeriod;
 	}
 
-	public String getSiteManagerId() {
-		return this.siteManagerId;
-	}
-
 	public SiteManagerInfo getSiteManagerInfo() {
 		return this.siteManagerInfo;
 	}
@@ -176,10 +172,6 @@ public class SiteConfig extends LocalConfig {
 
 	public void setListenPort(int listenPort) {
 		this.listenPort = listenPort;
-	}
-
-	public void setSiteManagerId(String siteManagerId) {
-		this.siteManagerId = siteManagerId;
 	}
 
 	public void setSiteManagerInfo(SiteManagerInfo siteManagerInfo) {

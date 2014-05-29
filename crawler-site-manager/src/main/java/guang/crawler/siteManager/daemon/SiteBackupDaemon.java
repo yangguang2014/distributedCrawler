@@ -1,6 +1,8 @@
-package guang.crawler.siteManager;
+package guang.crawler.siteManager.daemon;
 
 import guang.crawler.core.WebURL;
+import guang.crawler.siteManager.SiteConfig;
+import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.MapQueueIteraotr;
 
@@ -17,19 +19,19 @@ import org.apache.hadoop.fs.Path;
 
 import com.alibaba.fastjson.JSON;
 
-public class SiteBackuper extends TimerTask {
-	private static SiteBackuper defaultSiteBackuper;
+public class SiteBackupDaemon extends TimerTask {
+	private static SiteBackupDaemon defaultSiteBackuper;
 
-	public static SiteBackuper me() {
-		if (SiteBackuper.defaultSiteBackuper == null) {
-			SiteBackuper.defaultSiteBackuper = new SiteBackuper();
+	public static SiteBackupDaemon me() {
+		if (SiteBackupDaemon.defaultSiteBackuper == null) {
+			SiteBackupDaemon.defaultSiteBackuper = new SiteBackupDaemon();
 		}
-		return SiteBackuper.defaultSiteBackuper;
+		return SiteBackupDaemon.defaultSiteBackuper;
 	}
 
 	private FileSystem fileSystem;
 
-	private SiteBackuper() {
+	private SiteBackupDaemon() {
 	}
 
 	private void backupList(MapQueue<WebURL> listToBackup, String path)
@@ -45,7 +47,11 @@ public class SiteBackuper extends TimerTask {
 		}
 	}
 
-	public SiteBackuper init() throws IOException {
+	public void forceBackup() {
+		this.run();
+	}
+
+	public SiteBackupDaemon init() throws IOException {
 		Configuration configuration = new Configuration();
 		this.fileSystem = FileSystem.get(
 				URI.create(SiteConfig.me().getHadoopURL()), configuration);
@@ -60,7 +66,7 @@ public class SiteBackuper extends TimerTask {
 	public boolean loadBackupData() throws IOException {
 		SiteConfig config = SiteConfig.me();
 		String rootDir = config.getHadoopPath() + "/"
-				+ config.getSiteManagerId() + "/backup";
+				+ config.getSiteManagerInfo().getSiteToHandle() + "/backup";
 		Path maxVersionFilePath = new Path(rootDir + "/max-version");
 		boolean exists;
 		try {
@@ -74,7 +80,6 @@ public class SiteBackuper extends TimerTask {
 					.open(maxVersionFilePath)) {
 				version = fsin.readInt();
 			}
-
 			String backDir = rootDir + "/" + version;
 			SiteManager siteManager = SiteManager.me();
 			this.readBackupList(siteManager.getToDoTaskList(), backDir
@@ -110,6 +115,17 @@ public class SiteBackuper extends TimerTask {
 
 	}
 
+	public void rescheduleTaskList(MapQueue<WebURL> fromList) {
+		if (fromList.getLength() > 0) {
+			try (MapQueueIteraotr<WebURL> iterator = fromList.iterator()) {
+				while (iterator.hasNext()) {
+					SiteManager.me().getToDoTaskList()
+							.put(iterator.next().resetTryTime());
+				}
+			}
+		}
+	}
+
 	@Override
 	public void run() {
 		SiteConfig config = SiteConfig.me();
@@ -118,7 +134,7 @@ public class SiteBackuper extends TimerTask {
 
 		// 找到备份的目录
 		String rootDir = config.getHadoopPath() + "/"
-				+ config.getSiteManagerId() + "/backup";
+				+ config.getSiteManagerInfo().getSiteToHandle() + "/backup";
 		try {
 			this.fileSystem.mkdirs(new Path(rootDir));
 		} catch (IllegalArgumentException | IOException e) {

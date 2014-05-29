@@ -18,181 +18,146 @@ import org.xml.sax.SAXException;
  * 
  * @author yang
  */
-public class AcceptJsonServer implements Runnable, JsonServer
-{
-	
-	private final ServerSocket	   server;
-	private final ExecutorService	threadPool;
-	private CommandletLoader	   commandletLoader;
-	private Thread	               serverThread;
-	private AcceptThreadController	acceptThreadController;
-	
+public class AcceptJsonServer implements Runnable, JsonServer {
+
+	private final ServerSocket server;
+	private final ExecutorService threadPool;
+	private CommandletLoader commandletLoader;
+	private Thread serverThread;
+	private AcceptThreadController acceptThreadController;
+
 	public AcceptJsonServer(int threadNum, File configFile, File schemaFile)
-	        throws ServerStartException
-	{
-		
+			throws ServerStartException {
+
 		this.acceptThreadController = new AcceptThreadController();
 		this.commandletLoader = new CommandletLoader(configFile, schemaFile);
-		try
-		{
+		try {
 			this.commandletLoader.load();
 		} catch (InstantiationException | IllegalAccessException
-		        | ClassNotFoundException | SAXException | IOException
-		        | ParserConfigurationException e)
-		{
+				| ClassNotFoundException | SAXException | IOException
+				| ParserConfigurationException e) {
 			throw new ServerStartException("Load config file failed!", e);
 		}
-		try
-		{
+		try {
 			this.server = new ServerSocket();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new ServerStartException("Can not open socket!", e);
 		}
 		this.threadPool = Executors.newFixedThreadPool(threadNum);
-		
+
 	}
-	
+
 	public AcceptJsonServer(int port, int backlog, int threadNum,
-	        File configFile, File schemaFile) throws ServerStartException
-	{
+			File configFile, File schemaFile) throws ServerStartException {
+
 		this.acceptThreadController = new AcceptThreadController();
 		this.commandletLoader = new CommandletLoader(configFile, schemaFile);
-		try
-		{
+		try {
 			this.commandletLoader.load();
 		} catch (InstantiationException | IllegalAccessException
-		        | ClassNotFoundException | SAXException | IOException
-		        | ParserConfigurationException e)
-		{
+				| ClassNotFoundException | SAXException | IOException
+				| ParserConfigurationException e) {
 			throw new ServerStartException("Load config file failed!", e);
 		}
-		try
-		{
+		try {
 			this.server = new ServerSocket(port, backlog);
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			throw new ServerStartException("Can not open socket!", e);
 		}
 		this.threadPool = Executors.newFixedThreadPool(threadNum);
-		
+
 	}
-	
+
 	@Override
-	public InetAddress getAddress()
-	{
-		if (this.server != null)
-		{
+	public InetAddress getAddress() {
+		if (this.server != null) {
 			return this.server.getInetAddress();
 		}
 		return null;
 	}
-	
+
 	@Override
-	public int getPort()
-	{
-		if (this.server != null)
-		{
+	public int getPort() {
+		if (this.server != null) {
 			return this.server.getLocalPort();
 		}
 		return 0;
 	}
-	
+
 	@Override
-	public boolean isShutdown()
-	{
-		if (this.acceptThreadController.getType() != AcceptThreadController.TYPE_START)
-		{
+	public boolean isShutdown() {
+		if (this.acceptThreadController.getType() != AcceptThreadController.TYPE_START) {
 			return true;
-		} else if (this.server.isClosed() && this.threadPool.isTerminated())
-		{
+		} else if (this.server.isClosed() && this.threadPool.isTerminated()) {
 			return true;
 		}
 		return false;
 	}
-	
+
 	@Override
-	public void run()
-	{
-		while (this.acceptThreadController.getType() == AcceptThreadController.TYPE_START)
-		{
+	public void run() {
+		while (this.acceptThreadController.getType() == AcceptThreadController.TYPE_START) {
 			Socket client;
-			try
-			{
+			try {
 				client = this.server.accept();
 				AcceptRequestHandler command = new AcceptRequestHandler(client,
-				        this.commandletLoader, this.acceptThreadController);
+						this.commandletLoader, this.acceptThreadController);
 				this.threadPool.submit(command);
-			} catch (IOException ex)
-			{
+			} catch (IOException ex) {
 				// 在accept的时候断掉了，说明是系统要求线程停止了。
 				break;
 			}
 		}
 		// 在这里已经结束了，被要求停止
-		try
-		{
+		try {
 			this.server.close();
-		} catch (IOException ex)
-		{
+		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
 		this.threadPool.shutdownNow();
-		
+
 	}
-	
+
 	@Override
-	public void shutdown()
-	{
+	public void shutdown() {
 		this.acceptThreadController
-		        .setType(AcceptThreadController.TYPE_SHUTDOWN_NOW);
-		try
-		{
+				.setType(AcceptThreadController.TYPE_SHUTDOWN_NOW);
+		try {
 			this.server.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			// Should not come here.
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	@Override
-	public boolean start()
-	{
-		if (this.serverThread == null)
-		{
+	public boolean start() {
+		if (this.serverThread == null) {
 			this.serverThread = new Thread(this);
 		}
-		if ((this.serverThread != null) && !this.serverThread.isAlive())
-		{
-			try
-			{
+		if ((this.serverThread != null) && !this.serverThread.isAlive()) {
+			try {
 				this.serverThread.start();
 				return true;
-			} catch (IllegalThreadStateException e)
-			{
+			} catch (IllegalThreadStateException e) {
 				return false;
 			}
 		}
 		return false;
 	}
-	
+
 	@Override
-	public void waitForStop()
-	{
-		if (this.serverThread.isAlive())
-		{
-			try
-			{
+	public void waitForStop() {
+		if (this.serverThread.isAlive()) {
+			try {
 				this.serverThread.join();
 				this.threadPool.awaitTermination(1, TimeUnit.HOURS);
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 	}
-	
+
 }

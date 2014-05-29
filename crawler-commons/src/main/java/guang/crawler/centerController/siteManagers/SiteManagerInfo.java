@@ -23,11 +23,11 @@ public class SiteManagerInfo extends CenterConfigElement {
 	}
 
 	public String getManagerAddress() {
-		return this.get(SiteManagerInfo.KEY_MANAGER_ADDRESS);
+		return this.getProperty(SiteManagerInfo.KEY_MANAGER_ADDRESS);
 	}
 
 	public GenericState getManagerState() {
-		String managerState = this.get(SiteManagerInfo.KEY_MANAGER_STATE);
+		String managerState = this.getProperty(SiteManagerInfo.KEY_MANAGER_STATE);
 		if (managerState == null) {
 			return GenericState.registed;
 		}
@@ -39,11 +39,11 @@ public class SiteManagerInfo extends CenterConfigElement {
 	}
 
 	public String getSiteToHandle() {
-		return this.get(SiteManagerInfo.KEY_SITE_TOHANDLE);
+		return this.getProperty(SiteManagerInfo.KEY_SITE_TOHANDLE);
 	}
 
 	public boolean isDispatched() {
-		String dispatched = this.get(SiteManagerInfo.KEY_DISPATCHED);
+		String dispatched = this.getProperty(SiteManagerInfo.KEY_DISPATCHED);
 		if (dispatched == null) {
 			return false;
 		}
@@ -52,25 +52,25 @@ public class SiteManagerInfo extends CenterConfigElement {
 
 	public void setDispatched(boolean dispatched, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteManagerInfo.KEY_DISPATCHED, String.valueOf(dispatched),
+		this.setProperty(SiteManagerInfo.KEY_DISPATCHED, String.valueOf(dispatched),
 				refreshNow);
 	}
 
 	public void setManagerAddress(String managerAddress, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteManagerInfo.KEY_MANAGER_ADDRESS, managerAddress,
+		this.setProperty(SiteManagerInfo.KEY_MANAGER_ADDRESS, managerAddress,
 				refreshNow);
 	}
 
 	public void setManagerState(GenericState managerState, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteManagerInfo.KEY_MANAGER_STATE, managerState.toString(),
+		this.setProperty(SiteManagerInfo.KEY_MANAGER_STATE, managerState.toString(),
 				refreshNow);
 	}
 
 	public void setSiteToHandle(String siteToHandle, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteManagerInfo.KEY_SITE_TOHANDLE, siteToHandle, refreshNow);
+		this.setProperty(SiteManagerInfo.KEY_SITE_TOHANDLE, siteToHandle, refreshNow);
 	}
 
 }

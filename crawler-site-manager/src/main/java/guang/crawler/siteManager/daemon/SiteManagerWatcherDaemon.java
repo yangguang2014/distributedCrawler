@@ -1,8 +1,10 @@
-package guang.crawler.siteManager;
+package guang.crawler.siteManager.daemon;
 
 import guang.crawler.centerController.CenterConfig;
 import guang.crawler.centerController.config.SitesConfigInfo;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.siteManager.SiteConfig;
+import guang.crawler.siteManager.SiteManager;
 
 import java.io.IOException;
 import java.util.Date;
@@ -11,11 +13,17 @@ import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
-public class SiteManagerWatcher implements Watcher, Runnable {
+/**
+ * 监控中央配置中自己节点的信息，并根据这些信息决定自己的工作。
+ * 
+ * @author sun
+ * 
+ */
+public class SiteManagerWatcherDaemon implements Watcher, Runnable {
 
 	private Date eventTime = new Date();
 
-	public SiteManagerWatcher() {
+	public SiteManagerWatcherDaemon() {
 		// TODO Auto-generated constructor stub
 	}
 
@@ -80,7 +88,7 @@ public class SiteManagerWatcher implements Watcher, Runnable {
 						.getSiteId())) {
 					// 这样导致该站点被重新配置了
 					// 首先关闭当前已经运行的站点管理器
-					SiteManager.me().shutdown();
+					SiteManager.me().stopSiteManager();
 					// 然后使用新的配置
 					try {
 						siteConfig.setSiteToHandle(sitesConfigInfo
@@ -102,7 +110,7 @@ public class SiteManagerWatcher implements Watcher, Runnable {
 				}
 			} else if (!dispatched && siteConfig.isDispatched()) {
 				// 如果是这种情况，那么说明该站点被终止了
-				SiteManager.me().shutdown();
+				SiteManager.me().stopSiteManager();
 				// 更新配置信息
 				siteConfig.setDispatched(false);
 				siteConfig.setSiteToHandle(null);

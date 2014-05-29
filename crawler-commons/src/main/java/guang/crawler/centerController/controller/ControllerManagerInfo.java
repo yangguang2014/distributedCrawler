@@ -24,12 +24,12 @@ public class ControllerManagerInfo extends CenterConfigElement {
 	}
 
 	public String getControllerManagerAddress() throws InterruptedException {
-		return this.get(ControllerManagerInfo.KEY_CONTROLLER_MANAGER_ADDR);
+		return this.getProperty(ControllerManagerInfo.KEY_CONTROLLER_MANAGER_ADDR);
 	}
 
 	public void setControllerManagerAddress(String address, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(ControllerManagerInfo.KEY_CONTROLLER_MANAGER_ADDR, address,
+		this.setProperty(ControllerManagerInfo.KEY_CONTROLLER_MANAGER_ADDR, address,
 				refreshNow);
 	}
 }

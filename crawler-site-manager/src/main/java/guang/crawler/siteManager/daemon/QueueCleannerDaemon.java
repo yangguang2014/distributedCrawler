@@ -1,6 +1,8 @@
-package guang.crawler.siteManager;
+package guang.crawler.siteManager.daemon;
 
 import guang.crawler.core.WebURL;
+import guang.crawler.siteManager.SiteConfig;
+import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.MapQueueIteraotr;
 
@@ -13,26 +15,26 @@ import java.util.TimerTask;
  * @author yang
  *
  */
-public class QueueCleanner extends TimerTask
+public class QueueCleannerDaemon extends TimerTask
 {
 	private final MapQueue<WebURL>	workingList;
 	private final MapQueue<WebURL>	todoList;
 	private final MapQueue<WebURL>	failedList;
-	private static QueueCleanner	cleaner;
+	private static QueueCleannerDaemon	cleaner;
 	
-	public static QueueCleanner me()
+	public static QueueCleannerDaemon me()
 	{
-		if (QueueCleanner.cleaner == null)
+		if (QueueCleannerDaemon.cleaner == null)
 		{
 			SiteManager siteManager = SiteManager.me();
 			SiteConfig siteConfig = SiteConfig.me();
-			QueueCleanner.cleaner = new QueueCleanner(
+			QueueCleannerDaemon.cleaner = new QueueCleannerDaemon(
 			        siteManager.getWorkingTaskList(),
 			        siteManager.getToDoTaskList(),
 			        siteManager.getFailedTaskList(),
 			        siteConfig.getJobTimeout(), siteConfig.getJobTryTime());
 		}
-		return QueueCleanner.cleaner;
+		return QueueCleannerDaemon.cleaner;
 	}
 	
 	/**
@@ -44,7 +46,7 @@ public class QueueCleanner extends TimerTask
 	/**
 	 * 启动一个清理任务
 	 */
-	private QueueCleanner(MapQueue<WebURL> workingList,
+	private QueueCleannerDaemon(MapQueue<WebURL> workingList,
 			MapQueue<WebURL> todoList, MapQueue<WebURL> failedList,
 			long timeout, int tryTime)
 	{

@@ -23,7 +23,7 @@ public class SiteInfo extends CenterConfigElement {
 	}
 
 	public String[] getSeedSites() throws InterruptedException {
-		String seeds = this.get(SiteInfo.KEY_SEED);
+		String seeds = this.getProperty(SiteInfo.KEY_SEED);
 		return seeds.split(",");
 	}
 
@@ -32,11 +32,11 @@ public class SiteInfo extends CenterConfigElement {
 	}
 
 	public String getSiteManagerId() throws InterruptedException {
-		return this.get(SiteInfo.KEY_SITE_MANAGER);
+		return this.getProperty(SiteInfo.KEY_SITE_MANAGER);
 	}
 
 	public boolean isHandled() throws InterruptedException {
-		String handled = this.get(SiteInfo.KEY_HANDLED);
+		String handled = this.getProperty(SiteInfo.KEY_HANDLED);
 		if (handled == null) {
 			return false;
 		}
@@ -45,7 +45,7 @@ public class SiteInfo extends CenterConfigElement {
 
 	public void setHandled(boolean handled, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteInfo.KEY_HANDLED, String.valueOf(handled), refreshNow);
+		this.setProperty(SiteInfo.KEY_HANDLED, String.valueOf(handled), refreshNow);
 	}
 
 	public void setSeedSites(String[] seedSites, boolean refreshNow)
@@ -56,12 +56,12 @@ public class SiteInfo extends CenterConfigElement {
 			result.append(",");
 		}
 		result.append(seedSites[seedSites.length - 1]);
-		this.put(SiteInfo.KEY_SEED, result.toString(), refreshNow);
+		this.setProperty(SiteInfo.KEY_SEED, result.toString(), refreshNow);
 	}
 
 	public void setSiteManagerId(String siteManagerId, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		this.put(SiteInfo.KEY_SITE_MANAGER, siteManagerId, refreshNow);
+		this.setProperty(SiteInfo.KEY_SITE_MANAGER, siteManagerId, refreshNow);
 	}
 
 }

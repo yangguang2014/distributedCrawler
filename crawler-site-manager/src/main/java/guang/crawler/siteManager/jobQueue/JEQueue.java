@@ -34,7 +34,8 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			JEQueueElementTransfer<T> transfer) throws Exception {
 		// 每个不同的siteManager都有其自身的工作目录
 		File envHome = new File(dataHomeDir + "/"
-				+ SiteConfig.me().getSiteManagerId() + "/je-queues");
+				+ SiteConfig.me().getSiteManagerInfo().getSiteToHandle()
+				+ "/je-queues");
 		if (!envHome.exists()) {
 			if (!envHome.mkdirs()) {
 				throw new Exception("Couldn't create this folder: "
