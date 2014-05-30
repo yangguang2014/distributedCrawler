@@ -18,6 +18,26 @@ public class SitesConfigInfo extends CenterConfigElement {
 	}
 
 	/**
+	 * 删除某个站点
+	 * 
+	 * @param siteId
+	 * @return
+	 * @throws KeeperException
+	 * @throws InterruptedException
+	 */
+	public boolean dropSite(String siteId) throws KeeperException,
+			InterruptedException {
+		String realPath = this.path + CenterConfig.SITES_PATH + "/" + siteId;
+		boolean exist = this.connector.isNodeExists(realPath);
+		if (!exist) { // 如果本身该节点已经不存在了，那么再次删除也是正确的
+			return true;
+		}
+		this.connector.simpleDelete(siteId, null);
+		return true;
+
+	}
+
+	/**
 	 * 获取所有已经处理的站点
 	 * 
 	 * @return
@@ -58,7 +78,8 @@ public class SitesConfigInfo extends CenterConfigElement {
 		for (String child : children) {
 			try {
 				SiteInfo siteInfo = this.getSite(child);
-				if ((siteInfo != null) && !siteInfo.isHandled()) {
+				if ((siteInfo != null) && !siteInfo.isHandled()
+						&& siteInfo.isEnabled()) {
 					result.add(siteInfo);
 				}
 			} catch (IOException e) {

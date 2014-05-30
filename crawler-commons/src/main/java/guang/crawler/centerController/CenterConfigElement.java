@@ -37,6 +37,10 @@ public abstract class CenterConfigElement {
 		}
 	}
 
+	public boolean exists() throws KeeperException, InterruptedException {
+		return this.connector.isNodeExists(this.path);
+	}
+
 	public String getPath() {
 		return this.path;
 	}
@@ -90,6 +94,9 @@ public abstract class CenterConfigElement {
 
 	public boolean update() throws InterruptedException, IOException,
 			KeeperException {
+		if (!this.exists()) {
+			return false;
+		}
 		ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
 		this.values.store(byteOut, "update at " + new Date().toString());
 		byte[] data = byteOut.toByteArray();

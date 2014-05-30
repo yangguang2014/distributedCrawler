@@ -13,7 +13,7 @@ public class TestAddSite {
 		SiteInfo siteInfo = CenterConfig.me()
 				.init("ubuntu-3,ubuntu-6,ubuntu-8").getSitesConfigInfo()
 				.registSite("site1");
-		siteInfo.setSeedSites(new String[] { "http://www.quanben.com/" }, false);
+		siteInfo.setSeedSites("http://www.quanben.com/", false);
 		siteInfo.setHandled(false, false);
 		siteInfo.update();
 	}

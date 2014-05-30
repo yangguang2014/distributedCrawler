@@ -8,7 +8,7 @@ public class Test {
 		// 既然是模拟，设置一下环境变量
 		System.setProperty(
 				"crawler.home",
-				"/home/sun/work/workspace/distribute-crawler/target/distribute-crawler-1.0-SNAPSHOT-release");
+				"/home/sun/work/workspace/distributedCrawler/target/distribute-crawler-1.0-SNAPSHOT-release");
 		Main.main(args);
 	}
 }

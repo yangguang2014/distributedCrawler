@@ -41,6 +41,16 @@ public class ControllerWorkThread extends Thread implements Watcher {
 	private ControllerWorkThread() {
 	}
 
+	/**
+	 * 强制触发一次调度事件
+	 */
+	public void forceReschedue() {
+		synchronized (this.waitForEvent) {
+			this.waitForEvent.setTime(System.currentTimeMillis());
+			this.waitForEvent.notifyAll();
+		}
+	}
+
 	@Override
 	public void process(WatchedEvent event) {
 		// 不管怎样，再次继续监听事件
@@ -86,10 +96,19 @@ public class ControllerWorkThread extends Thread implements Watcher {
 									siteManagerId);
 					if ((siteManagerInfo == null)
 							|| !siteManagerInfo.isDispatched()
-							|| siteManagerInfo.getSiteToHandle().equals(
+							|| !siteManagerInfo.getSiteToHandle().equals(
 									siteInfo.getSiteId())) {
 						siteInfo.setHandled(false, false);
 						siteInfo.setSiteManagerId("null", true);
+					} else { // 如果一切分配的都对，那么检测一下该节点有没有被停止
+						if (!siteInfo.isEnabled()) {
+							siteManagerInfo.setDispatched(false, false);
+							siteManagerInfo.setSiteToHandle("", false);
+							siteManagerInfo.update();
+							siteInfo.setHandled(false, false);
+							siteInfo.setSiteManagerId("", false);
+							siteInfo.update();
+						}
 					}
 				}
 				// 然后做统一的分配

@@ -3,6 +3,8 @@ package guang.crawler.centerController.controller;
 import guang.crawler.centerController.CenterConfigElement;
 import guang.crawler.connector.CenterConfigConnector;
 
+import java.io.IOException;
+
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
@@ -51,20 +53,31 @@ public class ControllerConfigInfo extends CenterConfigElement {
 	 * 获取控制器的管理者信息
 	 * 
 	 * @return
+	 * @throws InterruptedException
+	 * @throws KeeperException
+	 * @throws IOException
 	 */
-	public ControllerManagerInfo getControllerManagerInfo() {
-		if (this.controllerManagerInfo != null) {
-			return this.controllerManagerInfo;
-		} else {
-			return new ControllerManagerInfo(this, this.path
-					+ ControllerConfigInfo.MANAGER, this.connector);
+	public ControllerManagerInfo getControllerManagerInfo()
+			throws KeeperException, InterruptedException, IOException {
+		if (this.controllerManagerInfo == null) {
+			this.controllerManagerInfo = new ControllerManagerInfo(this,
+					this.path + ControllerConfigInfo.MANAGER, this.connector);
+			if (this.controllerManagerInfo.exists()) {
+				this.controllerManagerInfo.load();
+			}
 		}
+		return this.controllerManagerInfo;
 	}
 
-	public ControllerServicesInfo getControllerServicesInfo() {
+	public ControllerServicesInfo getControllerServicesInfo()
+			throws KeeperException, InterruptedException, IOException {
+
 		if (this.controllerServicesInfo == null) {
 			this.controllerServicesInfo = new ControllerServicesInfo(this.path
 					+ ControllerConfigInfo.SERVICES, this.connector);
+			if (this.controllerServicesInfo.exists()) {
+				this.controllerServicesInfo.load();
+			}
 		}
 		return this.controllerServicesInfo;
 	}

@@ -1,7 +1,6 @@
 package com.gzgb.epo.webservice;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 import javax.xml.bind.annotation.XmlRootElement;
@@ -10,11 +9,8 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 采集点bean
  */
 @XmlRootElement(namespace = "http://guang.crawler.controller.webservice/")
-public class WebGatherNodeBean implements Serializable {
+public class WebGatherNodeInfo implements Serializable {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	/**
@@ -38,34 +34,19 @@ public class WebGatherNodeBean implements Serializable {
 	private String wgnName;
 
 	/**
-	 * 唯一标识
-	 */
-	private String wgnUniqueId;
-
-	/**
-	 * 入口地址
+	 * 以换行符分割的URL种子列表
 	 */
 	private String wgnEntryUrl;
 
 	/**
-	 * 允许链接格式
+	 * 允许的站点URL的正则表达式列表，以换行符分割
 	 */
 	private String wgnAllowRule;
 
 	/**
-	 * 禁止链接格式
+	 * 禁止的站点URL的正则表达式列表，以换行符分割
 	 */
 	private String wgnDenyRule;
-
-	/**
-	 * 分页匹配规则
-	 */
-	private String wgnNextPage;
-
-	/**
-	 * 采集域
-	 */
-	private String wgnAllowDomain;
 
 	/**
 	 * 采集权重
@@ -78,11 +59,6 @@ public class WebGatherNodeBean implements Serializable {
 	private Byte wgnType;
 
 	/**
-	 * 是否有效
-	 */
-	private Byte wgnSpiderEnable;
-
-	/**
 	 * 采集延迟时间
 	 */
 	private Byte wgnDelay;
@@ -93,19 +69,9 @@ public class WebGatherNodeBean implements Serializable {
 	private Byte wgnCookiesEnable;
 
 	/**
-	 * 处理链接
-	 */
-	private String wgnProcessLinks;
-
-	/**
 	 * 代理列表
 	 */
 	private String wgnProxies;
-
-	/**
-	 * 采集字段配置
-	 */
-	private ArrayList<Object> wgnConfigItem;
 
 	/**
 	 * 是否登录
@@ -153,16 +119,6 @@ public class WebGatherNodeBean implements Serializable {
 	private Byte wgnTraditional;
 
 	/**
-	 * 是否过滤掉网页
-	 */
-	private Byte wgnIsClean;
-
-	/**
-	 * 蜘蛛任务ID
-	 */
-	private String wgnJobId;
-
-	/**
 	 * 更新时间
 	 */
 	private Date wgnUpdateTime;
@@ -189,16 +145,8 @@ public class WebGatherNodeBean implements Serializable {
 		return this.weBSiteName;
 	}
 
-	public String getWgnAllowDomain() {
-		return this.wgnAllowDomain;
-	}
-
 	public String getWgnAllowRule() {
 		return this.wgnAllowRule;
-	}
-
-	public ArrayList<Object> getWgnConfigItem() {
-		return this.wgnConfigItem;
 	}
 
 	public Byte getWgnCookiesEnable() {
@@ -229,14 +177,6 @@ public class WebGatherNodeBean implements Serializable {
 		return this.wgnEntryUrl;
 	}
 
-	public Byte getWgnIsClean() {
-		return this.wgnIsClean;
-	}
-
-	public String getWgnJobId() {
-		return this.wgnJobId;
-	}
-
 	public String getWgnLoginAccount() {
 		return this.wgnLoginAccount;
 	}
@@ -257,20 +197,8 @@ public class WebGatherNodeBean implements Serializable {
 		return this.wgnName;
 	}
 
-	public String getWgnNextPage() {
-		return this.wgnNextPage;
-	}
-
-	public String getWgnProcessLinks() {
-		return this.wgnProcessLinks;
-	}
-
 	public String getWgnProxies() {
 		return this.wgnProxies;
-	}
-
-	public Byte getWgnSpiderEnable() {
-		return this.wgnSpiderEnable;
 	}
 
 	public Integer getWgnTimeInterval() {
@@ -287,10 +215,6 @@ public class WebGatherNodeBean implements Serializable {
 
 	public Byte getWgnType() {
 		return this.wgnType;
-	}
-
-	public String getWgnUniqueId() {
-		return this.wgnUniqueId;
 	}
 
 	public Date getWgnUpdateTime() {
@@ -317,16 +241,8 @@ public class WebGatherNodeBean implements Serializable {
 		this.weBSiteName = weBSiteName;
 	}
 
-	public void setWgnAllowDomain(String wgnAllowDomain) {
-		this.wgnAllowDomain = wgnAllowDomain;
-	}
-
 	public void setWgnAllowRule(String wgnAllowRule) {
 		this.wgnAllowRule = wgnAllowRule;
-	}
-
-	public void setWgnConfigItem(ArrayList<Object> wgnConfigItem) {
-		this.wgnConfigItem = wgnConfigItem;
 	}
 
 	public void setWgnCookiesEnable(Byte wgnCookiesEnable) {
@@ -357,14 +273,6 @@ public class WebGatherNodeBean implements Serializable {
 		this.wgnEntryUrl = wgnEntryUrl;
 	}
 
-	public void setWgnIsClean(Byte wgnIsClean) {
-		this.wgnIsClean = wgnIsClean;
-	}
-
-	public void setWgnJobId(String wgnJobId) {
-		this.wgnJobId = wgnJobId;
-	}
-
 	public void setWgnLoginAccount(String wgnLoginAccount) {
 		this.wgnLoginAccount = wgnLoginAccount;
 	}
@@ -385,20 +293,8 @@ public class WebGatherNodeBean implements Serializable {
 		this.wgnName = wgnName;
 	}
 
-	public void setWgnNextPage(String wgnNextPage) {
-		this.wgnNextPage = wgnNextPage;
-	}
-
-	public void setWgnProcessLinks(String wgnProcessLinks) {
-		this.wgnProcessLinks = wgnProcessLinks;
-	}
-
 	public void setWgnProxies(String wgnProxies) {
 		this.wgnProxies = wgnProxies;
-	}
-
-	public void setWgnSpiderEnable(Byte wgnSpiderEnable) {
-		this.wgnSpiderEnable = wgnSpiderEnable;
 	}
 
 	public void setWgnTimeInterval(Integer wgnTimeInterval) {
@@ -415,10 +311,6 @@ public class WebGatherNodeBean implements Serializable {
 
 	public void setWgnType(Byte wgnType) {
 		this.wgnType = wgnType;
-	}
-
-	public void setWgnUniqueId(String wgnUniqueId) {
-		this.wgnUniqueId = wgnUniqueId;
 	}
 
 	public void setWgnUpdateTime(Date wgnUpdateTime) {

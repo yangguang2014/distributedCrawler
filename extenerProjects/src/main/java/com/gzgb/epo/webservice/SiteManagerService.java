@@ -1,6 +1,4 @@
-package guang.crawler.controller.webservice;
-
-import guang.crawler.centerController.config.WebGatherNodeBean;
+package com.gzgb.epo.webservice;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -15,7 +13,7 @@ public interface SiteManagerService {
 	 * @return
 	 */
 	@WebMethod
-	public boolean add(WebGatherNodeBean site);
+	public boolean add(WebGatherNodeInfo site);
 
 	/**
 	 * 删除某个采集点
@@ -60,6 +58,5 @@ public interface SiteManagerService {
 	 * @return
 	 */
 	@WebMethod
-	public boolean update(
-			guang.crawler.centerController.config.WebGatherNodeBean site);
+	public boolean update(WebGatherNodeInfo site);
 }

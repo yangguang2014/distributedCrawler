@@ -39,13 +39,13 @@ public class WebServiceDaemon {
 				new SiteManagerServiceImp());
 		// 注册该服务
 		CenterConfig.me().getControllerInfo().getControllerServicesInfo()
-				.registService(MANAGER_SERVICE, address);
+				.registService(WebServiceDaemon.MANAGER_SERVICE, address);
 	}
 
 	public void stop() {
 		try {
 			CenterConfig.me().getControllerInfo().getControllerServicesInfo()
-					.unRegistService(MANAGER_SERVICE);
+					.unRegistService(WebServiceDaemon.MANAGER_SERVICE);
 		} catch (InterruptedException | IOException | KeeperException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -8,10 +8,14 @@ import java.io.IOException;
 
 import org.apache.zookeeper.KeeperException;
 
+import com.alibaba.fastjson.JSON;
+
 public class SiteInfo extends CenterConfigElement {
 	private static final String KEY_SEED = "seedSite";
 	private static final String KEY_HANDLED = "handled";
 	private static final String KEY_SITE_MANAGER = "siteManager";
+	private static final String KEY_SITE_CONFIG = "siteConfig";
+	private static final String KEY_SITE_ENABLED = "site.enabled";
 	/**
 	 * 该站点注册时获取的一个注册ID。
 	 */
@@ -35,6 +39,22 @@ public class SiteInfo extends CenterConfigElement {
 		return this.getProperty(SiteInfo.KEY_SITE_MANAGER);
 	}
 
+	public WebGatherNodeBean getWebGatherNodeInfo() {
+		String configString = this.getProperty(SiteInfo.KEY_SITE_CONFIG);
+		if (configString != null) {
+			return JSON.parseObject(configString, WebGatherNodeBean.class);
+		}
+		return null;
+	}
+
+	public boolean isEnabled() {
+		String enabled = this.getProperty(SiteInfo.KEY_SITE_ENABLED);
+		if ("true".equalsIgnoreCase(enabled)) {
+			return true;
+		}
+		return false;
+	}
+
 	public boolean isHandled() throws InterruptedException {
 		String handled = this.getProperty(SiteInfo.KEY_HANDLED);
 		if (handled == null) {
@@ -43,25 +63,44 @@ public class SiteInfo extends CenterConfigElement {
 		return Boolean.parseBoolean(handled);
 	}
 
-	public void setHandled(boolean handled, boolean refreshNow)
-			throws InterruptedException, IOException, KeeperException {
-		this.setProperty(SiteInfo.KEY_HANDLED, String.valueOf(handled), refreshNow);
+	public void setEnabled(boolean enabled) throws InterruptedException,
+			IOException, KeeperException {
+		this.setProperty(SiteInfo.KEY_SITE_ENABLED, Boolean.toString(enabled),
+				true);
 	}
 
-	public void setSeedSites(String[] seedSites, boolean refreshNow)
+	public void setHandled(boolean handled, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
-		StringBuilder result = new StringBuilder();
-		for (int i = 0; i < (seedSites.length - 1); i++) {
-			result.append(seedSites);
-			result.append(",");
-		}
-		result.append(seedSites[seedSites.length - 1]);
-		this.setProperty(SiteInfo.KEY_SEED, result.toString(), refreshNow);
+		this.setProperty(SiteInfo.KEY_HANDLED, String.valueOf(handled),
+				refreshNow);
+	}
+
+	/**
+	 * 设置以逗号分隔的种子URL列表
+	 * 
+	 * @param seedSites
+	 * @param refreshNow
+	 * @throws InterruptedException
+	 * @throws IOException
+	 * @throws KeeperException
+	 */
+	public void setSeedSites(String seedSites, boolean refreshNow)
+			throws InterruptedException, IOException, KeeperException {
+
+		this.setProperty(SiteInfo.KEY_SEED, seedSites, refreshNow);
 	}
 
 	public void setSiteManagerId(String siteManagerId, boolean refreshNow)
 			throws InterruptedException, IOException, KeeperException {
 		this.setProperty(SiteInfo.KEY_SITE_MANAGER, siteManagerId, refreshNow);
+	}
+
+	public void setWebGatherNodeInfo(WebGatherNodeBean info, boolean refreshNow)
+			throws InterruptedException, IOException, KeeperException {
+		if (info != null) {
+			String configString = JSON.toJSONString(info);
+			this.setProperty(SiteInfo.KEY_SITE_CONFIG, configString, refreshNow);
+		}
 	}
 
 }
