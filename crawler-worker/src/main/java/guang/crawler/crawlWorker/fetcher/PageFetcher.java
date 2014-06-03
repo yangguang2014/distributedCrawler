@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker.fetcher;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.crawlWorker.WorkerConfig;
 import guang.crawler.crawlWorker.url.URLCanonicalizer;
 

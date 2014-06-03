@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.crawlWorker.fetcher.Downloader;
 
 public class Test {

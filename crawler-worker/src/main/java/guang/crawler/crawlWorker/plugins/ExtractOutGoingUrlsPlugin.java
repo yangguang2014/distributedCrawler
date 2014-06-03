@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker.plugins;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.parser.HtmlParseData;
 import guang.crawler.crawlWorker.parser.TextParseData;

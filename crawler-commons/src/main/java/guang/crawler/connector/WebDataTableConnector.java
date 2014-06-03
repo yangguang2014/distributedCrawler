@@ -1,6 +1,6 @@
 package guang.crawler.connector;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -21,149 +21,167 @@ import org.apache.hadoop.hbase.client.HConnectionManager;
 import org.apache.hadoop.hbase.client.HTableInterface;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
+import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.util.Bytes;
 
-public class WebDataTableConnector {
-	private Configuration hbaseConfig;
-	private HBaseAdmin hbaseAdmin;
-	private HConnection hConnection;
-	private HashMap<String, HTableInterface> webDataTables;
-	private final String dataFamilyName = "data";
-	private boolean opened = false;
-	private final static long bufferSize = 1024;
-	private String zookeeperQuorum;
-
-	public WebDataTableConnector(String zookeeperQuorum) {
+public class WebDataTableConnector
+{
+	private static final String	             TABLE_PREFIX	= "site-";
+	private Configuration	                 hbaseConfig;
+	private HBaseAdmin	                     hbaseAdmin;
+	private HConnection	                     hConnection;
+	private HashMap<String, HTableInterface>	webDataTables;
+	private final String	                 dataFamilyName	= "data";
+	private boolean	                         opened	        = false;
+	private final static long	             bufferSize	    = 1024;
+	private String	                         zookeeperQuorum;
+	
+	public WebDataTableConnector(String zookeeperQuorum)
+	{
 		this.zookeeperQuorum = zookeeperQuorum;
 		this.webDataTables = new HashMap<String, HTableInterface>();
 	}
-
+	
 	public void addHtmlData(WebURL webUrl, String html, boolean childFinished)
-			throws IOException {
-		if (!this.opened) {
+	        throws IOException
+	{
+		if (!this.opened)
+		{
 			throw new IOException("data base should be opened first.");
 		}
-		String tableName = webUrl.getSiteManagerName();
+		String tableName = WebDataTableConnector.TABLE_PREFIX
+		        + webUrl.getSiteId();
 		HTableInterface webDataTable = this.webDataTables.get(tableName);
-		if (webDataTable == null) {
-			if (!this.tableExists(tableName)) {
+		if (webDataTable == null)
+		{
+			if (!this.tableExists(tableName))
+			{
 				webDataTable = this.createTable(tableName);
-			} else {
+			} else
+			{
 				webDataTable = this.loadTable(tableName);
 			}
-			if (webDataTable != null) {
+			if (webDataTable != null)
+			{
 				this.webDataTables.put(tableName, webDataTable);
 			}
 		}
 		Put put = new Put(Bytes.toBytes(webUrl.getDocid()));// 设置键值
 		put.add(Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("depth"),
-				Bytes.toBytes(webUrl.getDepth()));
+		        Bytes.toBytes(webUrl.getDepth()));
 		put.add(Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("url"),
-				Bytes.toBytes(webUrl.getURL()));
+		        Bytes.toBytes(webUrl.getURL()));
 		put.add(Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("html"),
-				Bytes.toBytes(html));
+		        Bytes.toBytes(html));
 		put.add(Bytes.toBytes(this.dataFamilyName),
-				Bytes.toBytes("childFinshed"), Bytes.toBytes(childFinished));
+		        Bytes.toBytes("childFinshed"), Bytes.toBytes(childFinished));
 		webDataTable.put(put);
+		webDataTable.flushCommits();
 	}
-
-	public void close() throws IOException {
-		if (!this.opened) {
+	
+	public void close() throws IOException
+	{
+		if (!this.opened)
+		{
 			return;
 		}
 		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables
-				.entrySet().iterator();
-		while (tables.hasNext()) {
+		        .entrySet().iterator();
+		while (tables.hasNext())
+		{
 			tables.next().getValue().close();
 		}
-		if (this.hbaseAdmin != null) {
+		if (this.hbaseAdmin != null)
+		{
 			this.hbaseAdmin.close();
 		}
-		if (this.hConnection != null) {
+		if (this.hConnection != null)
+		{
 			this.hConnection.close();
 		}
 		this.opened = false;
 	}
-
-	public HTableInterface createTable(String tableName) throws IOException {
-
+	
+	public HTableInterface createTable(String tableName) throws IOException
+	{
+		
 		HTableDescriptor tableDesc = new HTableDescriptor(
-				TableName.valueOf(tableName));
+		        TableName.valueOf(tableName));
 		HColumnDescriptor dataFamily = new HColumnDescriptor(
-				this.dataFamilyName);
+		        this.dataFamilyName);
 		dataFamily.setMaxVersions(1);
 		dataFamily.setBlockCacheEnabled(false);
 		tableDesc.addFamily(dataFamily);
 		this.hbaseAdmin.createTable(tableDesc);
-
+		
 		HTableInterface webDataTable = this.hConnection.getTable(tableName);
-		webDataTable.setAutoFlush(false, true);
+		webDataTable.setAutoFlush(true, true);
 		webDataTable.setWriteBufferSize(WebDataTableConnector.bufferSize);
 		return webDataTable;
 	}
-
-	public boolean deleteTable(String tableName) throws IOException {
+	
+	public boolean deleteTable(String tableName) throws IOException
+	{
 		boolean disabled = this.hbaseAdmin.isTableDisabled(tableName);
-		if (!disabled) {
+		if (!disabled)
+		{
 			this.hbaseAdmin.disableTable(tableName);
 		}
 		this.hbaseAdmin.deleteTable(tableName);
 		return true;
 	}
-
-	public void flush() throws IOException {
-		if (!this.opened) {
+	
+	public void flush() throws IOException
+	{
+		if (!this.opened)
+		{
 			return;
 		}
 		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables
-				.entrySet().iterator();
-		while (tables.hasNext()) {
+		        .entrySet().iterator();
+		while (tables.hasNext())
+		{
 			tables.next().getValue().flushCommits();
 		}
 	}
-
-	public String[] getHtmlData(String tableName, int docid) throws IOException {
-		if (!this.opened) {
+	
+	public String[] getHtmlData(String tableName, int docid) throws IOException
+	{
+		if (!this.opened)
+		{
 			throw new IOException("data base should be opened first.");
 		}
 		HTableInterface webDataTable = this.webDataTables.get(tableName);
-		if (webDataTable == null) {
-			if (!this.tableExists(tableName)) {
+		if (webDataTable == null)
+		{
+			if (!this.tableExists(tableName))
+			{
 				webDataTable = this.createTable(tableName);
-			} else {
+			} else
+			{
 				webDataTable = this.loadTable(tableName);
 			}
-			if (webDataTable != null) {
+			if (webDataTable != null)
+			{
 				this.webDataTables.put(tableName, webDataTable);
 			}
 		}
 		Get get = new Get(Bytes.toBytes(docid));
 		get.addFamily(Bytes.toBytes(this.dataFamilyName));
 		Result result = webDataTable.get(get);
-		if (result != null) {
-			String[] data = new String[2];
-			byte[] urlData = result.getValue(
-					Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("url"));
-			if (urlData != null) {
-				data[0] = Bytes.toString(urlData);
-			}
-			byte[] htmlData = result.getValue(
-					Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("html"));
-			if (htmlData != null) {
-				data[1] = Bytes.toString(htmlData);
-			}
-			return data;
-		}
-		return null;
+		return this.resultToHtmlData(result);
 	}
-
-	public HTableInterface loadTable(String tableName) throws IOException {
+	
+	public HTableInterface loadTable(String tableName) throws IOException
+	{
 		return this.hConnection.getTable(tableName);
 	}
-
+	
 	public void open() throws MasterNotRunningException,
-			ZooKeeperConnectionException, IOException {
-		if (this.opened) {
+	        ZooKeeperConnectionException, IOException
+	{
+		if (this.opened)
+		{
 			return;
 		}
 		Configuration config = new Configuration();
@@ -171,12 +189,54 @@ public class WebDataTableConnector {
 		this.hbaseConfig = HBaseConfiguration.create(config);
 		this.hbaseAdmin = new HBaseAdmin(this.hbaseConfig);
 		this.hConnection = HConnectionManager
-				.createConnection(this.hbaseConfig);
+		        .createConnection(this.hbaseConfig);
 		this.opened = true;
 	}
-
-	public boolean tableExists(String tableName) throws IOException {
+	
+	public String[] resultToHtmlData(Result result)
+	{
+		if (result != null)
+		{
+			String[] data = new String[2];
+			byte[] urlData = result.getValue(
+			        Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("url"));
+			if (urlData != null)
+			{
+				data[0] = Bytes.toString(urlData);
+			}
+			byte[] htmlData = result.getValue(
+			        Bytes.toBytes(this.dataFamilyName), Bytes.toBytes("html"));
+			if (htmlData != null)
+			{
+				data[1] = Bytes.toString(htmlData);
+			}
+			return data;
+		}
+		return null;
+	}
+	
+	/**
+	 * read data according to the site id
+	 * 
+	 * @param siteId
+	 * @return
+	 * @throws IOException
+	 */
+	public ResultScanner scanTable(long siteId) throws IOException
+	{
+		HTableInterface iface = this
+		        .loadTable(WebDataTableConnector.TABLE_PREFIX + siteId);
+		if (iface != null)
+		{
+			ResultScanner scanner = iface.getScanner("data".getBytes());
+			return scanner;
+		}
+		return null;
+	}
+	
+	public boolean tableExists(String tableName) throws IOException
+	{
 		return this.hbaseAdmin.tableExists(tableName);
 	}
-
+	
 }

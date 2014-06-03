@@ -28,9 +28,9 @@ public class CommandletLoader
 	/**
 	 * 将commandlet的名字定向到类名中
 	 */
-	private HashMap<String, String>	    nameToClass	= new HashMap<>();
-	private HashMap<String, String>	    urlToName	= new HashMap<>();
-	private HashMap<String, Commandlet>	nameToObj	= new HashMap<>();
+	private HashMap<String, String>	    nameToClass	= new HashMap<String, String>();
+	private HashMap<String, String>	    urlToName	= new HashMap<String, String>();
+	private HashMap<String, Commandlet>	nameToObj	= new HashMap<String, Commandlet>();
 	
 	/**
 	 * XML元素的命名空間
@@ -70,11 +70,11 @@ public class CommandletLoader
 			{
 				commandlet = (Commandlet) Class.forName(className)
 				        .newInstance();
-			} catch (InstantiationException | IllegalAccessException
-			        | ClassNotFoundException e)
+			} catch (Exception e)
 			{
 				return null;
 			}
+			
 		}
 		return commandlet;
 		

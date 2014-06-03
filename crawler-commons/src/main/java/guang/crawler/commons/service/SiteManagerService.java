@@ -1,6 +1,4 @@
-package guang.crawler.controller.webservice;
-
-import guang.crawler.centerController.config.WebGatherNodeBean;
+package guang.crawler.commons.service;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -61,5 +59,5 @@ public interface SiteManagerService {
 	 */
 	@WebMethod
 	public boolean update(
-			guang.crawler.centerController.config.WebGatherNodeBean site);
+			guang.crawler.commons.service.WebGatherNodeBean site);
 }

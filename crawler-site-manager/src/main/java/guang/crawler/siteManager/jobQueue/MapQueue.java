@@ -35,7 +35,7 @@ public abstract class MapQueue<T>
 	 *
 	 * @return
 	 */
-	public abstract MapQueueIteraotr<T> iterator();
+	public abstract MapQueueIterator<T> iterator();
 	
 	/**
 	 * 向队列中添加一个元素

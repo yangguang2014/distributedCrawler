@@ -1,4 +1,4 @@
-package guang.crawler.core;
+package guang.crawler.commons;
 
 public enum GenericState {
 

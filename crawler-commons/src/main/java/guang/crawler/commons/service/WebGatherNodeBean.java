@@ -1,4 +1,4 @@
-package com.gzgb.epo.webservice;
+package guang.crawler.commons.service;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,7 +9,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 采集点bean
  */
 @XmlRootElement(namespace = "http://guang.crawler.controller.webservice/")
-public class WebGatherNodeInfo implements Serializable {
+public class WebGatherNodeBean implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -34,12 +34,12 @@ public class WebGatherNodeInfo implements Serializable {
 	private String wgnName;
 
 	/**
-	 * 以换行符分割的URL种子列表
+	 * 以逗号分割的URL种子列表
 	 */
 	private String wgnEntryUrl;
 
 	/**
-	 * 允许的站点URL的正则表达式列表，以换行符分割
+	 * 允许的站点URL的正则表达式列表，以逗号分割
 	 */
 	private String wgnAllowRule;
 

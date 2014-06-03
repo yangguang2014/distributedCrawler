@@ -15,7 +15,7 @@ import org.xml.sax.SAXException;
  */
 public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 {
-
+	
 	/**
 	 * 需要从中获取URL的元素的名称。
 	 * 
@@ -25,7 +25,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 	{
 		A, AREA, LINK, IFRAME, FRAME, EMBED, IMG, BASE, META, BODY;
 	}
-
+	
 	/**
 	 * 用来对html中的元素的字符串与枚举类型切换
 	 * 
@@ -34,99 +34,99 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 	private static class HtmlFactory
 	{
 		private static Map<String, Element>	name2Element;
-
+		
 		static
 		{
-			HtmlFactory.name2Element = new HashMap<>();
+			HtmlFactory.name2Element = new HashMap<String, Element>();
 			for (Element element : Element.values())
 			{
 				HtmlFactory.name2Element.put(element.toString().toLowerCase(),
-						element);
+				        element);
 			}
 		}
-
+		
 		public static Element getElement(String name)
 		{
 			return HtmlFactory.name2Element.get(name);
 		}
 	}
-
+	
 	/**
 	 * 锚点文字信息的长度，避免过长的文字造成的影响
 	 */
-	private final int						MAX_ANCHOR_LENGTH	= 100;
-
-	private String							base;
-	private String							metaRefresh;
-	private String							metaLocation;
-
+	private final int	                 MAX_ANCHOR_LENGTH	= 100;
+	
+	private String	                     base;
+	private String	                     metaRefresh;
+	private String	                     metaLocation;
+	
 	/**
 	 * 目前是否在Body元素之中
 	 */
-	private boolean							isWithinBodyElement;
+	private boolean	                     isWithinBodyElement;
 	/**
 	 * body正文内容
 	 */
-	private StringBuilder					bodyText;
-
+	private StringBuilder	             bodyText;
+	
 	/**
 	 * 对外的链接
 	 */
 	private List<ExtractedUrlAnchorPair>	outgoingUrls;
-
+	
 	/**
 	 * 目前正在处理的URL
 	 */
-	private ExtractedUrlAnchorPair			curUrl				= null;
-	private boolean							anchorFlag			= false;
+	private ExtractedUrlAnchorPair	     curUrl	           = null;
+	private boolean	                     anchorFlag	       = false;
 	/**
 	 * 锚点的内容
 	 */
-	private StringBuilder					anchorText			= new StringBuilder();
-
+	private StringBuilder	             anchorText	       = new StringBuilder();
+	
 	public DefaultHtmlContentPlugin()
 	{
 		this.isWithinBodyElement = false;
 		this.bodyText = new StringBuilder();
-		this.outgoingUrls = new ArrayList<>();
+		this.outgoingUrls = new ArrayList<ExtractedUrlAnchorPair>();
 	}
-
+	
 	@Override
 	public void characters(char ch[], int start, int length)
-			throws SAXException
+	        throws SAXException
 	{
 		if (this.isWithinBodyElement)
 		{
 			this.bodyText.append(ch, start, length);
-
+			
 			if (this.anchorFlag)
 			{
 				this.anchorText.append(new String(ch, start, length));
 			}
 		}
 	}
-
+	
 	@Override
 	public void endElement(String uri, String localName, String qName)
-			throws SAXException
+	        throws SAXException
 	{
 		Element element = HtmlFactory.getElement(localName);
 		// 在这里只有Element.A，Element.AREA，Element.LINK三个元素，是因为需要采集它们的锚点文字信息，并不是说其他元素的链接地址不会被处理，它们同样也是被处理的。
 		if ((element == Element.A) || (element == Element.AREA)
-				|| (element == Element.LINK))
+		        || (element == Element.LINK))
 		{
 			this.anchorFlag = false;
 			if (this.curUrl != null)
 			{
 				// 去除换行和table字符，替换成空格
 				String anchor = this.anchorText.toString()
-						.replaceAll("\n", " ").replaceAll("\t", " ").trim();
+				        .replaceAll("\n", " ").replaceAll("\t", " ").trim();
 				if (!anchor.isEmpty())
 				{
 					if (anchor.length() > this.MAX_ANCHOR_LENGTH)
 					{
 						anchor = anchor.substring(0, this.MAX_ANCHOR_LENGTH)
-								+ "...";
+						        + "...";
 					}
 					this.curUrl.setAnchor(anchor);
 				}
@@ -140,30 +140,30 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			this.isWithinBodyElement = false;
 		}
 	}
-
+	
 	public String getBaseUrl()
 	{
 		return this.base;
 	}
-
+	
 	public String getBodyText()
 	{
 		return this.bodyText.toString();
 	}
-
+	
 	public List<ExtractedUrlAnchorPair> getOutgoingUrls()
 	{
 		return this.outgoingUrls;
 	}
-
+	
 	@Override
 	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException
+	        Attributes attributes) throws SAXException
 	{
 		Element element = HtmlFactory.getElement(localName);
-
+		
 		if ((element == Element.A) || (element == Element.AREA)
-				|| (element == Element.LINK))
+		        || (element == Element.LINK))
 		{
 			String href = attributes.getValue("href");
 			if (href != null)
@@ -175,7 +175,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			}
 			return;
 		}
-
+		
 		if (element == Element.IMG)
 		{
 			String imgSrc = attributes.getValue("src");
@@ -187,9 +187,9 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			}
 			return;
 		}
-
+		
 		if ((element == Element.IFRAME) || (element == Element.FRAME)
-				|| (element == Element.EMBED))
+		        || (element == Element.EMBED))
 		{
 			String src = attributes.getValue("src");
 			if (src != null)
@@ -200,7 +200,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			}
 			return;
 		}
-
+		
 		if (element == Element.BASE)
 		{
 			if (this.base != null)
@@ -214,7 +214,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			}
 			return;
 		}
-
+		
 		if (element == Element.META)
 		{
 			String equiv = attributes.getValue("http-equiv");
@@ -222,7 +222,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			if ((equiv != null) && (content != null))
 			{
 				equiv = equiv.toLowerCase();
-
+				
 				// http-equiv="refresh" content="0;URL=http://foo.bar/..."
 				if (equiv.equals("refresh") && (this.metaRefresh == null))
 				{
@@ -235,7 +235,7 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 					this.curUrl.setHref(this.metaRefresh);
 					this.outgoingUrls.add(this.curUrl);
 				}
-
+				
 				// http-equiv="location" content="http://foo.bar/..."
 				if (equiv.equals("location") && (this.metaLocation == null))
 				{
@@ -247,11 +247,11 @@ public class DefaultHtmlContentPlugin extends HtmlContentParserPlugin
 			}
 			return;
 		}
-
+		
 		if (element == Element.BODY)
 		{
 			this.isWithinBodyElement = true;
 		}
 	}
-
+	
 }

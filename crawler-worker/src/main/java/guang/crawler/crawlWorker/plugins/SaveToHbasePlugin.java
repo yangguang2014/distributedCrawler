@@ -1,7 +1,7 @@
 package guang.crawler.crawlWorker.plugins;
 
+import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
-import guang.crawler.core.WebURL;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.parser.HtmlParseData;
 

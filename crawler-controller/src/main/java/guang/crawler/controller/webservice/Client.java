@@ -1,5 +1,7 @@
 package guang.crawler.controller.webservice;
 
+import guang.crawler.commons.service.SiteManagerService;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -19,7 +21,7 @@ public class Client {
 				"SiteManagerService");
 		SiteManagerService proxy = service.getPort(portName,
 				SiteManagerService.class);
-		guang.crawler.centerController.config.WebGatherNodeBean bean = new guang.crawler.centerController.config.WebGatherNodeBean();
+		guang.crawler.commons.service.WebGatherNodeBean bean = new guang.crawler.commons.service.WebGatherNodeBean();
 		boolean success = proxy.update(bean);
 		System.out.println(success);
 	}

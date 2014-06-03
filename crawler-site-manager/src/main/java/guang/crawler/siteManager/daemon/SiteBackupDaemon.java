@@ -1,10 +1,10 @@
 package guang.crawler.siteManager.daemon;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.jobQueue.MapQueue;
-import guang.crawler.siteManager.jobQueue.MapQueueIteraotr;
+import guang.crawler.siteManager.jobQueue.MapQueueIterator;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -20,13 +20,9 @@ import org.apache.hadoop.fs.Path;
 import com.alibaba.fastjson.JSON;
 
 public class SiteBackupDaemon extends TimerTask {
-	private static SiteBackupDaemon defaultSiteBackuper;
 
-	public static SiteBackupDaemon me() {
-		if (SiteBackupDaemon.defaultSiteBackuper == null) {
-			SiteBackupDaemon.defaultSiteBackuper = new SiteBackupDaemon();
-		}
-		return SiteBackupDaemon.defaultSiteBackuper;
+	public static SiteBackupDaemon newDaemon() {
+		return new SiteBackupDaemon();
 	}
 
 	private FileSystem fileSystem;
@@ -36,15 +32,18 @@ public class SiteBackupDaemon extends TimerTask {
 
 	private void backupList(MapQueue<WebURL> listToBackup, String path)
 			throws IOException {
-		try (MapQueueIteraotr<WebURL> iteraor = listToBackup.iterator();
-				FSDataOutputStream fsout = this.fileSystem
-						.create(new Path(path))) {
+		MapQueueIterator<WebURL> iteraor = listToBackup.iterator();
+		try {
+			FSDataOutputStream fsout = this.fileSystem.create(new Path(path));
 			while (iteraor.hasNext()) {
 				WebURL url = iteraor.next();
 
 				fsout.writeUTF(JSON.toJSONString(url));
 			}
+		} finally {
+			iteraor.close();
 		}
+
 	}
 
 	public void forceBackup() {
@@ -76,9 +75,11 @@ public class SiteBackupDaemon extends TimerTask {
 		}
 		if (exists) {
 			int version = -1;
-			try (FSDataInputStream fsin = this.fileSystem
-					.open(maxVersionFilePath)) {
+			FSDataInputStream fsin = this.fileSystem.open(maxVersionFilePath);
+			try {
 				version = fsin.readInt();
+			} finally {
+				fsin.close();
 			}
 			String backDir = rootDir + "/" + version;
 			SiteManager siteManager = SiteManager.me();
@@ -97,8 +98,8 @@ public class SiteBackupDaemon extends TimerTask {
 
 	public void readBackupList(MapQueue<WebURL> list, String backupFilePath)
 			throws IOException {
-		try (FSDataInputStream fsin = this.fileSystem.open(new Path(
-				backupFilePath))) {
+		FSDataInputStream fsin = this.fileSystem.open(new Path(backupFilePath));
+		try {
 			while (true) {
 				try {
 
@@ -111,18 +112,24 @@ public class SiteBackupDaemon extends TimerTask {
 				}
 			}
 
+		} finally {
+			fsin.close();
 		}
 
 	}
 
 	public void rescheduleTaskList(MapQueue<WebURL> fromList) {
 		if (fromList.getLength() > 0) {
-			try (MapQueueIteraotr<WebURL> iterator = fromList.iterator()) {
+			MapQueueIterator<WebURL> iterator = fromList.iterator();
+			try {
 				while (iterator.hasNext()) {
 					SiteManager.me().getToDoTaskList()
 							.put(iterator.next().resetTryTime());
 				}
+			} finally {
+				iterator.close();
 			}
+
 		}
 	}
 
@@ -137,7 +144,9 @@ public class SiteBackupDaemon extends TimerTask {
 				+ config.getSiteManagerInfo().getSiteToHandle() + "/backup";
 		try {
 			this.fileSystem.mkdirs(new Path(rootDir));
-		} catch (IllegalArgumentException | IOException e) {
+		} catch (IOException e) {
+			return;
+		} catch (IllegalArgumentException e) {
 			return;
 		}
 		// 找到当前最大的备份版本号
@@ -150,13 +159,21 @@ public class SiteBackupDaemon extends TimerTask {
 		}
 		int maxVersion = config.getBackupVersion();
 		if (exists) {
-			try (FSDataInputStream fsin = this.fileSystem
-					.open(maxVersionFilePath)) {
+			FSDataInputStream fsin = null;
+			try {
+				fsin = this.fileSystem.open(maxVersionFilePath);
 				int version = fsin.readInt();
 				maxVersion = maxVersion < version ? version : maxVersion;
 				maxVersion++;
 			} catch (IOException e) {
 				return;
+			} finally {
+				if (fsin != null) {
+					try {
+						fsin.close();
+					} catch (IOException e) {
+					}
+				}
 			}
 		}
 
@@ -172,7 +189,9 @@ public class SiteBackupDaemon extends TimerTask {
 		}
 		try {
 			this.fileSystem.mkdirs(backDirPath);
-		} catch (IllegalArgumentException | IOException e) {
+		} catch (IllegalArgumentException e) {
+			return;
+		} catch (IOException e) {
 			return;
 		}
 		// 备份三个队列的数据
@@ -188,9 +207,12 @@ public class SiteBackupDaemon extends TimerTask {
 			return;
 		}
 		try {
-			try (FSDataOutputStream fsout = this.fileSystem.create(
-					maxVersionFilePath, true)) {
+			FSDataOutputStream fsout = this.fileSystem.create(
+					maxVersionFilePath, true);
+			try {
 				fsout.writeInt(maxVersion);
+			} finally {
+				fsout.close();
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

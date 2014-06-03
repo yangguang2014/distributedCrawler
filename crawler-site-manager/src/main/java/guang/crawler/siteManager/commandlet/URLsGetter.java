@@ -1,6 +1,6 @@
 package guang.crawler.siteManager.commandlet;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.Commandlet;
 import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.siteManager.SiteConfig;
@@ -17,7 +17,7 @@ public class URLsGetter implements Commandlet
 {
 	private static final String	KEY_COUNT	 = "COUNT";
 	private static final String	KEY_URL_LIST	= "URL_LIST";
-
+	
 	@Override
 	public DataPacket doCommand(DataPacket request)
 	{
@@ -46,7 +46,7 @@ public class URLsGetter implements Commandlet
 		SiteManager siteManager = SiteManager.me();
 		MapQueue<WebURL> todoList = siteManager.getToDoTaskList();
 		List<WebURL> urls = todoList.get(num);
-
+		
 		DataPacket result = new DataPacket();
 		result.setTitle("OK");
 		result.setData(data);
@@ -61,7 +61,7 @@ public class URLsGetter implements Commandlet
 			siteManager.getWorkingTaskList().put(url);
 		}
 		return result;
-
+		
 	}
-
+	
 }

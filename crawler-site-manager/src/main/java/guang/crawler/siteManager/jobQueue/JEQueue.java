@@ -1,8 +1,5 @@
 package guang.crawler.siteManager.jobQueue;
 
-import guang.crawler.siteManager.SiteConfig;
-import guang.crawler.siteManager.util.IOHelper;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,21 +27,10 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 
 	private boolean shutdown = false;
 
-	public JEQueue(String dataHomeDir, String dbName, boolean resumable,
+	public JEQueue(File envHome, String dbName, boolean resumable,
 			JEQueueElementTransfer<T> transfer) throws Exception {
 		// 每个不同的siteManager都有其自身的工作目录
-		File envHome = new File(dataHomeDir + "/"
-				+ SiteConfig.me().getSiteManagerInfo().getSiteToHandle()
-				+ "/je-queues");
-		if (!envHome.exists()) {
-			if (!envHome.mkdirs()) {
-				throw new Exception("Couldn't create this folder: "
-						+ envHome.getAbsolutePath());
-			}
-		}
-		if (!resumable) {
-			IOHelper.deleteFolderContents(envHome);
-		}
+
 		EnvironmentConfig envConfig = new EnvironmentConfig();
 		envConfig.setAllowCreate(true);
 		envConfig.setTransactional(resumable);
@@ -102,7 +88,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 	public synchronized List<T> get(int max) throws DatabaseException {
 
 		int matches = 0;
-		List<T> results = new ArrayList<>(max);
+		List<T> results = new ArrayList<T>(max);
 
 		Cursor cursor = null;
 		OperationStatus result;
@@ -161,7 +147,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 	}
 
 	@Override
-	public MapQueueIteraotr<T> iterator() {
+	public MapQueueIterator<T> iterator() {
 		Cursor cursor = null;
 		Transaction txn;
 		if (this.resumable) {
@@ -170,7 +156,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			txn = null;
 		}
 		cursor = this.urlsDB.openCursor(txn, null);
-		return new JECursorIterator<>(cursor, this.transfer);
+		return new JECursorIterator<T>(cursor, this.transfer);
 
 	}
 

@@ -17,7 +17,7 @@ public class StatisticsGetter implements Commandlet
 		if (!siteManager.isShutdown())
 		{
 			DataPacket response = new DataPacket("/statistics/get", null, null);
-			HashMap<String, String> data = new HashMap<>();
+			HashMap<String, String> data = new HashMap<String, String>();
 			long toDoSize = siteManager.getToDoTaskList().getLength();
 			long workingSize = siteManager.getWorkingTaskList().getLength();
 			long failedSize = siteManager.getFailedTaskList().getLength();

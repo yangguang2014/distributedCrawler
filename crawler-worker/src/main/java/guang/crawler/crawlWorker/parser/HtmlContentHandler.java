@@ -1,5 +1,7 @@
 package guang.crawler.crawlWorker.parser;
 
+import guang.crawler.crawlWorker.util.LinkElement;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +13,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import guang.crawler.crawlWorker.util.LinkElement;
-
 /**
  * 这个类用来从HTML中抽取URL列表的了。
  * 
@@ -20,90 +20,90 @@ import guang.crawler.crawlWorker.util.LinkElement;
  */
 public class HtmlContentHandler extends DefaultHandler
 {
-
+	
 	/**
 	 * 锚点文字信息的长度，避免过长的文字造成的影响
 	 */
-	private final int						MAX_ANCHOR_LENGTH	= 100;
-
-	private String							base;
-	private String							metaRefresh;
-	private String							metaLocation;
-
+	private final int	                 MAX_ANCHOR_LENGTH	= 100;
+	
+	private String	                     base;
+	private String	                     metaRefresh;
+	private String	                     metaLocation;
+	
 	/**
 	 * 目前是否在Body元素之中
 	 */
-	private boolean							isWithinBodyElement;
+	private boolean	                     isWithinBodyElement;
 	/**
 	 * body正文内容
 	 */
-	private StringBuilder					bodyText;
-
+	private StringBuilder	             bodyText;
+	
 	/**
 	 * 对外的链接
 	 */
 	private List<ExtractedUrlAnchorPair>	outgoingUrls;
-
+	
 	/**
 	 * 目前正在处理的URL
 	 */
-	private ExtractedUrlAnchorPair			curUrl				= null;
-	private boolean							anchorFlag			= false;
+	private ExtractedUrlAnchorPair	     curUrl	           = null;
+	private boolean	                     anchorFlag	       = false;
 	/**
 	 * 锚点的内容
 	 */
-	private StringBuilder					anchorText			= new StringBuilder();
-
+	private StringBuilder	             anchorText	       = new StringBuilder();
+	
 	public HtmlContentHandler()
 	{
 		this.isWithinBodyElement = false;
 		this.bodyText = new StringBuilder();
-		this.outgoingUrls = new ArrayList<>();
+		this.outgoingUrls = new ArrayList<ExtractedUrlAnchorPair>();
 	}
-
+	
 	@Override
 	public void characters(char ch[], int start, int length)
-			throws SAXException
+	        throws SAXException
 	{
 		if (this.isWithinBodyElement)
 		{
 			this.bodyText.append(ch, start, length);
-
+			
 			if (this.anchorFlag)
 			{
 				this.anchorText.append(new String(ch, start, length));
 			}
 		}
 	}
-
+	
 	@Override
 	public void endDocument() throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void endElement(String uri, String localName, String qName)
-			throws SAXException
+	        throws SAXException
 	{
 		LinkElement element = LinkElement.getElement(localName);
 		// 在这里只有Element.A，Element.AREA，Element.LINK三个元素，是因为需要采集它们的锚点文字信息，并不是说其他元素的链接地址不会被处理，它们同样也是被处理的。
 		if ((element == LinkElement.A) || (element == LinkElement.AREA)
-				|| (element == LinkElement.LINK))
+		        || (element == LinkElement.LINK))
 		{
 			this.anchorFlag = false;
 			if (this.curUrl != null)
 			{
 				// 去除换行和table字符，替换成空格
 				String anchor = this.anchorText.toString()
-						.replaceAll("\n", " ").replaceAll("\t", " ").trim();
+				        .replaceAll("\n", " ").replaceAll("\t", " ").trim();
 				if (!anchor.isEmpty())
 				{
 					if (anchor.length() > this.MAX_ANCHOR_LENGTH)
 					{
 						anchor = anchor.substring(0, this.MAX_ANCHOR_LENGTH)
-								+ "...";
+						        + "...";
 					}
 					this.curUrl.setAnchor(anchor);
 				}
@@ -117,104 +117,104 @@ public class HtmlContentHandler extends DefaultHandler
 			this.isWithinBodyElement = false;
 		}
 	}
-
+	
 	@Override
 	public void endPrefixMapping(String prefix) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void error(SAXParseException exception) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void fatalError(SAXParseException exception) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	public String getBaseUrl()
 	{
 		return this.base;
 	}
-
+	
 	public String getBodyText()
 	{
 		return this.bodyText.toString();
 	}
-
+	
 	public List<ExtractedUrlAnchorPair> getOutgoingUrls()
 	{
 		return this.outgoingUrls;
 	}
-
+	
 	@Override
 	public void ignorableWhitespace(char[] ch, int start, int length)
-			throws SAXException
+	        throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void notationDecl(String name, String publicId, String systemId)
-			throws SAXException
+	        throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void processingInstruction(String target, String data)
-			throws SAXException
+	        throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public InputSource resolveEntity(String publicId, String systemId)
-			throws SAXException, IOException
+	        throws SAXException, IOException
 	{
 		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public void setDocumentLocator(Locator locator)
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void skippedEntity(String name) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void startDocument() throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void startElement(String uri, String localName, String qName,
-			Attributes attributes) throws SAXException
+	        Attributes attributes) throws SAXException
 	{
 		LinkElement element = LinkElement.getElement(localName);
-
+		
 		if ((element == LinkElement.A) || (element == LinkElement.AREA)
-				|| (element == LinkElement.LINK))
+		        || (element == LinkElement.LINK))
 		{
 			String href = attributes.getValue("href");
 			if (href != null)
@@ -226,7 +226,7 @@ public class HtmlContentHandler extends DefaultHandler
 			}
 			return;
 		}
-
+		
 		if (element == LinkElement.IMG)
 		{
 			String imgSrc = attributes.getValue("src");
@@ -238,9 +238,9 @@ public class HtmlContentHandler extends DefaultHandler
 			}
 			return;
 		}
-
+		
 		if ((element == LinkElement.IFRAME) || (element == LinkElement.FRAME)
-				|| (element == LinkElement.EMBED))
+		        || (element == LinkElement.EMBED))
 		{
 			String src = attributes.getValue("src");
 			if (src != null)
@@ -251,7 +251,7 @@ public class HtmlContentHandler extends DefaultHandler
 			}
 			return;
 		}
-
+		
 		if (element == LinkElement.BASE)
 		{
 			if (this.base != null)
@@ -265,7 +265,7 @@ public class HtmlContentHandler extends DefaultHandler
 			}
 			return;
 		}
-
+		
 		if (element == LinkElement.META)
 		{
 			String equiv = attributes.getValue("http-equiv");
@@ -273,7 +273,7 @@ public class HtmlContentHandler extends DefaultHandler
 			if ((equiv != null) && (content != null))
 			{
 				equiv = equiv.toLowerCase();
-
+				
 				// http-equiv="refresh" content="0;URL=http://foo.bar/..."
 				if (equiv.equals("refresh") && (this.metaRefresh == null))
 				{
@@ -286,7 +286,7 @@ public class HtmlContentHandler extends DefaultHandler
 					this.curUrl.setHref(this.metaRefresh);
 					this.outgoingUrls.add(this.curUrl);
 				}
-
+				
 				// http-equiv="location" content="http://foo.bar/..."
 				if (equiv.equals("location") && (this.metaLocation == null))
 				{
@@ -298,34 +298,34 @@ public class HtmlContentHandler extends DefaultHandler
 			}
 			return;
 		}
-
+		
 		if (element == LinkElement.BODY)
 		{
 			this.isWithinBodyElement = true;
 		}
-
+		
 	}
-
+	
 	@Override
 	public void startPrefixMapping(String prefix, String uri)
-			throws SAXException
+	        throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void unparsedEntityDecl(String name, String publicId,
-			String systemId, String notationName) throws SAXException
+	        String systemId, String notationName) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
-
+	
 	@Override
 	public void warning(SAXParseException exception) throws SAXException
 	{
 		// TODO Auto-generated method stub
-
+		
 	}
 }

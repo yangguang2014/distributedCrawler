@@ -1,6 +1,6 @@
 package guang.crawler.siteManager.docid;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 
 public class SimpleIncretmentDocidServer implements DocidServer
 {

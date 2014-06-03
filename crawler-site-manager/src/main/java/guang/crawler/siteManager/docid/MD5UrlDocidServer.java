@@ -1,6 +1,6 @@
 package guang.crawler.siteManager.docid;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

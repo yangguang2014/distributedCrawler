@@ -10,58 +10,52 @@ import java.util.BitSet;
  * @author yang
  * 
  */
-public class BitMapFilter implements ObjectFilter
-{
-	private final int	  FILTER_SIZE	= 16 * 1024 * 1024;
-	private final String	DIGESTALG	= "MD5";
-	private BitSet	      filterData;
-	private MessageDigest	digest;
-	
-	public BitMapFilter() throws NoSuchAlgorithmException
-	{
+public class BitMapFilter implements ObjectFilter {
+	public static BitMapFilter newFilter() throws NoSuchAlgorithmException {
+		return new BitMapFilter();
+	}
+
+	private final int FILTER_SIZE = 16 * 1024 * 1024;
+	private final String DIGESTALG = "MD5";
+	private BitSet filterData;
+
+	private MessageDigest digest;
+
+	private BitMapFilter() throws NoSuchAlgorithmException {
 		this.filterData = new BitSet(this.FILTER_SIZE);
 		this.digest = MessageDigest.getInstance(this.DIGESTALG);
 	}
-	
+
 	@Override
-	public boolean contains(Object object)
-	{
-		if (object == null)
-		{
+	public boolean contains(Object object) {
+		if (object == null) {
 			return false;
 		}
 		int bitIdx = this.hashObject(object);
-		synchronized (this.filterData)
-		{
+		synchronized (this.filterData) {
 			return this.filterData.get(bitIdx);
-			
+
 		}
 	}
-	
+
 	@Override
-	public boolean containsAndSet(Object object)
-	{
-		if (object == null)
-		{
+	public boolean containsAndSet(Object object) {
+		if (object == null) {
 			return false;
 		}
 		int bitIdx = this.hashObject(object);
-		synchronized (this.filterData)
-		{
-			if (this.filterData.get(bitIdx))
-			{
+		synchronized (this.filterData) {
+			if (this.filterData.get(bitIdx)) {
 				return true;
-			} else
-			{
+			} else {
 				this.filterData.set(bitIdx);
 				return false;
 			}
-			
+
 		}
 	}
-	
-	private int hashObject(Object object)
-	{
+
+	private int hashObject(Object object) {
 		byte[] digestData = this.digest.digest(object.toString().getBytes());
 		int bitIdx = 0;
 		bitIdx |= (digestData[7] & 0xff);
@@ -71,5 +65,5 @@ public class BitMapFilter implements ObjectFilter
 		bitIdx |= (digestData[9] & 0xff);
 		return bitIdx;
 	}
-	
+
 }

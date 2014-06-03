@@ -2,7 +2,7 @@ package guang.crawler.siteManager;
 
 import guang.crawler.centerController.CenterConfig;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.AcceptJsonServer;
 import guang.crawler.jsonServer.JsonServer;
 import guang.crawler.jsonServer.ServerStartException;
@@ -10,15 +10,19 @@ import guang.crawler.siteManager.daemon.QueueCleannerDaemon;
 import guang.crawler.siteManager.daemon.SiteBackupDaemon;
 import guang.crawler.siteManager.daemon.SiteManagerWatcherDaemon;
 import guang.crawler.siteManager.docid.DocidServer;
-import guang.crawler.siteManager.docid.SimpleIncretmentDocidServer;
+import guang.crawler.siteManager.docid.MD5UrlDocidServer;
 import guang.crawler.siteManager.jobQueue.JEQueue;
 import guang.crawler.siteManager.jobQueue.JEQueueElementTransfer;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 import guang.crawler.siteManager.jobQueue.WebURLTransfer;
+import guang.crawler.siteManager.urlFilter.BitMapFilter;
+import guang.crawler.siteManager.urlFilter.ObjectFilter;
+import guang.crawler.siteManager.util.IOHelper;
 import guang.crawler.util.NetworkHelper;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.UnknownHostException;
 import java.util.Timer;
 
 import org.apache.zookeeper.KeeperException;
@@ -40,6 +44,7 @@ public class SiteManager {
 	private DocidServer docidServer;
 	private JsonServer jsonServer;
 	private static SiteManager siteManager;
+	private ObjectFilter urlsFilter;
 
 	private Timer siteManagerTimer;
 
@@ -60,6 +65,10 @@ public class SiteManager {
 
 	public MapQueue<WebURL> getToDoTaskList() {
 		return this.toDoTaskList;
+	}
+
+	public ObjectFilter getUrlsFilter() {
+		return this.urlsFilter;
 	}
 
 	public MapQueue<WebURL> getWorkingTaskList() {
@@ -86,13 +95,26 @@ public class SiteManager {
 	}
 
 	private void initJobQueue() throws Exception {
+		// 每个不同的siteManager都有其自身的工作目录
+		File envHome = new File(this.siteConfig.getWorkDir() + "/"
+				+ SiteConfig.me().getSiteManagerInfo().getSiteToHandle()
+				+ "/je-queues");
+		if (envHome.exists()) {
+			IOHelper.deleteFolderContents(envHome);
+		}
+		if (!envHome.exists()) {
+			if (!envHome.mkdirs()) {
+				throw new Exception("Couldn't create this folder: "
+						+ envHome.getAbsolutePath());
+			}
+		}
 		JEQueueElementTransfer<WebURL> transfer = new WebURLTransfer();
-		this.toDoTaskList = new JEQueue<>(this.siteConfig.getWorkDir(), "todo",
-				false, transfer);
-		this.workingTaskList = new JEQueue<>(this.siteConfig.getWorkDir(),
-				"working", false, transfer);
-		this.failedTaskList = new JEQueue<>(this.siteConfig.getWorkDir(),
-				"failed", false, transfer);
+		this.toDoTaskList = new JEQueue<WebURL>(envHome, "todo", false,
+				transfer);
+		this.workingTaskList = new JEQueue<WebURL>(envHome, "working", false,
+				transfer);
+		this.failedTaskList = new JEQueue<WebURL>(envHome, "failed", false,
+				transfer);
 
 	}
 
@@ -112,11 +134,17 @@ public class SiteManager {
 				this.siteConfig.getSiteManagerInfo().setManagerAddress(
 						NetworkHelper.getIPAddress() + ":"
 								+ this.jsonServer.getPort(), true);
-			} catch (IOException | KeeperException e) {
+			} catch (UnknownHostException e) {
 				throw new SiteManagerException(
 						"can not regist the json server", e);
-
+			} catch (IOException e) {
+				throw new SiteManagerException(
+						"can not regist the json server", e);
+			} catch (KeeperException e) {
+				throw new SiteManagerException(
+						"can not regist the json server", e);
 			}
+
 		} catch (ServerStartException e) {
 			System.out.println("[Failed] server created failed!");
 			e.printStackTrace();
@@ -153,28 +181,15 @@ public class SiteManager {
 				WebURL url = new WebURL();
 				url.setURL(seed);
 				url.setDepth((short) 1);
-				url.setSiteManagerName(this.siteConfig.getSiteManagerInfo()
+				url.setSiteManagerId(this.siteConfig.getSiteManagerInfo()
 						.getSiteManagerId());
+				url.setSiteId(this.siteConfig.getSiteToHandle().getSiteId());
 				url.setDocid(this.docidServer.next(url));
 				this.toDoTaskList.put(url);
 			}
 
 		}
 
-	}
-
-	/**
-	 * 关闭站点管理器 关闭后台线程，然后强制进行一次备份
-	 */
-	public void stopSiteManager() {
-		// 1. 关闭所有线程
-		this.stopDaemon();
-		// 2. 强制进行一次备份
-		this.backuperDaemon.forceBackup();
-		// 3. 关闭相关数据结构
-		this.toDoTaskList.close();
-		this.workingTaskList.close();
-		this.failedTaskList.close();
 	}
 
 	/**
@@ -185,12 +200,23 @@ public class SiteManager {
 		try {
 			managerInfo = this.centerConfig.getSiteManagersConfigInfo()
 					.getOnlineSiteManagers().registSiteManager();
-		} catch (InterruptedException | IOException | KeeperException e) {
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+			System.out
+					.println("Error to start site manager: regist site manager failed.");
+			return;
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.out
+					.println("Error to start site manager: regist site manager failed.");
+			return;
+		} catch (KeeperException e) {
 			e.printStackTrace();
 			System.out
 					.println("Error to start site manager: regist site manager failed.");
 			return;
 		}
+
 		this.siteConfig.setSiteManagerInfo(managerInfo);
 		this.siteManagerWatcherDaemon = new Thread(
 				new SiteManagerWatcherDaemon(), "site-manager-watcher daemon");
@@ -216,11 +242,12 @@ public class SiteManager {
 	public void startSiteManager() throws Exception {
 		// 1. 初始化工作队列
 		this.initJobQueue();
+		this.urlsFilter = BitMapFilter.newFilter();
 		// 2. 初始化相关后台线程
 		this.initJSONServer();
-		this.docidServer = new SimpleIncretmentDocidServer();
-		this.cleannerDaemon = QueueCleannerDaemon.me();
-		this.backuperDaemon = SiteBackupDaemon.me().init();
+		this.docidServer = new MD5UrlDocidServer();
+		this.cleannerDaemon = QueueCleannerDaemon.newDaemon();
+		this.backuperDaemon = SiteBackupDaemon.newDaemon().init();
 		// 3. 加载备份数据
 		this.loadWorkQueue();
 		// 4. 启动这些后台线程
@@ -233,6 +260,20 @@ public class SiteManager {
 		this.siteManagerTimer.cancel();
 		this.jsonServer.shutdown();
 		this.jsonServer.waitForStop();
+	}
+
+	/**
+	 * 关闭站点管理器 关闭后台线程，然后强制进行一次备份
+	 */
+	public void stopSiteManager() {
+		// 1. 关闭所有线程
+		this.stopDaemon();
+		// 2. 强制进行一次备份
+		this.backuperDaemon.forceBackup();
+		// 3. 关闭相关数据结构
+		this.toDoTaskList.close();
+		this.workingTaskList.close();
+		this.failedTaskList.close();
 	}
 
 }

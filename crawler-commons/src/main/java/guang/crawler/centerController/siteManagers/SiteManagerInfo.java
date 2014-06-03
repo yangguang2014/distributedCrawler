@@ -1,8 +1,8 @@
 package guang.crawler.centerController.siteManagers;
 
 import guang.crawler.centerController.CenterConfigElement;
+import guang.crawler.commons.GenericState;
 import guang.crawler.connector.CenterConfigConnector;
-import guang.crawler.core.GenericState;
 import guang.crawler.util.PathHelper;
 
 import java.io.IOException;

@@ -1,15 +1,13 @@
 package guang.crawler.siteManager.commandlet;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.Commandlet;
 import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 import guang.crawler.siteManager.docid.DocidServer;
-import guang.crawler.siteManager.urlFilter.BitMapFilter;
 import guang.crawler.siteManager.urlFilter.ObjectFilter;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.LinkedList;
 
 import com.alibaba.fastjson.JSON;
@@ -17,12 +15,8 @@ import com.alibaba.fastjson.JSON;
 public class URLsPutter implements Commandlet {
 	private final ObjectFilter urlFilter;
 
-	public URLsPutter() throws NoSuchAlgorithmException {
-		this(new BitMapFilter());
-	}
-
-	public URLsPutter(ObjectFilter urlFilter) {
-		this.urlFilter = urlFilter;
+	public URLsPutter() {
+		this.urlFilter = SiteManager.me().getUrlsFilter();
 	}
 
 	@Override
@@ -47,15 +41,17 @@ public class URLsPutter implements Commandlet {
 			}
 
 			if (count > 0) {
-				filteredResult = new LinkedList<>();
+				filteredResult = new LinkedList<WebURL>();
 				for (int i = 0; i < count; i++) {
 					String webUrlJson = request.getData().get("URL" + i);
 					WebURL url = JSON.parseObject(webUrlJson, WebURL.class);
 					boolean contains = this.urlFilter.containsAndSet(url
 							.getURL());
 					if (!contains) {
-						url.setSiteManagerName(SiteConfig.me()
+						url.setSiteManagerId(SiteConfig.me()
 								.getSiteManagerInfo().getSiteManagerId());
+						url.setSiteId(SiteConfig.me().getSiteToHandle()
+								.getSiteId());
 						filteredResult.add(url);
 
 					}

@@ -1,6 +1,7 @@
 package guang.crawler.centerController.config;
 
 import guang.crawler.centerController.CenterConfigElement;
+import guang.crawler.commons.service.WebGatherNodeBean;
 import guang.crawler.connector.CenterConfigConnector;
 import guang.crawler.util.PathHelper;
 

@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker.parser;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.crawlWorker.WorkerConfig;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.url.URLCanonicalizer;
@@ -108,7 +108,7 @@ public class Parser
 		parseData.setText(contentHandler.getBodyText().trim());
 		parseData.setTitle(metadata.get(DublinCore.TITLE));
 		
-		List<WebURL> outgoingUrls = new ArrayList<>();
+		List<WebURL> outgoingUrls = new ArrayList<WebURL>();
 		
 		String baseURL = contentHandler.getBaseUrl();
 		if (baseURL != null)

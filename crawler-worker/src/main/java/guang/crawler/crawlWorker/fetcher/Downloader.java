@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker.fetcher;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 import guang.crawler.crawlWorker.parser.Parser;
 import guang.crawler.crawlWorker.plugins.DownloadPlugin;
 
@@ -13,19 +13,19 @@ public class Downloader
 	private Parser	                   parser;
 	private PageFetcher	               pageFetcher;
 	private LinkedList<DownloadPlugin>	downloadPlugins;
-
+	
 	public Downloader()
 	{
 		this.parser = new Parser();
 		this.pageFetcher = new PageFetcher();
-		this.downloadPlugins = new LinkedList<>();
+		this.downloadPlugins = new LinkedList<DownloadPlugin>();
 	}
-
+	
 	public void addPlugin(DownloadPlugin plugin)
 	{
 		this.downloadPlugins.add(plugin);
 	}
-
+	
 	private Page download(WebURL curURL)
 	{
 		PageFetchResult fetchResult = null;
@@ -56,7 +56,7 @@ public class Downloader
 		}
 		return null;
 	}
-
+	
 	public void processUrl(WebURL url)
 	{
 		System.out.println("Processing: " + url);
@@ -77,7 +77,7 @@ public class Downloader
 		}
 		System.out.println("==============");
 	}
-
+	
 	public void shutdown()
 	{
 		if (this.pageFetcher != null)

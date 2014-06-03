@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker.parser;
 
-import guang.crawler.core.WebURL;
+import guang.crawler.commons.WebURL;
 
 import java.util.List;
 

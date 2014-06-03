@@ -16,7 +16,7 @@ public enum LinkElement
 	{
 		if (LinkElement.elements == null)
 		{
-			LinkElement.elements = new HashMap<>();
+			LinkElement.elements = new HashMap<String, LinkElement>();
 			LinkElement[] values = LinkElement.values();
 			for (LinkElement value : values)
 			{

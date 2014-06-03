@@ -9,20 +9,24 @@ import java.nio.channels.FileChannel;
  * 用来处理一些IO操作
  * 
  * @author yang
- *
+ * 
  */
 public class IOHelper
 {
-
+	
 	public static boolean deleteFolder(File folder)
 	{
 		return IOHelper.deleteFolderContents(folder) && folder.delete();
 	}
-
+	
 	public static boolean deleteFolderContents(File folder)
 	{
 		System.out.println("Deleting content of: " + folder.getAbsolutePath());
 		File[] files = folder.listFiles();
+		if (files == null)
+		{
+			return true;
+		}
 		for (File file : files)
 		{
 			if (file.isFile())
@@ -41,13 +45,13 @@ public class IOHelper
 		}
 		return true;
 	}
-
+	
 	public static void writeBytesToFile(byte[] bytes, String destination)
 	{
 		try
 		{
 			FileOutputStream fileOutputStream = new FileOutputStream(
-					destination);
+			        destination);
 			FileChannel fc = fileOutputStream.getChannel();
 			fc.write(ByteBuffer.wrap(bytes));
 			fileOutputStream.close();
