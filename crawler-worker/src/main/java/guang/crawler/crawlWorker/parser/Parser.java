@@ -22,157 +22,129 @@ import org.apache.tika.parser.html.HtmlParser;
 /**
  * @author Yasser Ganjisaffar <lastname at gmail dot com>
  */
-public class Parser
-{
-	
-	protected static final Logger	logger	= Logger.getLogger(Parser.class
-	                                               .getName());
-	private HtmlParser	          htmlParser;
-	private ParseContext	      parseContext;
-	
-	public Parser()
-	{
+public class Parser {
+
+	protected static final Logger logger = Logger.getLogger(Parser.class
+			.getName());
+	private HtmlParser htmlParser;
+	private ParseContext parseContext;
+
+	public Parser() {
 		this.htmlParser = new HtmlParser();
 		this.parseContext = new ParseContext();
 	}
-	
-	public boolean parse(Page page, String contextURL)
-	{
-		
-		if (Util.hasBinaryContent(page.getContentType()))
-		{
-			if (!WorkerConfig.me().isIncludeBinaryContentInCrawling())
-			{
+
+	public boolean parse(Page page, String contextURL) {
+
+		if (Util.hasBinaryContent(page.getContentType())) {
+			if (!WorkerConfig.me().isIncludeBinaryContentInCrawling()) {
 				return false;
 			}
-			
+
 			page.setParseData(BinaryParseData.getInstance());
 			return true;
-			
-		} else if (Util.hasPlainTextContent(page.getContentType()))
-		{ // 如果只是一般的文本，而不是HTML页面，那么就没有什么好处理的了
-			try
-			{
+
+		} else if (Util.hasPlainTextContent(page.getContentType())) { // 如果只是一般的文本，而不是HTML页面，那么就没有什么好处理的了
+			try {
 				TextParseData parseData = new TextParseData();
-				if (page.getContentCharset() == null)
-				{
+				if (page.getContentCharset() == null) {
 					parseData.setTextContent(new String(page.getContentData()));
-				} else
-				{
+				} else {
 					parseData.setTextContent(new String(page.getContentData(),
-					        page.getContentCharset()));
+							page.getContentCharset()));
 				}
 				page.setParseData(parseData);
 				return true;
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				Parser.logger.error(e.getMessage() + ", while parsing: "
-				        + page.getWebURL().getURL());
+						+ page.getWebURL().getURL());
 			}
 			return false;
 		}
-		
+
 		Metadata metadata = new Metadata();
 		HtmlContentHandler contentHandler = new HtmlContentHandler();
 		InputStream inputStream = null;
-		try
-		{
+		try {
 			inputStream = new ByteArrayInputStream(page.getContentData());
 			this.htmlParser.parse(inputStream, contentHandler, metadata,
-			        this.parseContext);
-		} catch (Exception e)
-		{
+					this.parseContext);
+		} catch (Exception e) {
 			Parser.logger.error(e.getMessage() + ", while parsing: "
-			        + page.getWebURL().getURL());
-		} finally
-		{
-			try
-			{
-				if (inputStream != null)
-				{
+					+ page.getWebURL().getURL());
+		} finally {
+			try {
+				if (inputStream != null) {
 					inputStream.close();
 				}
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				Parser.logger.error(e.getMessage() + ", while parsing: "
-				        + page.getWebURL().getURL());
+						+ page.getWebURL().getURL());
 			}
 		}
-		
-		if (page.getContentCharset() == null)
-		{
+
+		if (page.getContentCharset() == null) {
 			page.setContentCharset(metadata.get("Content-Encoding"));
 		}
-		
+
 		HtmlParseData parseData = new HtmlParseData();
 		parseData.setText(contentHandler.getBodyText().trim());
 		parseData.setTitle(metadata.get(DublinCore.TITLE));
-		
+
 		List<WebURL> outgoingUrls = new ArrayList<WebURL>();
-		
+
 		String baseURL = contentHandler.getBaseUrl();
-		if (baseURL != null)
-		{
+		if (baseURL != null) {
 			contextURL = baseURL;
 		}
-		
+
 		int urlCount = 0;
 		for (ExtractedUrlAnchorPair urlAnchorPair : contentHandler
-		        .getOutgoingUrls())
-		{
+				.getOutgoingUrls()) {
 			String href = urlAnchorPair.getHref();
 			href = href.trim();
-			if (href.length() == 0)
-			{
+			if (href.length() == 0) {
 				continue;
 			}
 			String hrefWithoutProtocol = href.toLowerCase();
-			if (href.startsWith("http://"))
-			{
+			if (href.startsWith("http://")) {
 				hrefWithoutProtocol = href.substring(7);
 			}
 			if (!hrefWithoutProtocol.contains("javascript:")
-			        && !hrefWithoutProtocol.contains("mailto:")
-			        && !hrefWithoutProtocol.contains("@"))
-			{
+					&& !hrefWithoutProtocol.contains("mailto:")
+					&& !hrefWithoutProtocol.contains("@")) {
 				String url = URLCanonicalizer.getCanonicalURL(href, contextURL);
-				if (url != null)
-				{
+				if (url != null) {
 					WebURL webURL = new WebURL();
 					webURL.setURL(url);
 					webURL.setAnchor(urlAnchorPair.getAnchor());
 					outgoingUrls.add(webURL);
 					urlCount++;
 					if (urlCount > WorkerConfig.me()
-					        .getMaxOutgoingLinksToFollow())
-					{
+							.getMaxOutgoingLinksToFollow()) {
 						break;
 					}
 				}
 			}
 		}
-		
+
 		parseData.setOutgoingUrls(outgoingUrls);
-		
-		try
-		{
-			if (page.getContentCharset() == null)
-			{
+
+		try {
+			if (page.getContentCharset() == null) {
 				parseData.setHtml(new String(page.getContentData()));
-			} else
-			{
+			} else {
 				parseData.setHtml(new String(page.getContentData(), page
-				        .getContentCharset()));
+						.getContentCharset()));
 			}
-		} catch (UnsupportedEncodingException e)
-		{
+		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 			return false;
 		}
-		
+
 		page.setParseData(parseData);
 		return true;
-		
+
 	}
-	
+
 }

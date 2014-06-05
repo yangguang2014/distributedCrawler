@@ -47,7 +47,7 @@ public class ControllerManagerWatcher extends Thread implements Watcher
 		switch (event.getType())
 		{
 		case NodeDeleted: // 之前的监控者已经退出了，那么想办法取代该节点
-			synchronized (event)
+			synchronized (this.eventTime)
 			{
 				this.eventTime.setTime(System.currentTimeMillis());
 				this.eventTime.notifyAll();

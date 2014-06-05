@@ -1,19 +1,46 @@
 #!/bin/bash
-CRAWLER_HOME=/home/yang/work/workspace/distributeCrawler/crawlerDist/target/release/crawlerDist-1.0-SNAPSHOT-release
-LIB_DIR=$CRAWLER_HOME/lib
-# set class path
-if [ "x$CP" = "x" ];then
-	for i in `ls $LIB_DIR/*.jar`;do 
-		if [ "x$CP" = "x" ];then 
-			CP=$i;
-		else 
-			CP=$CP:$i
-		fi;
-	done;
+
+# CRAWLER_HOME=
+# CLASS_PATH=
+# JVM_ARG=
+LAUNCHER_CLASS=guang.crawler.siteManager.SiteManagerMain
+
+# caculate CRAWLER_HOME directory
+enterCrawlerHome(){
+	if [ "x$CRAWLER_HOME" = "x" ];then
+		CRAWLER_HOME=$(which $0)
+		match=$(echo $CRAWLER_HOME|grep "^/.*")
+		if [ "x$match" = "x" ];then
+			CRAWLER_HOME=$PWD/$CRAWLER_HOME
+		fi
+		unset match
+		CRAWLER_HOME=$(dirname $CRAWLER_HOME)
+		cd $CRAWLER_HOME
+		cd ..
+		CRAWLER_HOME=$PWD
+	else
+		cd $CRAWLER_HOME
+	fi
+}
+# caculate class path
+getClassPath(){
+	for jar in $(ls lib/*.jar);do
+		if [ "x$CLASS_PATH" = "x" ];then
+			CLASS_PATH=$jar
+		else
+			CLASS_PATH=$CLASS_PATH:$jar
+		fi
+	done
+}
+if [ "x$LAUNCHER_CLASS" = "x" ];then
+	echo "Main class of launcher should be set!"
+	echo "exit ..."
+	exit 1;
 fi
 
-# set main class
-MAIN=guang.crawler.siteManager.Main
-
-# run main class
-java -cp $CP $MAIN
+if [ "x$CRAWLER_HOME" = "x" ];then
+	enterCrawlerHome
+fi
+getClassPath
+export CRAWLER_HOME
+java ${CLASS_PATH:+-cp $CLASS_PATH} ${JVM_ARG} ${LAUNCHER_CLASS} 1>$CRAWLER_HOME/log/site-manager.txt 2>&1 &

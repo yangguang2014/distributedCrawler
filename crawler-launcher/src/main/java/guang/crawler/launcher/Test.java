@@ -12,6 +12,6 @@ public class Test
 		        "crawler.home",
 		        System.getProperty("user.home")
 		                + "/work/workspace/distributedCrawler/target/distribute-crawler-1.0-SNAPSHOT-release");
-		Main.main(args);
+		CrawlerLauncherMain.main(args);
 	}
 }

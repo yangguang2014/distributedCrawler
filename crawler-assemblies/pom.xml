@@ -10,7 +10,7 @@
 	<artifactId>crawler-assemblies</artifactId>
 	<build>
 		<filters>
-			<filter>src/main/resources/filters/site-manager.filter</filter>
+			<filter>${filter.file}</filter>
 		</filters>
 		<plugins>
 			<plugin>
@@ -49,6 +49,7 @@
 								<descriptor>src/main/resources/assemblies/lib.xml</descriptor>
 								<descriptor>src/main/resources/assemblies/conf.xml</descriptor>
 								<descriptor>src/main/resources/assemblies/etc.xml</descriptor>
+								<descriptor>src/main/resources/assemblies/log.xml</descriptor>
 								<descriptor>src/main/resources/assemblies/bin.xml</descriptor>
 								<descriptor>src/main/resources/assemblies/compress.xml</descriptor>
 							</descriptors>

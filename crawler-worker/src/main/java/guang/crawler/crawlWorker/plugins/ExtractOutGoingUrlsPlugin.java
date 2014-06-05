@@ -1,10 +1,10 @@
 package guang.crawler.crawlWorker.plugins;
 
 import guang.crawler.commons.WebURL;
+import guang.crawler.crawlWorker.daemon.SiteManagerConnectorManager;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.parser.HtmlParseData;
 import guang.crawler.crawlWorker.parser.TextParseData;
-import guang.crawler.crawlWorker.util.SiteManagerConnectorManager;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -14,26 +14,15 @@ import java.util.regex.Pattern;
 public class ExtractOutGoingUrlsPlugin implements DownloadPlugin
 {
 	private SiteManagerConnectorManager	siteManagerConnectHelper;
-	private Pattern	                 filter	= Pattern
-	                                                .compile(".*(\\.(css|js|bmp|gif|jpe?g"
-	                                                        + "|png|tiff?|mid|mp2|mp3|mp4"
-	                                                        + "|wav|avi|mov|mpeg|ram|m4v|pdf"
-	                                                        + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+	private Pattern	                    filter	= Pattern
+	                                                   .compile(".*(\\.(css|js|bmp|gif|jpe?g"
+	                                                           + "|png|tiff?|mid|mp2|mp3|mp4"
+	                                                           + "|wav|avi|mov|mpeg|ram|m4v|pdf"
+	                                                           + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 	
 	public ExtractOutGoingUrlsPlugin()
 	{
-	}
-	
-	public ExtractOutGoingUrlsPlugin(
-	        SiteManagerConnectorManager siteManagerConnectHelper)
-	{
-		this.siteManagerConnectHelper = siteManagerConnectHelper;
-	}
-	
-	public void setSiteManagerConnector(
-	        SiteManagerConnectorManager siteManagerConnectHelper)
-	{
-		this.siteManagerConnectHelper = siteManagerConnectHelper;
+		this.siteManagerConnectHelper = SiteManagerConnectorManager.me();
 	}
 	
 	@Override

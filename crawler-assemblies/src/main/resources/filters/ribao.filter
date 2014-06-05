@@ -1,0 +1,6 @@
+# 实验室环境下的配置
+crawler.hadoop.user=zhou
+crawler.hadoop.url=hdfs://debian04:8020
+crawler.zookeeper.quorum=debian03,debian04,debian05
+crawler.zookeeper.clientPort=2181
+crawler.hadoop.path=/home/crawler

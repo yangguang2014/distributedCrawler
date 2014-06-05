@@ -167,4 +167,25 @@
 			</plugins>
 		</pluginManagement>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>lab</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<properties>
+				<filter.file>src/main/resources/filters/lab.filter</filter.file>
+			</properties>
+		</profile>
+		<profile>
+			<id>ribao</id>
+			<activation>
+				<activeByDefault>false</activeByDefault>
+			</activation>
+			<properties>
+				<filter.file>src/main/resources/filters/ribao.filter</filter.file>
+			</properties>
+		</profile>
+	</profiles>
 </project>

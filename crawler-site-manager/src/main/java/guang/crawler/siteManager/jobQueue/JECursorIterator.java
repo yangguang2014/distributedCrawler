@@ -6,7 +6,6 @@ import com.sleepycat.je.OperationStatus;
 
 public class JECursorIterator<T> implements MapQueueIterator<T> {
 	private final Cursor cursor;
-	private DatabaseEntry key = null;
 	private DatabaseEntry value = null;
 	private final JEQueueElementTransfer<T> transfer;
 
@@ -32,8 +31,7 @@ public class JECursorIterator<T> implements MapQueueIterator<T> {
 			@SuppressWarnings("unused")
 			DatabaseEntry key = new DatabaseEntry();
 			this.value = new DatabaseEntry();
-			OperationStatus result = this.cursor.getNext(this.key, this.value,
-					null);
+			OperationStatus result = this.cursor.getNext(key, this.value, null);
 			if (result == OperationStatus.SUCCESS) {
 				return true;
 			} else {
@@ -49,7 +47,7 @@ public class JECursorIterator<T> implements MapQueueIterator<T> {
 		if (this.hasNext()) {
 			result = this.transfer.entryToObject(this.value);
 		}
-		this.key = this.value = null;
+		this.value = null;
 		return result;
 	}
 

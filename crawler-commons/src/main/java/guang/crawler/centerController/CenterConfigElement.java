@@ -45,6 +45,10 @@ public abstract class CenterConfigElement {
 		return this.path;
 	}
 
+	public Properties getProperties() {
+		return this.values;
+	}
+
 	public String getProperty(String key) {
 		return this.values.getProperty(key);
 	}

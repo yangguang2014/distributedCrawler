@@ -1,4 +1,4 @@
-package guang.crawler.crawlWorker.util;
+package guang.crawler.crawlWorker.daemon;
 
 import guang.crawler.centerController.CenterConfig;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
@@ -7,7 +7,6 @@ import guang.crawler.connector.JSONServerConnector;
 import guang.crawler.jsonServer.DataPacket;
 
 import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -18,23 +17,33 @@ import java.util.Set;
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
-import org.apache.zookeeper.Watcher.Event.EventType;
 
 import com.alibaba.fastjson.JSON;
 
-public class SiteManagerConnectorManager implements Watcher
+public class SiteManagerConnectorManager implements Watcher, Runnable
 {
+	private static SiteManagerConnectorManager	connectorManager;
+	
+	public static SiteManagerConnectorManager me()
+	{
+		if (SiteManagerConnectorManager.connectorManager == null)
+		{
+			SiteManagerConnectorManager.connectorManager = new SiteManagerConnectorManager();
+		}
+		return SiteManagerConnectorManager.connectorManager;
+	}
+	
 	private HashMap<String, JSONServerConnector>	     connectors;
 	private CenterConfig	                             centerConfig;
 	private Iterator<Entry<String, JSONServerConnector>>	connectorIterator;
 	
-	private Date	                                     eventTime	    = new Date();
-	private Date	                                     lastUpdateTime	= new Date();
+	private Date	                                     eventTime	= new Date();
 	
-	public SiteManagerConnectorManager(CenterConfig controller)
-	        throws UnknownHostException, IOException
+	private Thread	                                     managerThread;
+	
+	private SiteManagerConnectorManager()
 	{
-		this.centerConfig = controller;
+		this.centerConfig = CenterConfig.me();
 		this.connectors = new HashMap<String, JSONServerConnector>();
 	}
 	
@@ -59,61 +68,62 @@ public class SiteManagerConnectorManager implements Watcher
 		return this.connectors.size();
 	}
 	
-	public WebURL getURL() throws IOException, InterruptedException,
-	        KeeperException
+	/**
+	 * 获取一个URL
+	 * 
+	 * @return 返回null，表示获取失败，应当再次获取；返回非null表示成功获取了URL；如果当前没有可以使用的连接，那么直接阻塞。
+	 * @throws InterruptedException
+	 */
+	public WebURL getURL() throws InterruptedException
 	{
-		// 如果有新的情况发生，就更新站点信息
-		if (this.lastUpdateTime.before(this.eventTime))
+		JSONServerConnector connector = null;
+		synchronized (this.connectors)
 		{
-			this.refreshConnectors();
+			while (this.connectors.size() == 0)
+			{
+				this.connectors.wait();
+			}
+			if ((this.connectorIterator == null)
+			        || !this.connectorIterator.hasNext())
+			{
+				this.connectorIterator = this.connectors.entrySet().iterator();
+			}
+			connector = this.connectorIterator.next().getValue();
+		}
+		if (connector == null)
+		{
+			return null;
 		}
 		DataPacket data = new DataPacket("/url/get", null, null);
 		HashMap<String, String> requestData = new HashMap<String, String>();
 		requestData.put("COUNT", "1");
 		data.setData(requestData);
-		if (this.connectors.size() == 0)
+		DataPacket result = null;
+		try
 		{
-			this.refreshConnectors();
+			connector.send(data);
+			result = connector.read();
+		} catch (IOException e)
+		{
+			result = null;
 		}
-		if (this.connectors.size() == 0)
+		if (result != null)
 		{
-			return null;
-		}
-		if ((this.connectorIterator == null)
-		        || !this.connectorIterator.hasNext())
-		{
-			this.connectorIterator = this.connectors.entrySet().iterator();
-		}
-		
-		for (int j = 0; j < this.connectors.size(); j++)
-		{
-			if (!this.connectorIterator.hasNext())
+			int count = Integer.parseInt(result.getData().get("COUNT"));
+			if (count > 0)
 			{
-				this.connectorIterator = this.connectors.entrySet().iterator();
+				String url = result.getData().get("URL_LIST" + 0);
+				return JSON.parseObject(url, WebURL.class);
 			}
-			JSONServerConnector connector = this.connectorIterator.next()
-			        .getValue();
-			DataPacket result = null;
-			try
-			{
-				connector.send(data);
-				result = connector.read();
-			} catch (IOException e)
-			{
-				this.refreshConnectors();
-			}
-			if (result != null)
-			{
-				int count = Integer.parseInt(result.getData().get("COUNT"));
-				if (count > 0)
-				{
-					String url = result.getData().get("URL_LIST" + 0);
-					return JSON.parseObject(url, WebURL.class);
-				}
-			}
-			
 		}
 		return null;
+	}
+	
+	public SiteManagerConnectorManager init()
+	{
+		this.managerThread = new Thread(this, "SiteManagerConnectorDaemon");
+		this.managerThread.setDaemon(true);
+		return this;
 	}
 	
 	@Override
@@ -124,27 +134,16 @@ public class SiteManagerConnectorManager implements Watcher
 		{
 			CenterConfig.me().getWorkersInfo().getOnlineWorkers()
 			        .getWorkerRefreshPath().watch(this);
-		} catch (KeeperException e)
+		} catch (Exception e)
 		{
-			e.printStackTrace();
-			return;
-		} catch (InterruptedException e)
-		{
-			e.printStackTrace();
-			return;
-		} catch (IOException e)
-		{
-			e.printStackTrace();
 			return;
 		}
-		if (EventType.NodeDataChanged == event.getType())
+		synchronized (this.eventTime)
 		{
-			synchronized (this.eventTime)
-			{
-				this.eventTime.setTime(System.currentTimeMillis());
-				this.eventTime.notifyAll();
-			}
+			this.eventTime.setTime(System.currentTimeMillis());
+			this.eventTime.notifyAll();
 		}
+		
 	}
 	
 	public void putData(WebURL parent, List<WebURL> outGoings)
@@ -186,9 +185,8 @@ public class SiteManagerConnectorManager implements Watcher
 	public void refreshConnectors() throws InterruptedException,
 	        KeeperException, IOException
 	{
-		while (true)
+		synchronized (this.connectors)
 		{
-			long now = System.currentTimeMillis();
 			Set<String> keys = this.connectors.keySet();
 			for (String key : keys)
 			{
@@ -200,7 +198,6 @@ public class SiteManagerConnectorManager implements Watcher
 				} catch (IOException e)
 				{
 					// Skit it
-					e.printStackTrace();
 				}
 			}
 			this.connectors.clear();
@@ -228,26 +225,86 @@ public class SiteManagerConnectorManager implements Watcher
 						} catch (NumberFormatException e)
 						{
 							// Skip it
-							e.printStackTrace();
 						} catch (IOException e)
 						{
 							// Skip it
-							e.printStackTrace();
 						}
 						
 					}
 				}
 			}
-			this.lastUpdateTime.setTime(now);
-			synchronized (this.eventTime)
-			{
-				if (this.lastUpdateTime.after(this.eventTime))
-				{
-					break;
-				}
-			}
+			this.connectors.notifyAll();
 			
 		}
 		
+	}
+	
+	@Override
+	public void run()
+	{
+		try
+		{
+			this.watch();
+		} catch (Exception e)
+		{
+			return;
+		}
+		while (true)
+		{
+			Date now = new Date();
+			try
+			{
+				// 更新所有的连接
+				this.refreshConnectors();
+			} catch (InterruptedException e)
+			{
+				return;
+			} catch (Exception e)
+			{
+				e.printStackTrace();
+				try
+				{
+					Thread.sleep(1000);
+					continue;
+				} catch (InterruptedException e1)
+				{
+					return;
+				}
+			}
+			// 最后检查一下是否需要继续更新
+			synchronized (this.eventTime)
+			{
+				if (now.after(this.eventTime))
+				{
+					try
+					{
+						this.eventTime.wait();
+					} catch (InterruptedException e)
+					{
+						return;
+					}
+				}
+			}
+		}
+	}
+	
+	public void start()
+	{
+		if (this.managerThread != null)
+		{
+			this.managerThread.start();
+		}
+		
+	}
+	
+	public void watch() throws KeeperException, InterruptedException,
+	        IOException
+	{
+		// 查看workers的通知信息
+		CenterConfig.me().getWorkersInfo().getOnlineWorkers()
+		        .getWorkerRefreshPath().watch(this);
+		// 监听所有在线的siteManager
+		CenterConfig.me().getSiteManagersConfigInfo().getOnlineSiteManagers()
+		        .watch(this);
 	}
 }

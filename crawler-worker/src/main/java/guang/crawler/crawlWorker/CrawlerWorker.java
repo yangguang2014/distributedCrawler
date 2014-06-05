@@ -4,14 +4,12 @@ import guang.crawler.centerController.CenterConfig;
 import guang.crawler.centerController.workers.WorkerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
+import guang.crawler.crawlWorker.daemon.SiteManagerConnectorManager;
 import guang.crawler.crawlWorker.fetcher.Downloader;
 import guang.crawler.crawlWorker.plugins.ExtractOutGoingUrlsPlugin;
 import guang.crawler.crawlWorker.plugins.SaveToHbasePlugin;
-import guang.crawler.crawlWorker.util.SiteManagerConnectorManager;
 
 import java.io.IOException;
-
-import org.apache.zookeeper.KeeperException;
 
 public class CrawlerWorker implements Runnable
 {
@@ -26,7 +24,7 @@ public class CrawlerWorker implements Runnable
 		return CrawlerWorker.crawlerWorker;
 	}
 	
-	private SiteManagerConnectorManager	siteManagerConnectHelper;
+	private SiteManagerConnectorManager	siteManagerConnectManager;
 	private WorkerConfig	            workerConfig;
 	private CenterConfig	            controller;
 	private Downloader	                downloader;
@@ -45,19 +43,10 @@ public class CrawlerWorker implements Runnable
 		        .getOnlineWorkers().registWorker();
 		this.workerConfig.setCrawlerController(this.controller);
 		this.workerConfig.setWorkerInfo(workerInfo);
-		try
-		{
-			this.siteManagerConnectHelper = new SiteManagerConnectorManager(
-			        this.controller);
-		} catch (IOException e)
-		{
-			System.out.println("Can not connect to site manager");
-			throw e;
-		}
+		this.siteManagerConnectManager = SiteManagerConnectorManager.me()
+		        .init();
 		this.downloader = new Downloader();
 		ExtractOutGoingUrlsPlugin extractOutGoingUrlsPlugin = new ExtractOutGoingUrlsPlugin();
-		extractOutGoingUrlsPlugin
-		        .setSiteManagerConnector(this.siteManagerConnectHelper);
 		
 		this.webDataTableConnector = new WebDataTableConnector(
 		        this.workerConfig.getZookeeperQuorum());
@@ -78,40 +67,27 @@ public class CrawlerWorker implements Runnable
 	@Override
 	public void run()
 	{
-		
+		this.siteManagerConnectManager.start();
 		WebURL url = null;
-		try
+		
+		while (true)
 		{
-			while (true)
+			try
 			{
-				try
-				{
-					url = this.siteManagerConnectHelper.getURL();
-					if (url != null)
-					{
-						this.downloader.processUrl(url);
-					} else if (this.siteManagerConnectHelper
-					        .getSiteManagerConnectorSize() == 0)
-					{
-						Thread.sleep(1000);
-					}
-				} catch (IOException ex)
-				{
-					continue;
-				} catch (KeeperException ex)
-				{
-					continue;
-				}
+				url = this.siteManagerConnectManager.getURL();
+			} catch (InterruptedException e)
+			{
+				break;
 			}
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if (url != null)
+			{
+				this.downloader.processUrl(url);
+			}
 		}
 		
 		try
 		{
-			this.siteManagerConnectHelper.exit();
+			this.siteManagerConnectManager.exit();
 		} catch (IOException e)
 		{
 			e.printStackTrace();

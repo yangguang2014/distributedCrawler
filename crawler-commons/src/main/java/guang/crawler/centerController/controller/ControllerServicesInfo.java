@@ -17,6 +17,10 @@ public class ControllerServicesInfo extends CenterConfigElement {
 		return this.getProperty(serviceName);
 	}
 
+	public String getServicesInfo() {
+		return this.getProperties().toString();
+	}
+
 	public boolean registService(String serviceName, String address)
 			throws InterruptedException, IOException, KeeperException {
 		this.setProperty(serviceName, address, true);

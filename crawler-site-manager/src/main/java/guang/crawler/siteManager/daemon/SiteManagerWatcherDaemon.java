@@ -1,8 +1,8 @@
 package guang.crawler.siteManager.daemon;
 
 import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.config.SitesConfigInfo;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.centerController.sitesConfig.SitesConfigInfo;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 

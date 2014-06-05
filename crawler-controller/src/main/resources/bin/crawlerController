@@ -3,7 +3,7 @@
 # CRAWLER_HOME=
 # CLASS_PATH=
 # JVM_ARG=
-LAUNCHER_CLASS=guang.crawler.launcher.CrawlerLauncherMain
+LAUNCHER_CLASS=guang.crawler.controller.CrawlerControllerMain
 
 # caculate CRAWLER_HOME directory
 enterCrawlerHome(){
@@ -43,4 +43,4 @@ if [ "x$CRAWLER_HOME" = "x" ];then
 fi
 getClassPath
 export CRAWLER_HOME
-java ${CLASS_PATH:+-cp $CLASS_PATH} ${JVM_ARG} ${LAUNCHER_CLASS} 1>$CRAWLER_HOME/log/log.txt 2>&1 &
+java ${CLASS_PATH:+-cp $CLASS_PATH} ${JVM_ARG} ${LAUNCHER_CLASS} 1>$CRAWLER_HOME/log/crawler-controller.txt 2>&1 &

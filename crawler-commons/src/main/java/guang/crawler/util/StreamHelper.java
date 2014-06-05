@@ -26,15 +26,27 @@ public class StreamHelper
 			}
 		}
 		String data = new String(byteout.toByteArray());
-		return JSON.parseObject(data, claz);
+		try
+		{
+			return JSON.parseObject(data, claz);
+		} catch (Exception e)
+		{
+			throw new IOException("parse JSON String failed", e);
+		}
 	}
 	
 	public static void writeObject(OutputStream out, Object data)
 	        throws IOException
 	{
-		String result = JSON.toJSONString(data);
-		out.write(result.getBytes());
-		out.write('\0');
-		out.flush();
+		try
+		{
+			String result = JSON.toJSONString(data);
+			out.write(result.getBytes());
+			out.write('\0');
+			out.flush();
+		} catch (Exception e)
+		{
+			throw new IOException("write object failed", e);
+		}
 	}
 }

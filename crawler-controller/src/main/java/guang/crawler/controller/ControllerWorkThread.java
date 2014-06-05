@@ -1,10 +1,10 @@
 package guang.crawler.controller;
 
 import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.config.SiteInfo;
-import guang.crawler.centerController.config.SitesConfigInfo;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
 import guang.crawler.centerController.siteManagers.SiteManagersConfigInfo;
+import guang.crawler.centerController.sitesConfig.SiteInfo;
+import guang.crawler.centerController.sitesConfig.SitesConfigInfo;
 
 import java.util.Date;
 import java.util.Iterator;

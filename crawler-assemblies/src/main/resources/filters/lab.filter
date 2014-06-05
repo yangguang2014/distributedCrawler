@@ -1,0 +1,6 @@
+# 实验室环境下的配置
+crawler.hadoop.user=zhou
+crawler.hadoop.url=hdfs://ubuntu-3:8020
+crawler.zookeeper.quorum=ubuntu-3,ubuntu-6,ubuntu-8
+crawler.zookeeper.clientPort=2181
+crawler.hadoop.path=/home/crawler

@@ -1,8 +1,8 @@
 package guang.crawler.controller.webservice;
 
 import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.config.SiteInfo;
 import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.centerController.sitesConfig.SiteInfo;
 import guang.crawler.commons.service.SiteManagerService;
 import guang.crawler.commons.service.SiteStatus;
 import guang.crawler.commons.service.WebGatherNodeBean;
@@ -23,8 +23,6 @@ public class SiteManagerServiceImp implements SiteManagerService
 			        .registSite(site.getId().toString());
 			if (siteInfo != null)
 			{
-				String urls = site.getWgnEntryUrl();
-				siteInfo.setSeedSites(urls, false);
 				siteInfo.setWebGatherNodeInfo(site, false);
 				siteInfo.update();
 				ControllerWorkThread.me().forceReschedue();
@@ -155,7 +153,6 @@ public class SiteManagerServiceImp implements SiteManagerService
 			{
 				return false;
 			}
-			siteInfo.setSeedSites(site.getWgnEntryUrl(), false);
 			siteInfo.setWebGatherNodeInfo(site, false);
 			siteInfo.update();
 			return true;

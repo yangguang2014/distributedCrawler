@@ -1,8 +1,8 @@
 package guang.crawler.centerController;
 
-import guang.crawler.centerController.config.SitesConfigInfo;
 import guang.crawler.centerController.controller.ControllerConfigInfo;
 import guang.crawler.centerController.siteManagers.SiteManagersConfigInfo;
+import guang.crawler.centerController.sitesConfig.SitesConfigInfo;
 import guang.crawler.centerController.workers.WorkersConfigInfo;
 import guang.crawler.connector.CenterConfigConnector;
 

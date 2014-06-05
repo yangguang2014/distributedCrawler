@@ -4,6 +4,7 @@ import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.util.StreamHelper;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -19,7 +20,13 @@ public class JSONServerConnector
 	public JSONServerConnector(String host, int port)
 	        throws UnknownHostException, IOException
 	{
-		this.socket = new Socket(host, port);
+		try
+		{
+			this.socket = new Socket(host, port);
+		} catch (ConnectException e)
+		{
+			throw new IOException("can not connect to json server", e);
+		}
 		
 	}
 	
