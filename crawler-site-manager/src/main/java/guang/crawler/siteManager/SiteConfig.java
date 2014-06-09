@@ -24,7 +24,7 @@ public class SiteConfig extends LocalConfig
 	/**
 	 * 当前节点是否被分配了爬取的站点
 	 */
-	private boolean	        dispatched;
+	private boolean	        dispatched	        = false;
 	/**
 	 * 采集点
 	 */
@@ -36,24 +36,20 @@ public class SiteConfig extends LocalConfig
 	private String	        workDir;
 	
 	/**
-	 * 站点管理器的监听端口
-	 */
-	private int	            listenPort;
-	/**
 	 * 作业超时的时间
 	 */
-	private long	        jobTimeout	       = 5 * 60 * 1000;
+	private long	        jobTimeout	        = 5 * 60 * 1000;
 	
 	/**
 	 * 作业重试的次数
 	 */
-	private int	            jobTryTime	       = 3;
+	private int	            jobTryTime	        = 3;
 	/**
 	 * 工作队列的清理时间间隔
 	 */
 	private long	        queueCleanerPeriod	= 100000;
 	
-	private boolean	        backTime	       = false;
+	private boolean	        backTime	        = false;
 	
 	/**
 	 * 备份的版本号
@@ -63,9 +59,14 @@ public class SiteConfig extends LocalConfig
 	/**
 	 * 备份的时间，默认设置为1个小时
 	 */
-	private long	        backupPeriod	   = 3600000;
+	private long	        backupPeriod	    = 3600000;
 	
 	private SiteManagerInfo	siteManagerInfo;
+	
+	/**
+	 * json server的线程数量
+	 */
+	private int	            jsonserverThreadNum	= 20;
 	
 	private SiteConfig()
 	{
@@ -97,9 +98,9 @@ public class SiteConfig extends LocalConfig
 		return this.jobTryTime;
 	}
 	
-	public int getListenPort()
+	public int getJsonserverThreadNum()
 	{
-		return this.listenPort;
+		return this.jsonserverThreadNum;
 	}
 	
 	public long getQueueCleanerPeriod()
@@ -150,6 +151,10 @@ public class SiteConfig extends LocalConfig
 		this.backupPeriod = PropertiesHelper.readLong(this.configProperties,
 		        "crawler.site-manager.backuper.backup.period",
 		        this.backupPeriod);
+		this.jsonserverThreadNum = PropertiesHelper.readInt(
+		        this.configProperties,
+		        "crawler.site-manager.jsonserver.threadNum",
+		        this.jsonserverThreadNum);
 	}
 	
 	private void initWorkDir()
@@ -182,11 +187,6 @@ public class SiteConfig extends LocalConfig
 	public void setDispatched(boolean isDispatched)
 	{
 		this.dispatched = isDispatched;
-	}
-	
-	public void setListenPort(int listenPort)
-	{
-		this.listenPort = listenPort;
 	}
 	
 	public void setSiteManagerInfo(SiteManagerInfo siteManagerInfo)

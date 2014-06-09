@@ -78,7 +78,7 @@ public class StatisticsGetter implements TimerTask
 	{
 		CenterConfig centerConfig = CenterConfig.me();
 		LinkedList<SiteInfo> sites = centerConfig.getSitesConfigInfo()
-		        .getAllSites();
+		        .getSitesInfo().getAllSites();
 		if ((sites == null) || (sites.size() == 0))
 		{
 			System.out.println("[sites config] no site registered.");

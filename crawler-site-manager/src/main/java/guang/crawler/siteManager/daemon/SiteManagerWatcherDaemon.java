@@ -36,7 +36,7 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 		SiteManagerInfo siteManagerInfo = SiteConfig.me().getSiteManagerInfo();
 		try
 		{
-			siteManagerInfo.watch(this);
+			siteManagerInfo.watchNode(this);
 		} catch (InterruptedException e)
 		{
 			// TODO Auto-generated catch block
@@ -74,212 +74,92 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 		// 首先，立即注册一个事件监听
 		SiteConfig siteConfig = SiteConfig.me();
 		SiteManagerInfo siteManagerInfo = siteConfig.getSiteManagerInfo();
+		try
+		{
+			siteManagerInfo.watchNode(this);
+		} catch (Exception e)
+		{
+			e.printStackTrace();
+			return;
+		}
+		
 		SitesConfigInfo sitesConfigInfo;
 		try
 		{
 			sitesConfigInfo = CenterConfig.me().getSitesConfigInfo();
-		} catch (IOException e)
+		} catch (Exception e)
 		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return;
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return;
 		}
-		try
-		{
-			siteManagerInfo.watch(this);
-		} catch (KeeperException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		while (true)
 		{
-			// 作第一次的处理
 			Date now = new Date();
 			try
 			{
 				siteManagerInfo.load();
-			} catch (InterruptedException e)
+			} catch (Exception e)
 			{
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return;
-			} catch (IOException e)
-			{
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				return;
 			}
 			boolean dispatched = siteManagerInfo.isDispatched();
 			String siteToHandle = siteManagerInfo.getSiteToHandle();
-			if (dispatched && siteConfig.isDispatched())
+			// 判断是否需要停止
+			if (siteConfig.isDispatched()
+			        && ((!dispatched) || (!siteToHandle.equals(siteConfig
+			                .getSiteToHandle().getSiteId()))))
 			{
-				if (!siteToHandle.equals(siteConfig.getSiteToHandle()
-				        .getSiteId()))
-				{
-					// 这样导致该站点被重新配置了
-					
-					// 首先关闭当前已经运行的站点管理器
-					SiteManager.me().stopSiteManager();
-					try
-					{
-						CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-						        .getWorkerRefreshPath().setChanged();
-					} catch (InterruptedException e2)
-					{
-						e2.printStackTrace();
-						// this should not happen
-					} catch (IOException e2)
-					{
-						e2.printStackTrace();
-						// this should not happen
-					} catch (KeeperException e2)
-					{
-						e2.printStackTrace();
-						// this should not happen
-					}
-					// 然后使用新的配置
-					try
-					{
-						siteConfig.setSiteToHandle(sitesConfigInfo
-						        .getSite(siteManagerInfo.getSiteToHandle()));
-					} catch (InterruptedException e1)
-					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						return;
-					} catch (IOException e1)
-					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						return;
-					} catch (KeeperException e1)
-					{
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-						return;
-					}
-					// 使用新的配置启动系统
-					try
-					{
-						SiteManager.me().startSiteManager();
-					} catch (Exception e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-						return;
-					}
-					try
-					{
-						CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-						        .getWorkerRefreshPath().setChanged();
-					} catch (KeeperException e2)
-					{
-						e2.printStackTrace();
-						// this should not happen
-						
-					} catch (IOException e2)
-					{
-						e2.printStackTrace();
-						// this should not happen
-						
-					} catch (InterruptedException e)
-					{
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-			} else if (!dispatched && siteConfig.isDispatched())
-			{
-				// 如果是这种情况，那么说明该站点被终止了
+				// 这种情况需要关闭当前已经运行的站点管理器
 				SiteManager.me().stopSiteManager();
-				// 更新配置信息
 				siteConfig.setDispatched(false);
-				siteConfig.setSiteToHandle(null);
 				try
 				{
 					CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-					        .getWorkerRefreshPath().setChanged();
-				} catch (KeeperException e2)
+					        .notifyChanged();
+				} catch (Exception e)
 				{
-					e2.printStackTrace();
+					e.printStackTrace();
 					// this should not happen
-					
-				} catch (IOException e2)
-				{
-					e2.printStackTrace();
-					// this should not happen
-					
-				} catch (InterruptedException e2)
-				{
-					e2.printStackTrace();
-					// this should not happen
-					
 				}
-			} else if (dispatched && !siteConfig.isDispatched())
+			}
+			// 判断是否需要开启
+			if (dispatched && (!siteConfig.isDispatched()))
 			{
-				// 如果是这种情况，那么说明该站点被分配了一个新的站点
-				siteConfig.setDispatched(true);
+				// 如果需要启动，而当前没有启动，那么启动之
+				// 然后使用新的配置
 				try
 				{
-					siteConfig.setSiteToHandle(sitesConfigInfo
+					siteConfig.setSiteToHandle(sitesConfigInfo.getSitesInfo()
 					        .getSite(siteManagerInfo.getSiteToHandle()));
-				} catch (InterruptedException e1)
+				} catch (Exception e)
 				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					return;
-				} catch (IOException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-					return;
-				} catch (KeeperException e1)
-				{
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					e.printStackTrace();
 					return;
 				}
-				// 启动相关部分
+				// 使用新的配置启动系统
 				try
 				{
 					SiteManager.me().startSiteManager();
 				} catch (Exception e)
 				{
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					return;
 				}
+				siteConfig.setDispatched(true);
 				try
 				{
 					CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-					        .getWorkerRefreshPath().setChanged();
-				} catch (InterruptedException e2)
+					        .notifyChanged();
+				} catch (Exception e)
 				{
-					e2.printStackTrace();
-					// this should not happen
-					
-				} catch (IOException e2)
-				{
-					e2.printStackTrace();
-					// this should not happen
-					
-				} catch (KeeperException e2)
-				{
-					e2.printStackTrace();
+					e.printStackTrace();
 					// this should not happen
 					
 				}
 			}
+			
 			synchronized (this.eventTime)
 			{
 				if (now.after(this.eventTime))

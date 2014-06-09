@@ -11,12 +11,14 @@ import java.util.List;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
-public class OnlineSiteManagers extends CenterConfigElement {
-
-	public OnlineSiteManagers(String path, CenterConfigConnector connector) {
+public class OnlineSiteManagers extends CenterConfigElement
+{
+	
+	public OnlineSiteManagers(String path, CenterConfigConnector connector)
+	{
 		super(path, connector);
 	}
-
+	
 	/**
 	 * 获取所有已经分配的站点管理器
 	 * 
@@ -25,25 +27,30 @@ public class OnlineSiteManagers extends CenterConfigElement {
 	 * @throws KeeperException
 	 */
 	public List<SiteManagerInfo> getAllDispatchedSiteManagers()
-			throws InterruptedException, KeeperException {
+	        throws InterruptedException, KeeperException
+	{
 		LinkedList<SiteManagerInfo> result = new LinkedList<SiteManagerInfo>();
 		List<String> children = this.connector.getChildren(this.path);
-		for (String child : children) {
-			try {
+		for (String child : children)
+		{
+			try
+			{
 				SiteManagerInfo siteManagerInfo = this
-						.getSiteManagerInfo(child);
-
-				if ((siteManagerInfo != null) && siteManagerInfo.isDispatched()) {
+				        .getSiteManagerInfo(child);
+				
+				if ((siteManagerInfo != null) && siteManagerInfo.isDispatched())
+				{
 					result.add(siteManagerInfo);
 				}
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 			}
-
+			
 		}
 		return result;
 	}
-
+	
 	/**
 	 * 获取所有已经分配的站点管理器
 	 * 
@@ -52,23 +59,27 @@ public class OnlineSiteManagers extends CenterConfigElement {
 	 * @throws KeeperException
 	 */
 	public List<SiteManagerInfo> getAllSiteManagers()
-			throws InterruptedException, KeeperException {
+	        throws InterruptedException, KeeperException
+	{
 		LinkedList<SiteManagerInfo> result = new LinkedList<SiteManagerInfo>();
 		List<String> children = this.connector.getChildren(this.path);
-		for (String child : children) {
-			try {
+		for (String child : children)
+		{
+			try
+			{
 				SiteManagerInfo siteManagerInfo = this
-						.getSiteManagerInfo(child);
-
+				        .getSiteManagerInfo(child);
+				
 				result.add(siteManagerInfo);
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 			}
-
+			
 		}
 		return result;
 	}
-
+	
 	/**
 	 * 获取所有尚未分配的站点管理器
 	 * 
@@ -77,25 +88,30 @@ public class OnlineSiteManagers extends CenterConfigElement {
 	 * @throws KeeperException
 	 */
 	public LinkedList<SiteManagerInfo> getAllUndispatchedSiteManagers()
-			throws InterruptedException, KeeperException {
+	        throws InterruptedException, KeeperException
+	{
 		LinkedList<SiteManagerInfo> result = new LinkedList<SiteManagerInfo>();
 		List<String> children = this.connector.getChildren(this.path);
-		for (String child : children) {
-			try {
+		for (String child : children)
+		{
+			try
+			{
 				SiteManagerInfo siteManagerInfo = this
-						.getSiteManagerInfo(child);
+				        .getSiteManagerInfo(child);
 				if ((siteManagerInfo != null)
-						&& !siteManagerInfo.isDispatched()) {
+				        && !siteManagerInfo.isDispatched())
+				{
 					result.add(siteManagerInfo);
 				}
-			} catch (IOException e) {
+			} catch (IOException e)
+			{
 				e.printStackTrace();
 			}
-
+			
 		}
 		return result;
 	}
-
+	
 	/**
 	 * 根据site-manager的ID获取站点信息
 	 * 
@@ -106,18 +122,20 @@ public class OnlineSiteManagers extends CenterConfigElement {
 	 * @throws KeeperException
 	 */
 	public SiteManagerInfo getSiteManagerInfo(String siteManagerId)
-			throws InterruptedException, IOException, KeeperException {
+	        throws InterruptedException, IOException, KeeperException
+	{
 		String realPath = this.path + "/" + siteManagerId;
 		boolean exist = this.connector.isNodeExists(realPath);
-		if (!exist) {
+		if (!exist)
+		{
 			return null;
 		}
 		SiteManagerInfo siteManagerInfo = new SiteManagerInfo(realPath,
-				this.connector);
+		        this.connector);
 		siteManagerInfo.load();
 		return siteManagerInfo;
 	}
-
+	
 	/**
 	 * 新增了一个站点管理器节点
 	 * 
@@ -126,13 +144,15 @@ public class OnlineSiteManagers extends CenterConfigElement {
 	 * @throws IOException
 	 */
 	public SiteManagerInfo registSiteManager() throws InterruptedException,
-			IOException, KeeperException {
+	        IOException, KeeperException
+	{
 		String realPath = this.connector.createNode(
-				this.path + "/site-manager", CreateMode.EPHEMERAL_SEQUENTIAL,
-				"".getBytes());
-		if (realPath != null) {
+		        this.path + "/site-manager", CreateMode.EPHEMERAL_SEQUENTIAL,
+		        "".getBytes());
+		if (realPath != null)
+		{
 			SiteManagerInfo managerInfo = new SiteManagerInfo(realPath,
-					this.connector);
+			        this.connector);
 			managerInfo.setManagerState(GenericState.registed, true);
 			return managerInfo;
 		}

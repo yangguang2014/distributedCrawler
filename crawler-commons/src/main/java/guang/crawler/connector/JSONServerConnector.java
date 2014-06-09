@@ -4,9 +4,7 @@ import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.util.StreamHelper;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 /**
  * 
@@ -16,18 +14,26 @@ public class JSONServerConnector
 {
 	
 	private Socket	socket;
+	private String	host;
+	private int	   port;
 	
 	public JSONServerConnector(String host, int port)
-	        throws UnknownHostException, IOException
+	{
+		this.host = host;
+		this.port = port;
+		
+	}
+	
+	public boolean open()
 	{
 		try
 		{
-			this.socket = new Socket(host, port);
-		} catch (ConnectException e)
+			this.socket = new Socket(this.host, this.port);
+			return true;
+		} catch (Exception e)
 		{
-			throw new IOException("can not connect to json server", e);
+			return false;
 		}
-		
 	}
 	
 	public DataPacket read() throws IOException
@@ -41,11 +47,17 @@ public class JSONServerConnector
 		StreamHelper.writeObject(this.socket.getOutputStream(), packet);
 	}
 	
-	public void shutdown() throws IOException
+	public void shutdown()
 	{
 		if (this.socket != null)
 		{
-			this.socket.close();
+			try
+			{
+				this.socket.close();
+			} catch (IOException e)
+			{
+				// skip
+			}
 		}
 	}
 	

@@ -20,7 +20,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .registSite(site.getId().toString());
+			        .getSitesInfo().registSite(site.getId().toString());
 			if (siteInfo != null)
 			{
 				siteInfo.setWebGatherNodeInfo(site, false);
@@ -44,7 +44,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .getSite(siteID.toString());
+			        .getSitesInfo().getSite(siteID.toString());
 			if (siteInfo == null)
 			{
 				return true;
@@ -82,7 +82,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .getSite(siteID.toString());
+			        .getSitesInfo().getSite(siteID.toString());
 			if (siteInfo == null)
 			{
 				return false;
@@ -102,7 +102,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .getSite(siteID.toString());
+			        .getSitesInfo().getSite(siteID.toString());
 			if (siteInfo == null)
 			{
 				return false;
@@ -122,7 +122,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .getSite(siteID.toString());
+			        .getSitesInfo().getSite(siteID.toString());
 			if (siteInfo == null)
 			{
 				return SiteStatus.notexist;
@@ -148,7 +148,7 @@ public class SiteManagerServiceImp implements SiteManagerService
 		try
 		{
 			SiteInfo siteInfo = CenterConfig.me().getSitesConfigInfo()
-			        .getSite(site.getId().toString());
+			        .getSitesInfo().getSite(site.getId().toString());
 			if (siteInfo == null)
 			{
 				return false;

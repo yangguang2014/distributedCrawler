@@ -236,9 +236,16 @@ public class CenterConfigConnector
 		this.zookeeper.setData(path, data, -1);
 	}
 	
-	public void watch(String path, Watcher watcher) throws KeeperException,
+	public void watchChildren(String path, Watcher watcher)
+	        throws KeeperException, InterruptedException
+	{
+		this.zookeeper.getChildren(path, watcher);
+	}
+	
+	public void watchNode(String path, Watcher watcher) throws KeeperException,
 	        InterruptedException
 	{
 		this.zookeeper.exists(path, watcher);
 	}
+	
 }

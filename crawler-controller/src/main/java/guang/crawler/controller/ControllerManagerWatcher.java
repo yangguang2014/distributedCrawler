@@ -37,7 +37,7 @@ public class ControllerManagerWatcher extends Thread implements Watcher
 		try
 		{
 			CenterConfig.me().getControllerInfo().getControllerManagerInfo()
-			        .watch(this);
+			        .watchNode(ControllerManagerWatcher.watcher);
 		} catch (Exception e)
 		{
 			e.printStackTrace();
@@ -67,7 +67,7 @@ public class ControllerManagerWatcher extends Thread implements Watcher
 		try
 		{
 			CenterConfig.me().getControllerInfo().getControllerManagerInfo()
-			        .watch(this);
+			        .watchNode(ControllerManagerWatcher.watcher);
 		} catch (Exception e)
 		{
 			e.printStackTrace();

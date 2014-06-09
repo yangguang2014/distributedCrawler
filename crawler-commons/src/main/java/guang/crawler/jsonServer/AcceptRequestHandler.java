@@ -6,6 +6,12 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 
+/**
+ * 这里就只支持短连接的工作方式了。
+ * 
+ * @author yang
+ * 
+ */
 public class AcceptRequestHandler implements Runnable
 {
 	private Socket	                     client;
@@ -23,7 +29,6 @@ public class AcceptRequestHandler implements Runnable
 	
 	private void doExit()
 	{
-		System.out.println("Connection will be shut down.");
 		try
 		{
 			this.client.close();
@@ -36,7 +41,13 @@ public class AcceptRequestHandler implements Runnable
 	@Override
 	public void run()
 	{
-		while (this.acceptThreadController.getType() == AcceptThreadController.TYPE_START)
+		// 如果当前已经控制要结束了，那么就直接结束。
+		if (this.acceptThreadController.getType() != AcceptThreadController.TYPE_START)
+		{
+			this.doExit();
+			return;
+		}
+		try
 		{
 			DataPacket data = null;
 			try
@@ -45,57 +56,40 @@ public class AcceptRequestHandler implements Runnable
 				        DataPacket.class);
 			} catch (SocketTimeoutException e)
 			{
-				// TODO 这里应当添加其他的处理方式
-				continue;
-			}
-			
-			catch (Exception e)
+				return;
+			} catch (Exception e)
 			{
 				data = null;
 			}
 			if (data == null)
 			{
-				this.doExit();
 				return;
 			}
-			String title = data.getTitle();
-			if (title.equals(DataPacket.EXIT_DATA_PACKET.getTitle()))
+			Commandlet commandlet = this.commandletLoader.getCommandlet(data
+			        .getTitle());
+			DataPacket result = null;
+			if (commandlet == null)
 			{
-				this.doExit();
-				break;
+				result = DataPacket.NOT_FOUND_PACKET;
 			} else
 			{
-				Commandlet commandlet = this.commandletLoader
-				        .getCommandlet(data.getTitle());
-				DataPacket result = null;
-				if (commandlet == null)
-				{
-					result = DataPacket.NOT_FOUND_PACKET;
-				} else
-				{
-					result = commandlet.doCommand(data);
-				}
-				if (result != null)
-				{
-					try
-					{
-						StreamHelper.writeObject(this.client.getOutputStream(),
-						        result);
-					} catch (IOException e)
-					{
-						this.doExit();
-					}
-				}
-				
+				result = commandlet.doCommand(data);
 			}
-		}
-		if (this.acceptThreadController.getType() == AcceptThreadController.TYPE_SHUTDOWN_NOW)
+			if (result != null)
+			{
+				try
+				{
+					StreamHelper.writeObject(this.client.getOutputStream(),
+					        result);
+				} catch (IOException e)
+				{
+					return;
+				}
+			}
+		} finally
 		{
 			this.doExit();
-		} else if (this.acceptThreadController.getType() == AcceptThreadController.TYPE_SHUTDOWN_GRACEFULLY)
-		{
-			// TODO 这里应当设计良好的停止机制
-			this.doExit();
 		}
+		
 	}
 }

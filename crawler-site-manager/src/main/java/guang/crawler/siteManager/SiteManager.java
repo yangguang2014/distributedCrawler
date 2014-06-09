@@ -38,6 +38,11 @@ public class SiteManager
 		return SiteManager.siteManager;
 	}
 	
+	/**
+	 * 当前采集点正在运行
+	 */
+	private boolean	            running	= false;
+	
 	private MapQueue<WebURL>	toDoTaskList;
 	private MapQueue<WebURL>	workingTaskList;
 	private MapQueue<WebURL>	failedTaskList;
@@ -145,8 +150,8 @@ public class SiteManager
 		File schemaFile = new File(schemaFileName);
 		try
 		{
-			this.jsonServer = new AcceptJsonServer(
-			        this.siteConfig.getListenPort(), 10, 2, configFile,
+			this.jsonServer = new AcceptJsonServer(0, 10,
+			        this.siteConfig.getJsonserverThreadNum(), configFile,
 			        schemaFile);
 			try
 			{
@@ -278,22 +283,27 @@ public class SiteManager
 		this.jsonServer.start();
 	}
 	
-	public void startSiteManager() throws Exception
+	public synchronized void startSiteManager() throws Exception
 	{
-		// 1. 初始化工作队列
-		this.initJobQueue();
-		this.urlsFilter = BitMapFilter.newFilter();
-		// 2. 初始化相关后台线程
-		this.initJSONServer();
-		this.docidServer = new MD5UrlDocidServer();
-		this.cleannerDaemon = QueueCleannerDaemon.newDaemon();
-		this.backuperDaemon = SiteBackupDaemon.newDaemon().init();
-		// 3. 加载备份数据
-		this.loadWorkQueue();
-		// 4. 启动这些后台线程
-		System.out.println("[INFO] Starting site manager ....");
-		this.startDaemon();
-		System.out.println("[SUCC] Starting JSON Server success.");
+		if (!this.running)
+		{
+			// 1. 初始化工作队列
+			this.initJobQueue();
+			this.urlsFilter = BitMapFilter.newFilter();
+			// 2. 初始化相关后台线程
+			this.initJSONServer();
+			this.docidServer = new MD5UrlDocidServer();
+			this.cleannerDaemon = QueueCleannerDaemon.newDaemon();
+			this.backuperDaemon = SiteBackupDaemon.newDaemon().init();
+			// 3. 加载备份数据
+			this.loadWorkQueue();
+			// 4. 启动这些后台线程
+			System.out.println("[INFO] Starting site manager ....");
+			this.startDaemon();
+			System.out.println("[SUCC] Starting JSON Server success.");
+			this.running = true;
+		}
+		
 	}
 	
 	private void stopDaemon()
@@ -306,16 +316,21 @@ public class SiteManager
 	/**
 	 * 关闭站点管理器 关闭后台线程，然后强制进行一次备份
 	 */
-	public void stopSiteManager()
+	public synchronized void stopSiteManager()
 	{
-		// 1. 关闭所有线程
-		this.stopDaemon();
-		// 2. 强制进行一次备份
-		this.backuperDaemon.forceBackup();
-		// 3. 关闭相关数据结构
-		this.toDoTaskList.close();
-		this.workingTaskList.close();
-		this.failedTaskList.close();
+		if (this.running)
+		{
+			// 1. 关闭所有线程
+			this.stopDaemon();
+			// 2. 强制进行一次备份
+			this.backuperDaemon.forceBackup();
+			// 3. 关闭相关数据结构
+			this.toDoTaskList.close();
+			this.workingTaskList.close();
+			this.failedTaskList.close();
+			this.running = false;
+		}
+		
 	}
 	
 }

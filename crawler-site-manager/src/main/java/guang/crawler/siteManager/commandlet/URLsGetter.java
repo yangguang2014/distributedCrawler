@@ -1,5 +1,6 @@
 package guang.crawler.siteManager.commandlet;
 
+import guang.crawler.centerController.CenterConfig;
 import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.Commandlet;
 import guang.crawler.jsonServer.DataPacket;
@@ -24,12 +25,28 @@ public class URLsGetter implements Commandlet
 		HashMap<String, String> data = request.getData();
 		if (SiteConfig.me().isBackupTime())// 如果当前正在进行相关文件的备份，那么就暂时不提供url了。
 		{
-			DataPacket result = new DataPacket();
-			result.setTitle("ERROR");
-			result.setData(data);
-			data.put(URLsGetter.KEY_COUNT, "0");
-			return result;
+			return this.noOps(data);
 		}
+		
+		SiteManager siteManager = SiteManager.me();
+		MapQueue<WebURL> todoList = siteManager.getToDoTaskList();
+		MapQueue<WebURL> workingList = siteManager.getWorkingTaskList();
+		if ((todoList.getLength() == 0) && (workingList.getLength() == 0))
+		{
+			// 当前站点没有什么需要做的，那么就设置当前站点为完成状态
+			try
+			{
+				SiteConfig.me().getSiteToHandle().setFinished(true, true);
+				SiteManager.me().stopSiteManager();
+				CenterConfig.me().getSiteManagersConfigInfo()
+				        .getOnlineSiteManagers().notifyChanged();
+				return null;
+			} catch (Exception e)
+			{
+				return this.noOps(data);
+			}
+		}
+		// 如果一切正常，那么就正常的取值处理
 		String count = data.get(URLsGetter.KEY_COUNT);
 		// 这里暂时只获取一个
 		int num = 1;
@@ -43,11 +60,8 @@ public class URLsGetter implements Commandlet
 				num = 1;
 			}
 		}
-		SiteManager siteManager = SiteManager.me();
-		MapQueue<WebURL> todoList = siteManager.getToDoTaskList();
 		
 		List<WebURL> urls = todoList.get(num);
-		
 		DataPacket result = new DataPacket();
 		result.setTitle("OK");
 		result.setData(data);
@@ -63,6 +77,15 @@ public class URLsGetter implements Commandlet
 		}
 		return result;
 		
+	}
+	
+	private DataPacket noOps(HashMap<String, String> data)
+	{
+		DataPacket result = new DataPacket();
+		result.setTitle("ERROR");
+		result.setData(data);
+		data.put(URLsGetter.KEY_COUNT, "0");
+		return result;
 	}
 	
 }

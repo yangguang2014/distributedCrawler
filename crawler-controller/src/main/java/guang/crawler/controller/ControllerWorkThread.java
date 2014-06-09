@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.Watcher.Event.EventType;
 
 /**
  * 该
@@ -61,23 +62,41 @@ public class ControllerWorkThread extends Thread implements Watcher
 		// 不管怎样，再次继续监听事件
 		try
 		{
-			CenterConfig.me().getSiteManagersConfigInfo()
-			        .getOnlineSiteManagers().watch(this);
+			if (event.getPath().equals(
+			        CenterConfig.me().getSiteManagersConfigInfo()
+			                .getOnlineSiteManagers().getPath()))
+			{
+				if (event.getType() == EventType.NodeChildrenChanged)
+				{
+					CenterConfig.me().getSiteManagersConfigInfo()
+					        .getOnlineSiteManagers().watchChildren(this);
+				} else
+				{
+					CenterConfig.me().getSiteManagersConfigInfo()
+					        .getOnlineSiteManagers().watchNode(this);
+				}
+			} else if (event.getPath().equals(
+			        CenterConfig.me().getSitesConfigInfo().getSitesInfo()
+			                .getPath()))
+			{
+				if (event.getType() == EventType.NodeChildrenChanged)
+				{
+					CenterConfig.me().getSitesConfigInfo().getSitesInfo()
+					        .watchChildren(this);
+				}
+			}
 		} catch (Exception e)
 		{
-			e.printStackTrace();
 			return;
 		}
 		
-		if (event.getType() == Watcher.Event.EventType.NodeChildrenChanged)
+		// 处理字节点的增减事件
+		synchronized (this.waitForEvent)
 		{
-			// 处理字节点的增减事件
-			synchronized (this.waitForEvent)
-			{
-				this.waitForEvent.setTime(System.currentTimeMillis());
-				this.waitForEvent.notifyAll();
-			}
+			this.waitForEvent.setTime(System.currentTimeMillis());
+			this.waitForEvent.notifyAll();
 		}
+		
 	}
 	
 	@Override
@@ -86,8 +105,12 @@ public class ControllerWorkThread extends Thread implements Watcher
 		CenterConfig centerConfig = CenterConfig.me();
 		try
 		{
-			centerConfig.getSiteManagersConfigInfo().getOnlineSiteManagers()
-			        .watch(this);
+			CenterConfig.me().getSiteManagersConfigInfo()
+			        .getOnlineSiteManagers().watchNode(this);
+			CenterConfig.me().getSiteManagersConfigInfo()
+			        .getOnlineSiteManagers().watchChildren(this);
+			CenterConfig.me().getSitesConfigInfo().getSitesInfo()
+			        .watchChildren(this);
 		} catch (Exception e)
 		{
 			return;
@@ -103,7 +126,7 @@ public class ControllerWorkThread extends Thread implements Watcher
 				SiteManagersConfigInfo siteManagersConfigInfo = centerConfig
 				        .getSiteManagersConfigInfo();
 				// 首先检测一下当前分配的状态
-				List<SiteInfo> handledSites = sitesConfigInfo
+				List<SiteInfo> handledSites = sitesConfigInfo.getSitesInfo()
 				        .getAllHandledSites();
 				for (SiteInfo siteInfo : handledSites)
 				{
@@ -119,8 +142,8 @@ public class ControllerWorkThread extends Thread implements Watcher
 						siteInfo.setHandled(false, false);
 						siteInfo.setSiteManagerId("null", true);
 					} else
-					{ // 如果一切分配的都对，那么检测一下该节点有没有被停止
-						if (!siteInfo.isEnabled())
+					{ // 如果一切分配的都对，那么检测一下该节点有没有被停止或者已经分配完成
+						if (!siteInfo.isEnabled() || siteInfo.isFinished())
 						{
 							siteManagerInfo.setDispatched(false, false);
 							siteManagerInfo.setSiteToHandle("", false);
@@ -135,7 +158,7 @@ public class ControllerWorkThread extends Thread implements Watcher
 				List<SiteManagerInfo> undispatchedSiteManagers = siteManagersConfigInfo
 				        .getOnlineSiteManagers()
 				        .getAllUndispatchedSiteManagers();
-				List<SiteInfo> unhandledSites = sitesConfigInfo
+				List<SiteInfo> unhandledSites = sitesConfigInfo.getSitesInfo()
 				        .getAllUnhandledSites();
 				if ((undispatchedSiteManagers.size() > 0)
 				        && (unhandledSites.size() > 0))

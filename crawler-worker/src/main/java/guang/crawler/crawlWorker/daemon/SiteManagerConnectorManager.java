@@ -12,11 +12,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
+import org.apache.zookeeper.Watcher.Event.EventType;
 
 import com.alibaba.fastjson.JSON;
 
@@ -36,10 +36,9 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 	private HashMap<String, JSONServerConnector>	     connectors;
 	private CenterConfig	                             centerConfig;
 	private Iterator<Entry<String, JSONServerConnector>>	connectorIterator;
-	
 	private Date	                                     eventTime	= new Date();
-	
 	private Thread	                                     managerThread;
+	boolean	                                             shutdown	= false;
 	
 	private SiteManagerConnectorManager()
 	{
@@ -49,23 +48,16 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 	
 	public void exit() throws IOException
 	{
-		this.connectorIterator = this.connectors.entrySet().iterator();
-		while (this.connectorIterator.hasNext())
-		{
-			this.exit(this.connectorIterator.next().getValue());
-		}
-		
-	}
-	
-	public void exit(JSONServerConnector connector) throws IOException
-	{
-		connector.send(DataPacket.EXIT_DATA_PACKET);
-		
+		this.shutdown = true;
 	}
 	
 	public int getSiteManagerConnectorSize()
 	{
-		return this.connectors.size();
+		synchronized (this.connectors)
+		{
+			return this.connectors.size();
+		}
+		
 	}
 	
 	/**
@@ -93,19 +85,30 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 		if (connector == null)
 		{
 			return null;
+		} else
+		{
+			
 		}
 		DataPacket data = new DataPacket("/url/get", null, null);
 		HashMap<String, String> requestData = new HashMap<String, String>();
 		requestData.put("COUNT", "1");
 		data.setData(requestData);
 		DataPacket result = null;
-		try
+		
+		boolean success = connector.open();
+		if (success)
 		{
-			connector.send(data);
-			result = connector.read();
-		} catch (IOException e)
-		{
-			result = null;
+			try
+			{
+				connector.send(data);
+				result = connector.read();
+			} catch (IOException e)
+			{
+				result = null;
+			} finally
+			{
+				connector.shutdown();
+			}
 		}
 		if (result != null)
 		{
@@ -132,8 +135,21 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 		// 首先继续注册事件监听器
 		try
 		{
-			CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-			        .getWorkerRefreshPath().watch(this);
+			if (event.getPath().equals(
+			        CenterConfig.me().getWorkersInfo().getOnlineWorkers()
+			                .getPath())
+			        && (event.getType() != EventType.NodeChildrenChanged))
+			{
+				CenterConfig.me().getWorkersInfo().getOnlineWorkers()
+				        .watchNode(this);
+			} else if (event.getPath().equals(
+			        CenterConfig.me().getSiteManagersConfigInfo()
+			                .getOnlineSiteManagers())
+			        && (event.getType() == EventType.NodeChildrenChanged))
+			{
+				CenterConfig.me().getSiteManagersConfigInfo()
+				        .getOnlineSiteManagers().watchChildren(this);
+			}
 		} catch (Exception e)
 		{
 			return;
@@ -169,9 +185,22 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 		}
 		requestData.put("COUNT", String.valueOf(sendSize));
 		request.setData(requestData);
-		JSONServerConnector connector = this.connectors.get(parent
-		        .getSiteManagerId());
-		connector.send(request);
+		JSONServerConnector connector = null;
+		synchronized (this.connectors)
+		{
+			connector = this.connectors.get(parent.getSiteManagerId());
+		}
+		boolean success = connector.open();
+		if (success)
+		{
+			try
+			{
+				connector.send(request);
+			} finally
+			{
+				connector.shutdown();
+			}
+		}
 		
 	}
 	
@@ -187,19 +216,6 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 	{
 		synchronized (this.connectors)
 		{
-			Set<String> keys = this.connectors.keySet();
-			for (String key : keys)
-			{
-				try
-				{
-					JSONServerConnector connector = this.connectors.get(key);
-					this.exit(connector);
-					connector.shutdown();
-				} catch (IOException e)
-				{
-					// Skit it
-				}
-			}
 			this.connectors.clear();
 			List<SiteManagerInfo> dispatchedSiteManagers = this.centerConfig
 			        .getSiteManagersConfigInfo().getOnlineSiteManagers()
@@ -215,21 +231,11 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 					{
 						String[] addInfo = siteManagerAddress.split(":");
 						JSONServerConnector connector;
-						try
-						{
-							connector = new JSONServerConnector(addInfo[0],
-							        Integer.parseInt(addInfo[1]));
-							this.connectors.put(
-							        siteManagerInfo.getSiteManagerId(),
-							        connector);
-						} catch (NumberFormatException e)
-						{
-							// Skip it
-						} catch (IOException e)
-						{
-							// Skip it
-						}
 						
+						connector = new JSONServerConnector(addInfo[0],
+						        Integer.parseInt(addInfo[1]));
+						this.connectors.put(siteManagerInfo.getSiteManagerId(),
+						        connector);
 					}
 				}
 			}
@@ -244,12 +250,16 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 	{
 		try
 		{
-			this.watch();
+			// 查看workers的通知信息
+			CenterConfig.me().getWorkersInfo().getOnlineWorkers()
+			        .watchNode(this);
+			CenterConfig.me().getSiteManagersConfigInfo()
+			        .getOnlineSiteManagers().watchChildren(this);
 		} catch (Exception e)
 		{
 			return;
 		}
-		while (true)
+		while (!this.shutdown)
 		{
 			Date now = new Date();
 			try
@@ -297,14 +307,4 @@ public class SiteManagerConnectorManager implements Watcher, Runnable
 		
 	}
 	
-	public void watch() throws KeeperException, InterruptedException,
-	        IOException
-	{
-		// 查看workers的通知信息
-		CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-		        .getWorkerRefreshPath().watch(this);
-		// 监听所有在线的siteManager
-		CenterConfig.me().getSiteManagersConfigInfo().getOnlineSiteManagers()
-		        .watch(this);
-	}
 }
