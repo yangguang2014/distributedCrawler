@@ -2,13 +2,37 @@ package guang.crawler.commons;
 
 public class WebURL {
 
+	/**
+	 * 实际的URL字符串
+	 */
 	private String url;
+	/**
+	 * 当前WebURL的文档ID，全局唯一
+	 */
 	private String docid;
+	/**
+	 * 当前URL的父URL的文档ID，如果没有，为NULL
+	 */
 	private String parentDocid;
+	/**
+	 * 当前URL的采集深度
+	 */
 	private short depth;
+	/**
+	 * 当前URL如果是在<a>这种锚点中设置的，那么它的锚点信息存放在该变量中
+	 */
 	private String anchor;
+	/**
+	 * 该URL的采集优先级，暂时未被使用
+	 */
 	private byte priority;
+	/**
+	 * 该URL的子URL的数目，暂时未被使用
+	 */
 	private int childNum;
+	/**
+	 * 当前URL所对应的站点管理器的ID。
+	 */
 	private String siteManagerId;
 	/**
 	 * 该URL开始爬行的时间
