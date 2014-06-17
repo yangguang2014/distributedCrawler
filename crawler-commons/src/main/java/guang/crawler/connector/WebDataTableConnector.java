@@ -152,7 +152,8 @@ public class WebDataTableConnector {
 				continue;
 			}
 		}
-		return (Long[]) result.toArray();
+		Long[]resultArray=new Long[result.size()];
+		return result.toArray(resultArray);
 	}
 
 	public String[] getHtmlData(String tableName, int docid) throws IOException {
