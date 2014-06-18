@@ -18,7 +18,7 @@ public abstract class CenterConfigElement
 	protected final String	              path;
 	protected final CenterConfigConnector	connector;
 	private Properties	                  values;
-	private static final String	          PATH_LOCK	         = "/lock";
+	private static final String	          PATH_LOCK	         = "_lock";
 	private static final String	          KEY_NOTIFY_CHANGED	= "notify.changed";
 	
 	public CenterConfigElement(String path, CenterConfigConnector connector)
