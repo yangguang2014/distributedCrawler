@@ -203,30 +203,29 @@ public class SiteManager
 			// 将failed list和 working list中的数据重新加载到todo list中
 			this.backuperDaemon.rescheduleTaskList(this.workingTaskList);
 			this.backuperDaemon.rescheduleTaskList(this.failedTaskList);
-		} else
-		{
-			// 将种子站点添加到todo List中
-			String seedsString = this.siteConfig.getSiteToHandle()
-			        .getWebGatherNodeInfo().getWgnEntryUrl().trim();
-			String seeds[] = seedsString.split(",");
-			for (String seed : seeds)
-			{
-				seed = seed.trim();
-				if (seed.equals(""))
-				{
-					continue;
-				}
-				WebURL url = new WebURL();
-				url.setURL(seed);
-				url.setDepth((short) 1);
-				url.setSiteManagerId(this.siteConfig.getSiteManagerInfo()
-				        .getSiteManagerId());
-				url.setSiteId(this.siteConfig.getSiteToHandle().getSiteId());
-				url.setDocid(this.docidServer.next(url));
-				this.toDoTaskList.put(url);
-			}
-			
 		}
+		// 将种子站点添加到todo List中
+		String seedsString = this.siteConfig.getSiteToHandle()
+		        .getWebGatherNodeInfo().getWgnEntryUrl().trim();
+		String seeds[] = seedsString.split(",");
+		for (String seed : seeds)
+		{
+			seed = seed.trim();
+			if (seed.equals(""))
+			{
+				continue;
+			}
+			WebURL url = new WebURL();
+			url.setURL(seed);
+			url.setDepth((short) 1);
+			url.setSiteManagerId(this.siteConfig.getSiteManagerInfo()
+			        .getSiteManagerId());
+			url.setSiteId(this.siteConfig.getSiteToHandle().getSiteId());
+			url.setDocid(this.docidServer.next(url));
+			this.toDoTaskList.put(url);
+		}
+		
+	
 		
 	}
 	
