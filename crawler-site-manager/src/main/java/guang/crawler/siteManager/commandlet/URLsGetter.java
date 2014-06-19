@@ -1,11 +1,12 @@
 package guang.crawler.siteManager.commandlet;
 
-import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerConfig.CenterConfig;
 import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.Commandlet;
 import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
+import guang.crawler.siteManager.daemon.SiteBackupDaemon;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 
 import java.util.Date;
@@ -37,7 +38,8 @@ public class URLsGetter implements Commandlet
 			try
 			{
 				SiteConfig.me().getSiteToHandle().setFinished(true, true);
-				SiteManager.me().stopSiteManager();
+				SiteManager.me().stopGathering();
+				SiteManager.me().getBackuperDaemon().clearBackups();
 				CenterConfig.me().getSiteManagersConfigInfo()
 				        .getOnlineSiteManagers().notifyChanged();
 				return null;
