@@ -48,6 +48,10 @@ public class SiteManager
 	private MapQueue<WebURL>	failedTaskList;
 	private QueueCleannerDaemon	cleannerDaemon;
 	private SiteBackupDaemon	backuperDaemon;
+	public SiteBackupDaemon getBackuperDaemon() {
+		return backuperDaemon;
+	}
+
 	private SiteConfig	        siteConfig;
 	private DocidServer	        docidServer;
 	private JsonServer	        jsonServer;
