@@ -1,7 +1,7 @@
 package guang.crawler.siteManager;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.siteManagers.SiteManagerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.jsonServer.AcceptJsonServer;
 import guang.crawler.jsonServer.JsonServer;
@@ -283,7 +283,7 @@ public class SiteManager
 		this.jsonServer.start();
 	}
 	
-	public synchronized void startSiteManager() throws Exception
+	public synchronized void startGathering() throws Exception
 	{
 		if (!this.running)
 		{
@@ -316,7 +316,7 @@ public class SiteManager
 	/**
 	 * 关闭站点管理器 关闭后台线程，然后强制进行一次备份
 	 */
-	public synchronized void stopSiteManager()
+	public synchronized void stopGathering()
 	{
 		if (this.running)
 		{
