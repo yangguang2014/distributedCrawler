@@ -1,7 +1,7 @@
 package com.gzgb.epo.webservice;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.controller.ControllerServicesInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.controller.ControllerServicesInfo;
 import guang.crawler.commons.service.SiteManagerService;
 import guang.crawler.commons.service.WebGatherNodeBean;
 
