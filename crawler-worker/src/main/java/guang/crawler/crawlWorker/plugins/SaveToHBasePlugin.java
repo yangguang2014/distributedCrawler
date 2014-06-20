@@ -4,14 +4,15 @@ import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.crawlWorker.fetcher.Page;
 import guang.crawler.crawlWorker.parser.HtmlParseData;
+import guang.crawler.crawlWorker.parser.TextParseData;
 
 import java.io.IOException;
 
-public class SaveToHbasePlugin implements DownloadPlugin
+public class SaveToHBasePlugin implements DownloadPlugin
 {
 	private WebDataTableConnector	webDataTableConnector;
 	
-	public SaveToHbasePlugin(WebDataTableConnector webDataTableConnector)
+	public SaveToHBasePlugin(WebDataTableConnector webDataTableConnector)
 	{
 		this.webDataTableConnector = webDataTableConnector;
 	}
@@ -27,6 +28,19 @@ public class SaveToHbasePlugin implements DownloadPlugin
 			try
 			{
 				this.webDataTableConnector.addHtmlData(webURL, html, false);
+				System.out.println("[OK] save url success:" + webURL.getURL());
+				return true;
+			} catch (IOException e)
+			{
+				e.printStackTrace();
+			}
+		}else if(page.getParseData() instanceof TextParseData){
+			TextParseData textParseData=(TextParseData)page.getParseData();
+			WebURL webURL = page.getWebURL();
+			String text=textParseData.getTextContent();
+			try
+			{
+				this.webDataTableConnector.addHtmlData(webURL, text, false);
 				System.out.println("[OK] save url success:" + webURL.getURL());
 				return true;
 			} catch (IOException e)
