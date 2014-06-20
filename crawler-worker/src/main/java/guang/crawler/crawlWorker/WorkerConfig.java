@@ -1,7 +1,7 @@
 package guang.crawler.crawlWorker;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.workers.WorkerInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.workers.WorkerInfo;
 import guang.crawler.localConfig.LocalConfig;
 import guang.crawler.util.PropertiesHelper;
 

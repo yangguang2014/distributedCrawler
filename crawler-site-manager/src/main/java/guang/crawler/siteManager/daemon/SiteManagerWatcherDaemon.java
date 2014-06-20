@@ -1,8 +1,8 @@
 package guang.crawler.siteManager.daemon;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.siteManagers.SiteManagerInfo;
-import guang.crawler.centerController.sitesConfig.SitesConfigInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.siteManagers.SiteManagerInfo;
+import guang.crawler.centerConfig.sitesConfig.SitesConfigInfo;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
 
@@ -112,7 +112,7 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 			                .getSiteToHandle().getSiteId()))))
 			{
 				// 这种情况需要关闭当前已经运行的站点管理器
-				SiteManager.me().stopSiteManager();
+				SiteManager.me().stopGathering();
 				siteConfig.setDispatched(false);
 				try
 				{
@@ -141,7 +141,7 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 				// 使用新的配置启动系统
 				try
 				{
-					SiteManager.me().startSiteManager();
+					SiteManager.me().startGathering();
 				} catch (Exception e)
 				{
 					e.printStackTrace();

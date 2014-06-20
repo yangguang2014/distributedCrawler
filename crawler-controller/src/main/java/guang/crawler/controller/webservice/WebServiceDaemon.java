@@ -1,6 +1,6 @@
 package guang.crawler.controller.webservice;
 
-import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerConfig.CenterConfig;
 import guang.crawler.controller.ControllerConfig;
 import guang.crawler.util.NetworkHelper;
 

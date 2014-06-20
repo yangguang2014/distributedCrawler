@@ -208,13 +208,34 @@ public class SiteBackupDaemon extends TimerTask
 		}
 	}
 	
+	public void clearBackups(){
+		SiteConfig config = SiteConfig.me();
+		// 首先设置系统为backup time，从而让用户不再获取新的任务，也暂停清理线程的工作
+		config.setBackTime(true);
+		// 找到备份的目录
+		String rootDir = config.getHadoopPath() + "/"
+		        + config.getSiteManagerInfo().getSiteToHandle() + "/backup";
+		try
+		{
+			Path path=new Path(rootDir);
+			if(this.fileSystem.exists(path))
+			this.fileSystem.delete(path,true);
+		} catch (IOException e)
+		{
+			return;
+		} catch (IllegalArgumentException e)
+		{
+			return;
+		}
+		config.setBackTime(false);
+	}
+	
 	@Override
 	public void run()
 	{
 		SiteConfig config = SiteConfig.me();
 		// 首先设置系统为backup time，从而让用户不再获取新的任务，也暂停清理线程的工作
 		config.setBackTime(true);
-		
 		// 找到备份的目录
 		String rootDir = config.getHadoopPath() + "/"
 		        + config.getSiteManagerInfo().getSiteToHandle() + "/backup";

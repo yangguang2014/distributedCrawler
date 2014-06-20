@@ -1,10 +1,10 @@
 package guang.crawler.statistics;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.controller.ControllerManagerInfo;
-import guang.crawler.centerController.controller.ControllerServicesInfo;
-import guang.crawler.centerController.siteManagers.SiteManagerInfo;
-import guang.crawler.centerController.sitesConfig.SiteInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.controller.ControllerManagerInfo;
+import guang.crawler.centerConfig.controller.ControllerServicesInfo;
+import guang.crawler.centerConfig.siteManagers.SiteManagerInfo;
+import guang.crawler.centerConfig.sitesConfig.SiteInfo;
 
 import java.io.IOException;
 import java.util.LinkedList;

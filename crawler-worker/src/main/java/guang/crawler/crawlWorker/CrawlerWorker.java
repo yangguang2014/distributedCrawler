@@ -1,13 +1,13 @@
 package guang.crawler.crawlWorker;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.workers.WorkerInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.workers.WorkerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.crawlWorker.daemon.SiteManagerConnectorManager;
 import guang.crawler.crawlWorker.fetcher.Downloader;
 import guang.crawler.crawlWorker.plugins.ExtractOutGoingUrlsPlugin;
-import guang.crawler.crawlWorker.plugins.SaveToHbasePlugin;
+import guang.crawler.crawlWorker.plugins.SaveToHBasePlugin;
 
 import java.io.IOException;
 
@@ -57,7 +57,7 @@ public class CrawlerWorker implements Runnable
 		{
 			System.out.println("Can not open hbase connect");
 		}
-		SaveToHbasePlugin saveToHbasePlugin = new SaveToHbasePlugin(
+		SaveToHBasePlugin saveToHbasePlugin = new SaveToHBasePlugin(
 		        this.webDataTableConnector);
 		this.downloader.addPlugin(extractOutGoingUrlsPlugin);
 		this.downloader.addPlugin(saveToHbasePlugin);

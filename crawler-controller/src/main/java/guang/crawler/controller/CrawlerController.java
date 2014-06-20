@@ -1,6 +1,6 @@
 package guang.crawler.controller;
 
-import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerConfig.CenterConfig;
 import guang.crawler.commons.GenericState;
 
 import java.io.IOException;

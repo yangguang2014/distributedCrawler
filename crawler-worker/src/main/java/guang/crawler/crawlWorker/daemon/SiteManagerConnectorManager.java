@@ -1,7 +1,7 @@
 package guang.crawler.crawlWorker.daemon;
 
-import guang.crawler.centerController.CenterConfig;
-import guang.crawler.centerController.siteManagers.SiteManagerInfo;
+import guang.crawler.centerConfig.CenterConfig;
+import guang.crawler.centerConfig.siteManagers.SiteManagerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.connector.JSONServerConnector;
 import guang.crawler.jsonServer.DataPacket;

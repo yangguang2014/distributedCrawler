@@ -6,7 +6,6 @@ import guang.crawler.jsonServer.Commandlet;
 import guang.crawler.jsonServer.DataPacket;
 import guang.crawler.siteManager.SiteConfig;
 import guang.crawler.siteManager.SiteManager;
-import guang.crawler.siteManager.daemon.SiteBackupDaemon;
 import guang.crawler.siteManager.jobQueue.MapQueue;
 
 import java.util.Date;

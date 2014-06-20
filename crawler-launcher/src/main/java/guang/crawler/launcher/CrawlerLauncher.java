@@ -1,6 +1,6 @@
 package guang.crawler.launcher;
 
-import guang.crawler.centerController.CenterConfig;
+import guang.crawler.centerConfig.CenterConfig;
 import guang.crawler.controller.CrawlerController;
 import guang.crawler.crawlWorker.CrawlerWorker;
 import guang.crawler.siteManager.SiteManager;
