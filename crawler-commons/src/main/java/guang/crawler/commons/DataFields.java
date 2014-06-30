@@ -27,7 +27,7 @@ public class DataFields {
 	 * @param columnName
 	 * @param data
 	 */
-	public void addFiled(final String key, final String dataFamily,
+	public DataFields addFiled(final String key, final String dataFamily,
 			final String columnName, final String data) {
 		LinkedList<DataField> filedList = this.fileds.get(key);
 		if (filedList == null) {
@@ -36,6 +36,7 @@ public class DataFields {
 		}
 		DataField filed = new DataField(dataFamily, columnName, data);
 		filedList.add(filed);
+		return this;
 	}
 	
 	public HashMap<String, LinkedList<DataField>> getAllFileds() {

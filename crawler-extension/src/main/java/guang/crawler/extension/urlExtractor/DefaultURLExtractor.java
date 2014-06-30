@@ -14,14 +14,15 @@ import java.util.List;
  *
  */
 public class DefaultURLExtractor implements URLsExtractor {
-
+	
 	@Override
-	public void extractURLs(final Page page, final List<WebURL> urlList) {
+	public void extractURLs(final Page page) {
+		List<WebURL> urlList = page.getLinksToFollow();
 		ParseData data = page.getParseData();
 		if (data instanceof HtmlParseData) {
 			HtmlParseData htmlData = (HtmlParseData) data;
 			urlList.addAll(htmlData.getOutgoingUrls());
 		}
 	}
-
+	
 }

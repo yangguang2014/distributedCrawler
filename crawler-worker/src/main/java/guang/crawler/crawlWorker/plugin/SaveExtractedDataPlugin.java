@@ -6,10 +6,10 @@ import guang.crawler.connector.WebDataTableConnector;
 
 import java.io.IOException;
 
-public class SaveToHBasePlugin implements DownloadPlugin {
+public class SaveExtractedDataPlugin implements DownloadPlugin {
 	private WebDataTableConnector	webDataTableConnector;
 	
-	public SaveToHBasePlugin(final WebDataTableConnector webDataTableConnector) {
+	public SaveExtractedDataPlugin(final WebDataTableConnector webDataTableConnector) {
 		this.webDataTableConnector = webDataTableConnector;
 	}
 	

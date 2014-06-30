@@ -1,6 +1,5 @@
 package guang.crawler.crawlWorker.plugin;
 
-import guang.crawler.commons.DataFields;
 import guang.crawler.commons.Page;
 import guang.crawler.crawlWorker.WorkerConfig;
 import guang.crawler.extension.filedExtractor.FieldsExtractor;
@@ -14,42 +13,40 @@ import java.io.File;
  * @author sun
  *
  */
-public class ExtractFiledToSavePlugin implements DownloadPlugin {
-
+public class ExtractDataToSavePlugin implements DownloadPlugin {
+	
 	private ComponentLoader<FieldsExtractor>	fieldsExtractorLoader;
-
-	public ExtractFiledToSavePlugin() throws ConfigLoadException {
+	
+	public ExtractDataToSavePlugin() throws ConfigLoadException {
 		String configFileName = WorkerConfig.me().getCrawlerHome()
-		        + "/conf/crawler-worker/filed-extractors.xml";
+				+ "/conf/crawler-worker/filed-extractors.xml";
 		File configFile = new File(configFileName);
 		String schemaFileName = WorkerConfig.me().getCrawlerHome()
-		        + "/etc/xsd/components.xsd";
+				+ "/etc/xsd/components.xsd";
 		File schemaFile = new File(schemaFileName);
 		this.fieldsExtractorLoader = new ComponentLoader<FieldsExtractor>(
-		        configFile, schemaFile);
+				configFile, schemaFile);
 		try {
 			this.fieldsExtractorLoader.load();
 		} catch (Exception e) {
 			throw new ConfigLoadException(
-			        "load fileds-extractors.xml file failed!", e);
+					"load fileds-extractors.xml file failed!", e);
 		}
 	}
-
+	
 	@Override
 	public boolean work(final Page page) {
-		DataFields result = new DataFields();
 		if (page != null) {
 			// 获取URLExtractor
 			FieldsExtractor extractor = this.fieldsExtractorLoader
-					.getComponent(page.getWebURL().getURL());
+			        .getComponent(page.getWebURL().getURL());
 			if (extractor != null) {
 				// 利用URLExtractor抽取URL列表
-				extractor.extractFields(page, result);
+				extractor.extractFields(page);
 			}
-			page.setDataToSave(result);
 			return true;
 		}
 		return false;
 	}
-
+	
 }

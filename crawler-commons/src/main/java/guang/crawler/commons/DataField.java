@@ -13,39 +13,42 @@ public class DataField {
 	 * 实际存储的数据
 	 */
 	private String	data;
-	
+
 	public DataField() {
 	}
-	
+
 	public DataField(final String dataFamily, final String columnName,
-	        final String data) {
+			final String data) {
 		this.dataFamily = dataFamily;
 		this.columnName = columnName;
 		this.data = data;
 	}
-
+	
 	public String getColumnName() {
 		return this.columnName;
 	}
-
+	
 	public String getData() {
 		return this.data;
 	}
-
+	
 	public String getDataFamily() {
 		return this.dataFamily;
 	}
-
-	public void setColumnName(final String columnName) {
+	
+	public DataField setColumnName(final String columnName) {
 		this.columnName = columnName;
-	}
-	
-	public void setData(final String data) {
-		this.data = data;
-	}
-	
-	public void setDataFamily(final String dataFamily) {
-		this.dataFamily = dataFamily;
+		return this;
 	}
 
+	public DataField setData(final String data) {
+		this.data = data;
+		return this;
+	}
+
+	public DataField setDataFamily(final String dataFamily) {
+		this.dataFamily = dataFamily;
+		return this;
+	}
+	
 }

@@ -16,25 +16,31 @@ import guang.crawler.connector.WebDataTableConnector;
  */
 public class DefaultFieldExtractor implements FieldsExtractor {
 	
-	@Override
-	public void extractFields(final Page page, final DataFields fileds) {
+	public static void extractPageBody(final Page page) {
 		WebURL webURL = page.getWebURL();
+		DataFields fields = page.getDataToSave();
 		String docID = webURL.getDocid();
-		fileds.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "depth",
-		        String.valueOf(webURL.getDepth()));
-		fileds.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "url",
-		        String.valueOf(webURL.getURL()));
+		fields.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "depth",
+		                String.valueOf(webURL.getDepth()))
+		      .addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "url",
+		                String.valueOf(webURL.getURL()));
 		ParseData parseData = page.getParseData();
 		if (parseData instanceof HtmlParseData) {
 			HtmlParseData data = (HtmlParseData) parseData;
-			fileds.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "page",
-			        data.getHtml());
+			fields.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA,
+			                "page", data.getHtml());
+			
 		} else if (page.getParseData() instanceof TextParseData) {
 			TextParseData textParseData = (TextParseData) page.getParseData();
 			String text = textParseData.getTextContent();
-			fileds.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA, "page",
-			        text);
+			fields.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA,
+			                "page", text);
 		}
 	}
 	
+	@Override
+	public void extractFields(final Page page) {
+		DefaultFieldExtractor.extractPageBody(page);
+	}
+
 }

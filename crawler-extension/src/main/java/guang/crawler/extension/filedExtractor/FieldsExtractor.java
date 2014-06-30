@@ -1,6 +1,5 @@
 package guang.crawler.extension.filedExtractor;
 
-import guang.crawler.commons.DataFields;
 import guang.crawler.commons.Page;
 
 public interface FieldsExtractor {
@@ -9,8 +8,6 @@ public interface FieldsExtractor {
 	 *
 	 * @param page
 	 *            当前正在处理的页面
-	 * @param fields
-	 *            所有需要存储的域
 	 */
-	public void extractFields(Page page, DataFields fields);
+	public void extractFields(Page page);
 }

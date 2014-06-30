@@ -16,16 +16,17 @@ import java.util.regex.Pattern;
  * @author sun
  *
  */
-public class QQNewsCommentExtractor implements URLsExtractor {
+public class QQNewsURLsExtractor implements URLsExtractor {
 	
 	private Pattern	cmtIdPattern;
 	
-	public QQNewsCommentExtractor() {
+	public QQNewsURLsExtractor() {
 		this.cmtIdPattern = Pattern.compile("cmt_id\\s*=\\s*([0-9]+)\\s*;");
 	}
 
 	@Override
-	public void extractURLs(final Page page, final List<WebURL> urlList) {
+	public void extractURLs(final Page page) {
+		List<WebURL> urlList = page.getLinksToFollow();
 		ParseData data = page.getParseData();
 		if (data instanceof HtmlParseData) {
 			HtmlParseData htmlData = (HtmlParseData) data;
@@ -39,11 +40,15 @@ public class QQNewsCommentExtractor implements URLsExtractor {
 			// 评论数URL
 			String cmtCountURLString = "http://coral.qq.com/article/" + cmtId
 			        + "/commentnum";
-			WebURL cmtCountURL = WebURL.newWebURL().setURL(cmtCountURLString);
+			WebURL cmtCountURL = WebURL.newWebURL()
+			                           .setURL(cmtCountURLString);
+			cmtCountURL.setProperty("commentedWebURL", page.getWebURL());
 			// 第一条评论URL
 			String firstCmtURLString = "http://coral.qq.com/article/" + cmtId
 			        + "/comment?commentid=0";
-			WebURL firstCmtURL = WebURL.newWebURL().setURL(firstCmtURLString);
+			WebURL firstCmtURL = WebURL.newWebURL()
+			                           .setURL(firstCmtURLString);
+			cmtCountURL.setProperty("commentedWebURL", page.getWebURL());
 			// 2.3 将构建的动态URL添加到最终的列表中
 			urlList.add(cmtCountURL);
 			urlList.add(firstCmtURL);
