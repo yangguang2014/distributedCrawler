@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ext:components-config version="1.0"
+	xmlns:ext="http://guang.org/distributedCrawler/components" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://guang.org/distributedCrawler/components http://guang.org/distributedCrawler/url-extractors ">
+	<ext:component-defines>
+		<ext:component>
+			<ext:component-name>token</ext:component-name>
+			<ext:component-class>http://tempuri.org</ext:component-class>
+		</ext:component>
+	</ext:component-defines>
+	<ext:component-mappings>
+		<ext:component-mapping>
+			<ext:component-name>token</ext:component-name>
+		</ext:component-mapping>
+	</ext:component-mappings>
+</ext:components-config>

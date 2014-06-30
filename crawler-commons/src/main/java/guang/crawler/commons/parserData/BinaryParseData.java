@@ -1,4 +1,4 @@
-package guang.crawler.crawlWorker.parser;
+package guang.crawler.commons.parserData;
 
 /**
  * 如果遇到的是二进制的数据类型，那么使用这种数据格式。

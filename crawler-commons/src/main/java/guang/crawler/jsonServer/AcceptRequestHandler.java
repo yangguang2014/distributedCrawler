@@ -1,5 +1,6 @@
 package guang.crawler.jsonServer;
 
+import guang.crawler.localConfig.ComponentLoader;
 import guang.crawler.util.StreamHelper;
 
 import java.io.IOException;
@@ -8,86 +9,69 @@ import java.net.SocketTimeoutException;
 
 /**
  * 这里就只支持短连接的工作方式了。
- * 
+ *
  * @author yang
- * 
+ *
  */
-public class AcceptRequestHandler implements Runnable
-{
+public class AcceptRequestHandler implements Runnable {
 	private Socket	                     client;
-	private CommandletLoader	         commandletLoader;
+	private ComponentLoader<Commandlet>	 commandletLoader;
 	private final AcceptThreadController	acceptThreadController;
 	
-	public AcceptRequestHandler(Socket client,
-	        CommandletLoader commandletLoader,
-	        AcceptThreadController acceptThreadController) throws IOException
-	{
+	public AcceptRequestHandler(final Socket client,
+	        final ComponentLoader<Commandlet> commandletLoader,
+	        final AcceptThreadController acceptThreadController)
+					throws IOException {
 		this.client = client;
 		this.commandletLoader = commandletLoader;
 		this.acceptThreadController = acceptThreadController;
 	}
 	
-	private void doExit()
-	{
-		try
-		{
+	private void doExit() {
+		try {
 			this.client.close();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			return;
 		}
 	}
 	
 	@Override
-	public void run()
-	{
+	public void run() {
 		// 如果当前已经控制要结束了，那么就直接结束。
-		if (this.acceptThreadController.getType() != AcceptThreadController.TYPE_START)
-		{
+		if (this.acceptThreadController.getType() != AcceptThreadController.TYPE_START) {
 			this.doExit();
 			return;
 		}
-		try
-		{
+		try {
 			DataPacket data = null;
-			try
-			{
+			try {
 				data = StreamHelper.readObject(this.client.getInputStream(),
 				        DataPacket.class);
-			} catch (SocketTimeoutException e)
-			{
+			} catch (SocketTimeoutException e) {
 				return;
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				data = null;
 			}
-			if (data == null)
-			{
+			if (data == null) {
 				return;
 			}
-			Commandlet commandlet = this.commandletLoader.getCommandlet(data
+			Commandlet commandlet = this.commandletLoader.getComponent(data
 			        .getTitle());
 			DataPacket result = null;
-			if (commandlet == null)
-			{
+			if (commandlet == null) {
 				result = DataPacket.NOT_FOUND_PACKET;
-			} else
-			{
+			} else {
 				result = commandlet.doCommand(data);
 			}
-			if (result != null)
-			{
-				try
-				{
+			if (result != null) {
+				try {
 					StreamHelper.writeObject(this.client.getOutputStream(),
 					        result);
-				} catch (IOException e)
-				{
+				} catch (IOException e) {
 					return;
 				}
 			}
-		} finally
-		{
+		} finally {
 			this.doExit();
 		}
 		

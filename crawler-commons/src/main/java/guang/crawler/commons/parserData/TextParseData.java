@@ -1,4 +1,5 @@
-package guang.crawler.crawlWorker.parser;
+package guang.crawler.commons.parserData;
+
 
 /**
  * 如果是纯文本数据，那么解析的结果就是这种数据类型

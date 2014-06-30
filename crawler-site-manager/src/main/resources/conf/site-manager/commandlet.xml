@@ -1,40 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tns:commandApp version="1.0"
-	xmlns:tns="http://guang.org/distributedCrawler/commandlet" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://guang.org/distributedCrawler/commandlet site.xsd">
-	<tns:commandlets>
-		<tns:commandlet>
-			<tns:commandlet-name>URLsGetter</tns:commandlet-name>
-			<tns:commandlet-class>guang.crawler.siteManager.commandlet.URLsGetter</tns:commandlet-class>
-			<tns:load-on-startup>false</tns:load-on-startup>
-		</tns:commandlet>
-		<tns:commandlet>
-			<tns:commandlet-name>URLsPutter</tns:commandlet-name>
-			<tns:commandlet-class>guang.crawler.siteManager.commandlet.URLsPutter</tns:commandlet-class>
-			<tns:load-on-startup>false</tns:load-on-startup>
-		</tns:commandlet>
-		<tns:commandlet>
-			<tns:commandlet-name>StatisticsGetter</tns:commandlet-name>
-			<tns:commandlet-class>guang.crawler.siteManager.commandlet.StatisticsGetter</tns:commandlet-class>
-			<tns:load-on-startup>false</tns:load-on-startup>
-		</tns:commandlet>
-		
-	</tns:commandlets>
-	<tns:commandlet-mappings>
-		<tns:commandlet-mapping>
-			<tns:commandlet-name>URLsGetter</tns:commandlet-name>
-			<tns:url-pattern>/url/get</tns:url-pattern>
-		</tns:commandlet-mapping>
-		<tns:commandlet-mapping>
-			<tns:commandlet-name>URLsPutter</tns:commandlet-name>
-			<tns:url-pattern>/url/put</tns:url-pattern>
-		</tns:commandlet-mapping>
-		<tns:commandlet-mapping>
-			<tns:commandlet-name>StatisticsGetter</tns:commandlet-name>
-			<tns:url-pattern>/statistics/get</tns:url-pattern>
-		</tns:commandlet-mapping>
-	</tns:commandlet-mappings>
-
-
-
-</tns:commandApp>
+<cmdlet:components-config
+	xmlns:cmdlet="http://guang.org/distributedCrawler/components"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://guang.org/distributedCrawler/components http://guang.org/distributedCrawler/url-extractors ">
+	<cmdlet:component-defines>
+		<cmdlet:component>
+			<cmdlet:component-name>URLsGetter</cmdlet:component-name>
+			<cmdlet:component-class>guang.crawler.siteManager.commandlet.URLsGetter</cmdlet:component-class>
+			<cmdlet:load-on-startup>false</cmdlet:load-on-startup>
+		</cmdlet:component>
+		<cmdlet:component>
+			<cmdlet:component-name>URLsPutter</cmdlet:component-name>
+			<cmdlet:component-class>guang.crawler.siteManager.commandlet.URLsPutter</cmdlet:component-class>
+			<cmdlet:load-on-startup>false</cmdlet:load-on-startup>
+		</cmdlet:component>
+		<cmdlet:component>
+			<cmdlet:component-name>StatisticsGetter</cmdlet:component-name>
+			<cmdlet:component-class>guang.crawler.siteManager.commandlet.StatisticsGetter</cmdlet:component-class>
+			<cmdlet:load-on-startup>false</cmdlet:load-on-startup>
+		</cmdlet:component>
+	</cmdlet:component-defines>
+	<cmdlet:component-mappings>
+		<cmdlet:component-mapping>
+			<cmdlet:component-name>URLsGetter</cmdlet:component-name>
+			<cmdlet:url-pattern>/url/get</cmdlet:url-pattern>
+		</cmdlet:component-mapping>
+		<cmdlet:component-mapping>
+			<cmdlet:component-name>URLsPutter</cmdlet:component-name>
+			<cmdlet:url-pattern>/url/put</cmdlet:url-pattern>
+		</cmdlet:component-mapping>
+	</cmdlet:component-mappings>
+</cmdlet:components-config>

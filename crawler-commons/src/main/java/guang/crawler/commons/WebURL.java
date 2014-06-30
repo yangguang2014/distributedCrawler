@@ -3,50 +3,64 @@ package guang.crawler.commons;
 public class WebURL {
 
 	/**
+	 * 创建一个新的URL
+	 *
+	 * @return
+	 */
+	public static WebURL newWebURL() {
+		return new WebURL();
+	}
+	
+	/**
 	 * 实际的URL字符串
 	 */
-	private String url;
+	private String	url;
 	/**
 	 * 当前WebURL的文档ID，全局唯一
 	 */
-	private String docid;
+	private String	docid;
 	/**
 	 * 当前URL的父URL的文档ID，如果没有，为NULL
 	 */
-	private String parentDocid;
+	private String	parentDocid;
 	/**
 	 * 当前URL的采集深度
 	 */
-	private short depth;
+	private short	depth;
 	/**
 	 * 当前URL如果是在<a>这种锚点中设置的，那么它的锚点信息存放在该变量中
 	 */
-	private String anchor;
+	private String	anchor;
 	/**
 	 * 该URL的采集优先级，暂时未被使用
 	 */
-	private byte priority;
+	private byte	priority;
 	/**
 	 * 该URL的子URL的数目，暂时未被使用
 	 */
-	private int childNum;
+	private int	   childNum;
 	/**
 	 * 当前URL所对应的站点管理器的ID。
 	 */
-	private String siteManagerId;
+	private String	siteManagerId;
 	/**
 	 * 该URL开始爬行的时间
 	 */
-	private long startTime = -1;
+	private long	startTime	= -1;
 	/**
 	 * 该URL被尝试爬取的次数
 	 */
-	private int tryTime = 0;
+	private int	   tryTime	  = 0;
+	/**
+	 * 当前URL所对应的站点ID
+	 */
+	private String	siteId;
 
-	private String siteId;
+	private WebURL() {
+	}
 
 	@Override
-	public boolean equals(Object o) {
+	public boolean equals(final Object o) {
 		if (this == o) {
 			return true;
 		}
@@ -118,43 +132,52 @@ public class WebURL {
 		return this;
 	}
 
-	public void setAnchor(String anchor) {
+	public WebURL setAnchor(final String anchor) {
 		this.anchor = anchor;
+		return this;
 	}
 
-	public void setChildNum(int childNum) {
+	public WebURL setChildNum(final int childNum) {
 		this.childNum = childNum;
+		return this;
 	}
 
-	public void setDepth(short depth) {
+	public WebURL setDepth(final short depth) {
 		this.depth = depth;
+		return this;
 	}
 
-	public void setDocid(String docid) {
+	public WebURL setDocid(final String docid) {
 		this.docid = docid;
+		return this;
 	}
 
-	public void setParentDocid(String parentDocid) {
+	public WebURL setParentDocid(final String parentDocid) {
 		this.parentDocid = parentDocid;
+		return this;
 	}
 
-	public void setPriority(byte priority) {
+	public WebURL setPriority(final byte priority) {
 		this.priority = priority;
+		return this;
 	}
 
-	public void setSiteId(String siteId) {
+	public WebURL setSiteId(final String siteId) {
 		this.siteId = siteId;
+		return this;
 	}
 
-	public void setSiteManagerId(String siteManagerId) {
+	public WebURL setSiteManagerId(final String siteManagerId) {
 		this.siteManagerId = siteManagerId;
+		return this;
 	}
 
-	public void setURL(String url) {
+	public WebURL setURL(final String url) {
 		this.url = url;
+		return this;
 	}
 
-	public WebURL startTime(long startTime) {
+	public WebURL startTime(final long startTime) {
 		this.startTime = startTime;
 		return this;
 	}

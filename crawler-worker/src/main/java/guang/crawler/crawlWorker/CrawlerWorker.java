@@ -5,20 +5,18 @@ import guang.crawler.centerConfig.workers.WorkerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.crawlWorker.daemon.SiteManagerConnectorManager;
-import guang.crawler.crawlWorker.fetcher.Downloader;
-import guang.crawler.crawlWorker.plugins.ExtractOutGoingUrlsPlugin;
-import guang.crawler.crawlWorker.plugins.SaveToHBasePlugin;
+import guang.crawler.crawlWorker.fetcher.PageProcessor;
+import guang.crawler.crawlWorker.plugin.ConfigLoadException;
+import guang.crawler.crawlWorker.plugin.ExtractOutGoingUrlsPlugin;
+import guang.crawler.crawlWorker.plugin.SaveToHBasePlugin;
 
 import java.io.IOException;
 
-public class CrawlerWorker implements Runnable
-{
+public class CrawlerWorker implements Runnable {
 	private static CrawlerWorker	crawlerWorker;
 	
-	public static CrawlerWorker me()
-	{
-		if (CrawlerWorker.crawlerWorker == null)
-		{
+	public static CrawlerWorker me() {
+		if (CrawlerWorker.crawlerWorker == null) {
 			CrawlerWorker.crawlerWorker = new CrawlerWorker();
 		}
 		return CrawlerWorker.crawlerWorker;
@@ -27,15 +25,15 @@ public class CrawlerWorker implements Runnable
 	private SiteManagerConnectorManager	siteManagerConnectManager;
 	private WorkerConfig	            workerConfig;
 	private CenterConfig	            controller;
-	private Downloader	                downloader;
+	private PageProcessor	                downloader;
 	private WebDataTableConnector	    webDataTableConnector;
 	
-	private CrawlerWorker()
-	{
+	private CrawlerWorker() {
 	}
 	
-	public CrawlerWorker init() throws IOException, InterruptedException
-	{
+	public CrawlerWorker init() throws IOException, InterruptedException,
+	        ConfigLoadException {
+		// 初始化各类配置信息
 		this.workerConfig = WorkerConfig.me().init();
 		this.controller = CenterConfig.me().init(
 		        this.workerConfig.getZookeeperQuorum());
@@ -45,16 +43,14 @@ public class CrawlerWorker implements Runnable
 		this.workerConfig.setWorkerInfo(workerInfo);
 		this.siteManagerConnectManager = SiteManagerConnectorManager.me()
 		        .init();
-		this.downloader = new Downloader();
+		// 初始化下载器
+		this.downloader = new PageProcessor();
 		ExtractOutGoingUrlsPlugin extractOutGoingUrlsPlugin = new ExtractOutGoingUrlsPlugin();
-		
 		this.webDataTableConnector = new WebDataTableConnector(
 		        this.workerConfig.getZookeeperQuorum());
-		try
-		{
+		try {
 			this.webDataTableConnector.open();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			System.out.println("Can not open hbase connect");
 		}
 		SaveToHBasePlugin saveToHbasePlugin = new SaveToHBasePlugin(
@@ -65,39 +61,31 @@ public class CrawlerWorker implements Runnable
 	}
 	
 	@Override
-	public void run()
-	{
+	public void run() {
 		this.siteManagerConnectManager.start();
 		WebURL url = null;
 		
-		while (true)
-		{
-			try
-			{
+		while (true) {
+			try {
 				url = this.siteManagerConnectManager.getURL();
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				break;
 			}
-			if (url != null)
-			{
+			if (url != null) {
 				this.downloader.processUrl(url);
 			}
 		}
 		
-		try
-		{
+		try {
 			this.siteManagerConnectManager.exit();
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.downloader.shutdown();
 		
 	}
 	
-	public void start()
-	{
+	public void start() {
 		new Thread(this).start();
 	}
 }

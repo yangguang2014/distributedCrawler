@@ -1,5 +1,7 @@
 package guang.crawler.crawlWorker.fetcher;
 
+import guang.crawler.commons.Page;
+
 import java.io.EOFException;
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package guang.crawler.crawlWorker.parser;
+package guang.crawler.commons.parserData;
 
 import guang.crawler.commons.WebURL;
 

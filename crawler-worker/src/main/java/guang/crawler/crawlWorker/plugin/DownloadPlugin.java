@@ -1,6 +1,6 @@
-package guang.crawler.crawlWorker.plugins;
+package guang.crawler.crawlWorker.plugin;
 
-import guang.crawler.crawlWorker.fetcher.Page;
+import guang.crawler.commons.Page;
 
 public interface DownloadPlugin
 {
