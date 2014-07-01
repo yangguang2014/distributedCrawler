@@ -2,8 +2,8 @@ package guang.crawler.extension.urlExtractor.qq;
 
 import guang.crawler.commons.Page;
 import guang.crawler.commons.WebURL;
+import guang.crawler.commons.parserData.HtmlParseData;
 import guang.crawler.commons.parserData.ParseData;
-import guang.crawler.commons.parserData.TextParseData;
 import guang.crawler.extension.urlExtractor.URLsExtractor;
 
 import java.util.List;
@@ -23,17 +23,17 @@ public class QQNewsCommentURLsExtractor implements URLsExtractor {
 	public void extractURLs(final Page page) {
 		List<WebURL> urlList = page.getLinksToFollow();
 		// 检测是否设置了被评论的页面
-		WebURL commentedURL = (WebURL) page.getWebURL()
-		                                   .getProperty("commentedWebURL");
-		if (commentedURL == null) {
+		String commentedDocID = (String) page.getWebURL()
+		                                     .getProperty("commentedDocID");
+		if (commentedDocID == null) {
 			return;
 		}
 		ParseData parseData = page.getParseData();
 		// 处理的必须是JSON数据
-		if (parseData instanceof TextParseData) {
+		if (parseData instanceof HtmlParseData) {
 			// 必须是JSON数据
-			TextParseData data = (TextParseData) parseData;
-			String jsonString = data.getTextContent();
+			HtmlParseData data = (HtmlParseData) parseData;
+			String jsonString = data.getHtml();
 			if ((jsonString == null) || (jsonString.length() == 0)) {
 				return;
 			}
@@ -42,19 +42,24 @@ public class QQNewsCommentURLsExtractor implements URLsExtractor {
 			        || ((responseObject = responseObject.getJSONObject("data")) == null)) {
 				return;
 			}
-			String maxID = responseObject.getString("maxid");
 			String lastID = responseObject.getString("last");
 			String targetID = responseObject.getString("targetid");
-
-			if ((targetID == null) || (maxID == null) || (lastID == null)
-			        || maxID.equals(lastID)) {
+			String retnum = responseObject.getString("retnum");
+			int cmtCount = 0;
+			try {
+				cmtCount = Integer.parseInt(retnum);
+			} catch (NumberFormatException e) {
+				cmtCount = 0;
+			}
+			if (cmtCount == 0) {
 				// 该新闻已经没有新的评论了
 				return;
 			}
 			urlList.add(WebURL.newWebURL()
 			                  .setURL("http://coral.qq.com/article/" + targetID
 			                                  + "/comment?commentid=" + lastID)
-			                  .setProperty("commentedWebURL", commentedURL));
+			                  .setProperty("commentedDocID", commentedDocID)
+			                  .setShouldDepthIncrease(false));
 
 		}
 

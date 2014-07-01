@@ -5,12 +5,12 @@ import guang.crawler.centerConfig.workers.WorkerInfo;
 import guang.crawler.commons.WebURL;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.crawlWorker.daemon.SiteManagerConnectorManager;
-import guang.crawler.crawlWorker.fetcher.PageProcessor;
-import guang.crawler.crawlWorker.plugin.ConfigLoadException;
-import guang.crawler.crawlWorker.plugin.ExtractDataToSavePlugin;
-import guang.crawler.crawlWorker.plugin.ExtractLinksToFollowPlugin;
-import guang.crawler.crawlWorker.plugin.SaveExtractedDataPlugin;
-import guang.crawler.crawlWorker.plugin.UploadExtractedLinksPlugin;
+import guang.crawler.crawlWorker.pageProcessor.ConfigLoadException;
+import guang.crawler.crawlWorker.pageProcessor.ExtractDataToSavePlugin;
+import guang.crawler.crawlWorker.pageProcessor.ExtractLinksToFollowPlugin;
+import guang.crawler.crawlWorker.pageProcessor.PageProcessor;
+import guang.crawler.crawlWorker.pageProcessor.SaveExtractedDataPlugin;
+import guang.crawler.crawlWorker.pageProcessor.UploadExtractedLinksPlugin;
 
 import java.io.IOException;
 

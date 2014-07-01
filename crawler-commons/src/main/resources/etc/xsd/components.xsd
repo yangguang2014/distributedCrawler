@@ -31,8 +31,8 @@
 								<complexType>
 									<sequence>
 										<element name="component-name" type="token" nillable="false"></element>
-										<element name="url-pattern" type="anyURI" nillable="false"
-											maxOccurs="unbounded" minOccurs="0"></element>
+										<element name="url-pattern" type="string" nillable="false"
+											maxOccurs="unbounded" minOccurs="1"></element>
 									</sequence>
 								</complexType>
 							</element>

@@ -2,9 +2,8 @@ package guang.crawler.extension.filedExtractor.qq;
 
 import guang.crawler.commons.DataFields;
 import guang.crawler.commons.Page;
-import guang.crawler.commons.WebURL;
+import guang.crawler.commons.parserData.HtmlParseData;
 import guang.crawler.commons.parserData.ParseData;
-import guang.crawler.commons.parserData.TextParseData;
 import guang.crawler.connector.WebDataTableConnector;
 import guang.crawler.extension.filedExtractor.FieldsExtractor;
 
@@ -26,10 +25,10 @@ public class QQCommentFieldsExtractor implements FieldsExtractor {
 	public void extractFields(final Page page) {
 		ParseData parseData = page.getParseData();
 		// 检测数据内容
-		if (parseData instanceof TextParseData) {
+		if (parseData instanceof HtmlParseData) {
 			// 必须是JSON数据
-			TextParseData data = (TextParseData) parseData;
-			String jsonString = data.getTextContent();
+			HtmlParseData data = (HtmlParseData) parseData;
+			String jsonString = data.getHtml();
 			if ((jsonString == null) || (jsonString.length() == 0)) {
 				return;
 			}
@@ -42,15 +41,15 @@ public class QQCommentFieldsExtractor implements FieldsExtractor {
 			}
 			// 处理每条评论
 			DataFields dataFileds = page.getDataToSave();
-			WebURL commentedURL = (WebURL) page.getWebURL()
-			                                   .getProperty("commentedWebURL");
+			String commentedDocID = (String) page.getWebURL()
+			                                     .getProperty("commentedDocID");
 			int size = jsonArray.size();
 			for (int i = 0; i < size; i++) {
 				JSONObject comment = jsonArray.getJSONObject(i);
 				String commentId = comment.getString("id");
 				String commentData = comment.toJSONString();
 				// 将评论内容添加到HBase中，每个评论一列。
-				dataFileds.addFiled(commentedURL.getDocid(),
+				dataFileds.addFiled(commentedDocID,
 				                    WebDataTableConnector.FAMILY_SUPPORT_DATA,
 				                    "cmt" + commentId, commentData);
 			}

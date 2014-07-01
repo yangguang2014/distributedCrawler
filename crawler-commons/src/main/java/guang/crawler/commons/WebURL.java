@@ -3,7 +3,7 @@ package guang.crawler.commons;
 import java.util.HashMap;
 
 public class WebURL {
-	
+
 	/**
 	 * 创建一个新的URL
 	 *
@@ -12,7 +12,7 @@ public class WebURL {
 	public static WebURL newWebURL() {
 		return new WebURL();
 	}
-
+	
 	/**
 	 * 实际的URL字符串
 	 */
@@ -28,7 +28,7 @@ public class WebURL {
 	/**
 	 * 当前URL的采集深度
 	 */
-	private short	                depth;
+	private short	                depth	            = -1;
 	/**
 	 * 当前URL如果是在<a>这种锚点中设置的，那么它的锚点信息存放在该变量中
 	 */
@@ -48,16 +48,21 @@ public class WebURL {
 	/**
 	 * 该URL开始爬行的时间
 	 */
-	private long	                startTime	= -1;
+	private long	                startTime	        = -1;
 	/**
 	 * 该URL被尝试爬取的次数
 	 */
-	private int	                    tryTime	  = 0;
+	private int	                    tryTime	            = 0;
 	/**
 	 * 当前URL所对应的站点ID
 	 */
 	private String	                siteId;
-
+	
+	/**
+	 * 当前URL的深度是否应当增加。这种情况出现在页面加载的是JS中的链接，如评论内容等深度不应当增加的情况。默认应当增加，可以设置为false
+	 */
+	private boolean	                shouldDepthIncrease	= true;
+	
 	/**
 	 * 在处理该URL过程中设置的一些属性
 	 */
@@ -66,7 +71,7 @@ public class WebURL {
 	private WebURL() {
 		this.properties = new HashMap<String, Object>();
 	}
-
+	
 	@Override
 	public boolean equals(final Object o) {
 		if (this == o) {
@@ -75,16 +80,16 @@ public class WebURL {
 		if ((o == null) || (this.getClass() != o.getClass())) {
 			return false;
 		}
-		
+
 		WebURL otherUrl = (WebURL) o;
 		return (this.url != null) && this.url.equals(otherUrl.getURL());
-		
-	}
 
+	}
+	
 	public String getAnchor() {
 		return this.anchor;
 	}
-	
+
 	public int getChildNum() {
 		return this.childNum;
 	}
@@ -96,93 +101,101 @@ public class WebURL {
 	public String getDocid() {
 		return this.docid;
 	}
-	
+
 	public String getParentDocid() {
 		return this.parentDocid;
 	}
-	
+
 	public byte getPriority() {
 		return this.priority;
 	}
-	
+
+	public HashMap<String, Object> getProperties() {
+		return this.properties;
+	}
+
 	/**
 	 * 从当前URL获取一些之前设置过的属性
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
 	public Object getProperty(final String key) {
 		return this.properties.get(key);
 	}
-	
+
 	public String getSiteId() {
 		return this.siteId;
 	}
-	
+
 	public String getSiteManagerId() {
 		return this.siteManagerId;
 	}
-	
+
 	public long getStartTime() {
 		return this.startTime;
 	}
-	
+
 	public int getTryTime() {
 		return this.tryTime;
 	}
-	
+
 	public String getURL() {
 		return this.url;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		return this.url.hashCode();
 	}
-	
+
 	public WebURL increaseTryTime() {
 		this.tryTime++;
 		return this;
 	}
-	
+
+	public boolean isShouldDepthIncrease() {
+		return this.shouldDepthIncrease;
+	}
+
 	public WebURL resetTryTime() {
 		this.tryTime = 0;
 		return this;
 	}
-	
+
 	public WebURL setAnchor(final String anchor) {
 		this.anchor = anchor;
 		return this;
 	}
-	
+
 	public WebURL setChildNum(final int childNum) {
 		this.childNum = childNum;
 		return this;
 	}
-	
+
 	public WebURL setDepth(final short depth) {
 		this.depth = depth;
 		return this;
 	}
-	
+
 	public WebURL setDocid(final String docid) {
 		this.docid = docid;
 		return this;
 	}
-	
+
 	public WebURL setParentDocid(final String parentDocid) {
 		this.parentDocid = parentDocid;
 		return this;
 	}
-	
+
 	public WebURL setPriority(final byte priority) {
 		this.priority = priority;
 		return this;
 	}
-	
+
 	/**
 	 * 给当前URL设置一些属性
-	 * 
+	 *
 	 * @param key
 	 * @param value
 	 * @return
@@ -191,30 +204,35 @@ public class WebURL {
 		this.properties.put(key, value);
 		return this;
 	}
-	
+
+	public WebURL setShouldDepthIncrease(final boolean shouldDepthIncrease) {
+		this.shouldDepthIncrease = shouldDepthIncrease;
+		return this;
+	}
+
 	public WebURL setSiteId(final String siteId) {
 		this.siteId = siteId;
 		return this;
 	}
-	
+
 	public WebURL setSiteManagerId(final String siteManagerId) {
 		this.siteManagerId = siteManagerId;
 		return this;
 	}
-	
+
 	public WebURL setURL(final String url) {
 		this.url = url;
 		return this;
 	}
-	
+
 	public WebURL startTime(final long startTime) {
 		this.startTime = startTime;
 		return this;
 	}
-	
+
 	@Override
 	public String toString() {
 		return this.url;
 	}
-	
+
 }

@@ -5,12 +5,17 @@
 	<ext:component-defines>
 		<ext:component>
 			<ext:component-name>default</ext:component-name>
-			<ext:component-class>guang.crawler.extension.urlExtractors.DefaultURLExtractor</ext:component-class>
+			<ext:component-class>guang.crawler.extension.urlExtractor.DefaultURLExtractor</ext:component-class>
 			<ext:load-on-startup>true</ext:load-on-startup>
 		</ext:component>
 		<ext:component>
 			<ext:component-name>QQNewsURLsExtractor</ext:component-name>
-			<ext:component-class>guang.crawler.extension.urlExtractor.qq</ext:component-class>
+			<ext:component-class>guang.crawler.extension.urlExtractor.qq.QQNewsURLsExtractor</ext:component-class>
+			<ext:load-on-startup>false</ext:load-on-startup>
+		</ext:component>
+		<ext:component>
+			<ext:component-name>QQNewsCommentURLsExtractor</ext:component-name>
+			<ext:component-class>guang.crawler.extension.urlExtractor.qq.QQNewsCommentURLsExtractor</ext:component-class>
 			<ext:load-on-startup>false</ext:load-on-startup>
 		</ext:component>
 	</ext:component-defines>
@@ -18,6 +23,10 @@
 		<ext:component-mapping>
 			<ext:component-name>QQNewsURLsExtractor</ext:component-name>
 			<ext:url-pattern>http://news\.qq\.com/a/.*.htm</ext:url-pattern>
+		</ext:component-mapping>
+		<ext:component-mapping>
+			<ext:component-name>QQNewsCommentURLsExtractor</ext:component-name>
+			<ext:url-pattern>http://coral\.qq\.com/article/[0-9]+/comment\?commentid=[0-9]+.*</ext:url-pattern>
 		</ext:component-mapping>
 	</ext:component-mappings>
 </ext:components-config>

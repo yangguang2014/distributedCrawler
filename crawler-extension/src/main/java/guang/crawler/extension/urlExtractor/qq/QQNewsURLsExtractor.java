@@ -17,9 +17,9 @@ import java.util.regex.Pattern;
  *
  */
 public class QQNewsURLsExtractor implements URLsExtractor {
-	
+
 	private Pattern	cmtIdPattern;
-	
+
 	public QQNewsURLsExtractor() {
 		this.cmtIdPattern = Pattern.compile("cmt_id\\s*=\\s*([0-9]+)\\s*;");
 	}
@@ -31,7 +31,7 @@ public class QQNewsURLsExtractor implements URLsExtractor {
 		if (data instanceof HtmlParseData) {
 			HtmlParseData htmlData = (HtmlParseData) data;
 			// 1. 获取静态URL列表
-			urlList.addAll(htmlData.getOutgoingUrls());
+			// urlList.addAll(htmlData.getOutgoingUrls());
 			// 2. 获取动态URL列表
 			String html = htmlData.getHtml();
 			// 2.1 获取cmt_id的值
@@ -41,23 +41,30 @@ public class QQNewsURLsExtractor implements URLsExtractor {
 			String cmtCountURLString = "http://coral.qq.com/article/" + cmtId
 			        + "/commentnum";
 			WebURL cmtCountURL = WebURL.newWebURL()
-			                           .setURL(cmtCountURLString);
-			cmtCountURL.setProperty("commentedWebURL", page.getWebURL());
+			                           .setURL(cmtCountURLString)
+			                           .setShouldDepthIncrease(false)
+			                           .setProperty("commentedDocID",
+			                                        page.getWebURL()
+			                                            .getDocid());
 			// 第一条评论URL
 			String firstCmtURLString = "http://coral.qq.com/article/" + cmtId
 			        + "/comment?commentid=0";
 			WebURL firstCmtURL = WebURL.newWebURL()
-			                           .setURL(firstCmtURLString);
-			cmtCountURL.setProperty("commentedWebURL", page.getWebURL());
+			                           .setURL(firstCmtURLString)
+			                           .setShouldDepthIncrease(false)
+			                           .setProperty("commentedDocID",
+			                                        page.getWebURL()
+			                                            .getDocid());
 			// 2.3 将构建的动态URL添加到最终的列表中
 			urlList.add(cmtCountURL);
 			urlList.add(firstCmtURL);
+			
 		}
 	}
 
 	private String getCmtId(final String html) {
 		Matcher cmtIdMatcher = this.cmtIdPattern.matcher(html);
-		if (cmtIdMatcher.matches()) {
+		if (cmtIdMatcher.find()) {
 			String cmtId = cmtIdMatcher.group(1);
 			return cmtId;
 		}

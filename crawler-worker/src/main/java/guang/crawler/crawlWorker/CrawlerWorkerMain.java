@@ -1,6 +1,6 @@
 package guang.crawler.crawlWorker;
 
-import guang.crawler.crawlWorker.plugin.ConfigLoadException;
+import guang.crawler.crawlWorker.pageProcessor.ConfigLoadException;
 
 import java.io.IOException;
 

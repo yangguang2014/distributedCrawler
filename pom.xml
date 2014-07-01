@@ -7,15 +7,15 @@
 	<version>1.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<modules>
+		<module>crawler-commons</module>
+		<module>crawler-extension</module>
+		<module>crawler-controller</module>
 		<module>crawler-worker</module>
 		<module>crawler-site-manager</module>
-		<module>crawler-commons</module>
 		<module>crawler-statistics</module>
-		<module>crawler-controller</module>
+		<module>extenerProjects</module>
 		<module>crawler-launcher</module>
 		<module>crawler-assemblies</module>
-		<module>extenerProjects</module>
-		<module>crawler-extension</module>
 	</modules>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

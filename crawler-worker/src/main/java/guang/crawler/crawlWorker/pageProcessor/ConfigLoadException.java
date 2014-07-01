@@ -1,4 +1,4 @@
-package guang.crawler.crawlWorker.plugin;
+package guang.crawler.crawlWorker.pageProcessor;
 
 /**
  * 加载配置信息抛出异常.

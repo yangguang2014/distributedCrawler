@@ -1,7 +1,7 @@
 package guang.crawler.crawlWorker;
 
 import guang.crawler.commons.WebURL;
-import guang.crawler.crawlWorker.fetcher.PageProcessor;
+import guang.crawler.crawlWorker.pageProcessor.PageProcessor;
 
 import org.junit.After;
 import org.junit.Before;

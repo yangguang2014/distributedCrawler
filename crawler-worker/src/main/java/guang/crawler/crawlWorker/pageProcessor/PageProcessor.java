@@ -1,9 +1,10 @@
-package guang.crawler.crawlWorker.fetcher;
+package guang.crawler.crawlWorker.pageProcessor;
 
 import guang.crawler.commons.Page;
 import guang.crawler.commons.WebURL;
+import guang.crawler.crawlWorker.fetcher.PageFetchResult;
+import guang.crawler.crawlWorker.fetcher.PageFetcher;
 import guang.crawler.crawlWorker.parser.Parser;
-import guang.crawler.crawlWorker.plugin.DownloadPlugin;
 
 import java.util.LinkedList;
 
@@ -16,6 +17,7 @@ import org.apache.http.HttpStatus;
  *
  */
 public class PageProcessor {
+	
 	private Parser	                   parser;
 	private PageFetcher	               pageFetcher;
 	private LinkedList<DownloadPlugin>	downloadPlugins;
@@ -25,26 +27,20 @@ public class PageProcessor {
 		this.pageFetcher = new PageFetcher();
 		this.downloadPlugins = new LinkedList<DownloadPlugin>();
 	}
-	
+
 	public void addPlugin(final DownloadPlugin plugin) {
 		this.downloadPlugins.add(plugin);
 	}
-	
+
 	private PageFetchResult download(final WebURL curURL) {
 		PageFetchResult fetchResult = null;
-		try {
-			fetchResult = this.pageFetcher.fetchData(curURL);
-			if (fetchResult.getStatusCode() == HttpStatus.SC_OK) {
-				return fetchResult;
-			}
-		} finally {
-			if (fetchResult != null) {
-				fetchResult.discardContentIfNotConsumed();
-			}
+		fetchResult = this.pageFetcher.fetchData(curURL);
+		if (fetchResult.getStatusCode() == HttpStatus.SC_OK) {
+			return fetchResult;
 		}
 		return null;
 	}
-	
+
 	private Page parse(final PageFetchResult fetchResult, final WebURL curURL) {
 		try {
 			Page page = new Page(curURL);
@@ -54,11 +50,15 @@ public class PageProcessor {
 			}
 		} catch (Exception e) {
 			return null;
+		} finally {
+			if (fetchResult != null) {
+				fetchResult.discardContentIfNotConsumed();
+			}
 		}
 		return null;
-
+		
 	}
-	
+
 	public void processUrl(final WebURL url) {
 		System.out.println("Processing: " + url);
 		PageFetchResult fetchResult = this.download(url);
@@ -74,7 +74,7 @@ public class PageProcessor {
 			System.out.println("Couldn't fetch the content of the page.");
 		}
 	}
-	
+
 	public void shutdown() {
 		if (this.pageFetcher != null) {
 			this.pageFetcher.shutDown();

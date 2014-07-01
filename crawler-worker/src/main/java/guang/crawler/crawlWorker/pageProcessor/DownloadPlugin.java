@@ -1,4 +1,4 @@
-package guang.crawler.crawlWorker.plugin;
+package guang.crawler.crawlWorker.pageProcessor;
 
 import guang.crawler.commons.Page;
 

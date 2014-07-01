@@ -3,7 +3,7 @@ package guang.crawler.crawlWorker;
 import guang.crawler.commons.Page;
 import guang.crawler.commons.parserData.HtmlParseData;
 import guang.crawler.commons.parserData.ParseData;
-import guang.crawler.crawlWorker.plugin.DownloadPlugin;
+import guang.crawler.crawlWorker.pageProcessor.DownloadPlugin;
 import guang.crawler.crawlWorker.url.URLCanonicalizer;
 
 import java.util.regex.Matcher;
