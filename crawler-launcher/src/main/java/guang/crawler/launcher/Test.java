@@ -14,7 +14,7 @@ public class Test {
 		WebGatherNodeBean bean = new WebGatherNodeBean();
 		bean.setId(1l);
 		bean.setWgnEntryUrl("http://news.qq.com/");
-
+		bean.setWgnAllowRule("http://news\\.qq\\.com/.*,http://coral\\.qq\\.com/.*");
 		SiteInfo siteInfo = CenterConfig.me()
 		                                .init("ubuntu-3,ubuntu-6,ubuntu-8")
 		                                .getSitesConfigInfo()
@@ -26,7 +26,7 @@ public class Test {
 		        .setHandled(false, false)
 		        .update();
 	}
-	
+
 	private static void clearCenterConfig() throws IOException,
 	        InterruptedException {
 		CenterConfig.me()
@@ -35,7 +35,7 @@ public class Test {
 		CenterConfig.me()
 		            .initPath();
 	}
-
+	
 	public static void main(final String[] args) throws IOException,
 	        InterruptedException, ClassNotFoundException, KeeperException {
 		// 既然是模拟，设置一下环境变量
