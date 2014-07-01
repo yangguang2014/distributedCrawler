@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
  *
  */
 public class QQNewsURLsExtractor implements URLsExtractor {
-
+	
 	private Pattern	cmtIdPattern;
-
+	
 	public QQNewsURLsExtractor() {
 		this.cmtIdPattern = Pattern.compile("cmt_id\\s*=\\s*([0-9]+)\\s*;");
 	}
-
+	
 	@Override
 	public void extractURLs(final Page page) {
 		List<WebURL> urlList = page.getLinksToFollow();
@@ -31,7 +31,7 @@ public class QQNewsURLsExtractor implements URLsExtractor {
 		if (data instanceof HtmlParseData) {
 			HtmlParseData htmlData = (HtmlParseData) data;
 			// 1. 获取静态URL列表
-			// urlList.addAll(htmlData.getOutgoingUrls());
+			urlList.addAll(htmlData.getOutgoingUrls());
 			// 2. 获取动态URL列表
 			String html = htmlData.getHtml();
 			// 2.1 获取cmt_id的值
@@ -58,10 +58,10 @@ public class QQNewsURLsExtractor implements URLsExtractor {
 			// 2.3 将构建的动态URL添加到最终的列表中
 			urlList.add(cmtCountURL);
 			urlList.add(firstCmtURL);
-			
+
 		}
 	}
-
+	
 	private String getCmtId(final String html) {
 		Matcher cmtIdMatcher = this.cmtIdPattern.matcher(html);
 		if (cmtIdMatcher.find()) {
@@ -70,5 +70,5 @@ public class QQNewsURLsExtractor implements URLsExtractor {
 		}
 		return null;
 	}
-	
+
 }

@@ -21,9 +21,9 @@ public class ExtractLinksToFollowPlugin implements DownloadPlugin {
 	private Pattern	                       filter	= Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g"
 	                                                      + "|png|tiff?|mid|mp2|mp3|mp4"
 	                                                      + "|wav|avi|mov|mpeg|ram|m4v|pdf"
-	                                                      + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+	                                                      + "|rm|smil|wmv|swf|wma|zip|rar|gz|ico))$");
 	private ComponentLoader<URLsExtractor>	extractorLoader;
-	
+
 	public ExtractLinksToFollowPlugin() throws ConfigLoadException {
 		String configFileName = WorkerConfig.me()
 		                                    .getCrawlerHome()
@@ -41,12 +41,12 @@ public class ExtractLinksToFollowPlugin implements DownloadPlugin {
 			throw new ConfigLoadException(
 			        "load url-extractors.xml file failed!", e);
 		}
-		
+
 	}
-	
+
 	@Override
 	public boolean work(final Page page) {
-		
+
 		if (page != null) {
 			// 获取URLExtractor
 			URLsExtractor extractor = this.extractorLoader.getComponent(page.getWebURL()
@@ -71,5 +71,5 @@ public class ExtractLinksToFollowPlugin implements DownloadPlugin {
 		}
 		return false;
 	}
-	
+
 }
