@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
@@ -54,7 +55,7 @@ public class WebDataTableConnector {
 	
 	/**
 	 * 向HBase中插入一系列的域
-	 * 
+	 *
 	 * @param webUrl
 	 * @param dataFields
 	 * @throws IOException
@@ -65,7 +66,7 @@ public class WebDataTableConnector {
 			throw new IOException("data base should be opened first.");
 		}
 		String tableName = WebDataTableConnector.TABLE_PREFIX
-				+ webUrl.getSiteId();
+		        + webUrl.getSiteId();
 		HTableInterface webDataTable = this.webDataTables.get(tableName);
 		if (webDataTable == null) {
 			if (!this.tableExists(tableName)) {
@@ -77,8 +78,7 @@ public class WebDataTableConnector {
 				this.webDataTables.put(tableName, webDataTable);
 			}
 		}
-		HashMap<String, LinkedList<DataField>> fields = dataFields
-				.getAllFileds();
+		HashMap<String, LinkedList<DataField>> fields = dataFields.getAllFileds();
 		Set<String> keys = fields.keySet();
 		for (String key : keys) {
 			LinkedList<DataField> data = fields.get(key);
@@ -88,8 +88,8 @@ public class WebDataTableConnector {
 			Put put = new Put(Bytes.toBytes(key));// 设置键值
 			for (DataField field : data) {
 				put.add(Bytes.toBytes(field.getDataFamily()),
-						Bytes.toBytes(field.getColumnName()),
-						Bytes.toBytes(field.getData()));
+				        Bytes.toBytes(field.getColumnName()),
+				        Bytes.toBytes(field.getData()));
 			}
 			webDataTable.put(put);
 		}
@@ -98,12 +98,12 @@ public class WebDataTableConnector {
 	}
 
 	public void addHtmlData(final WebURL webUrl, final String html,
-			final boolean childFinished) throws IOException {
+	        final boolean childFinished) throws IOException {
 		if (!this.opened) {
 			throw new IOException("data base should be opened first.");
 		}
 		String tableName = WebDataTableConnector.TABLE_PREFIX
-				+ webUrl.getSiteId();
+		        + webUrl.getSiteId();
 		HTableInterface webDataTable = this.webDataTables.get(tableName);
 		if (webDataTable == null) {
 			if (!this.tableExists(tableName)) {
@@ -117,13 +117,13 @@ public class WebDataTableConnector {
 		}
 		Put put = new Put(Bytes.toBytes(webUrl.getDocid()));// 设置键值
 		put.add(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-				Bytes.toBytes("depth"), Bytes.toBytes(webUrl.getDepth()));
+		        Bytes.toBytes("depth"), Bytes.toBytes(webUrl.getDepth()));
 		put.add(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-				Bytes.toBytes("url"), Bytes.toBytes(webUrl.getURL()));
+		        Bytes.toBytes("url"), Bytes.toBytes(webUrl.getURL()));
 		put.add(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-				Bytes.toBytes("html"), Bytes.toBytes(html));
+		        Bytes.toBytes("html"), Bytes.toBytes(html));
 		put.add(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-				Bytes.toBytes("childFinshed"), Bytes.toBytes(childFinished));
+		        Bytes.toBytes("childFinshed"), Bytes.toBytes(childFinished));
 		webDataTable.put(put);
 
 		webDataTable.flushCommits();
@@ -133,10 +133,12 @@ public class WebDataTableConnector {
 		if (!this.opened) {
 			return;
 		}
-		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables
-				.entrySet().iterator();
+		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables.entrySet()
+		                                                                    .iterator();
 		while (tables.hasNext()) {
-			tables.next().getValue().close();
+			tables.next()
+			      .getValue()
+			      .close();
 		}
 		if (this.hbaseAdmin != null) {
 			this.hbaseAdmin.close();
@@ -148,18 +150,18 @@ public class WebDataTableConnector {
 	}
 
 	public HTableInterface createTable(final String tableName)
-			throws IOException {
+	        throws IOException {
 
 		HTableDescriptor tableDesc = new HTableDescriptor(
-				TableName.valueOf(tableName));
+		        TableName.valueOf(tableName));
 		HColumnDescriptor dataFamily = new HColumnDescriptor(
-				WebDataTableConnector.FAMILY_MAIN_DATA);
+		        WebDataTableConnector.FAMILY_MAIN_DATA);
 		dataFamily.setMaxVersions(1);
 		dataFamily.setBlockCacheEnabled(false);
 		tableDesc.addFamily(dataFamily);
 
 		HColumnDescriptor supportDataFamily = new HColumnDescriptor(
-				WebDataTableConnector.FAMILY_SUPPORT_DATA);
+		        WebDataTableConnector.FAMILY_SUPPORT_DATA);
 		supportDataFamily.setMaxVersions(1);
 		supportDataFamily.setBlockCacheEnabled(false);
 		tableDesc.addFamily(supportDataFamily);
@@ -184,11 +186,32 @@ public class WebDataTableConnector {
 		if (!this.opened) {
 			return;
 		}
-		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables
-				.entrySet().iterator();
+		Iterator<Entry<String, HTableInterface>> tables = this.webDataTables.entrySet()
+		                                                                    .iterator();
 		while (tables.hasNext()) {
-			tables.next().getValue().flushCommits();
+			tables.next()
+			      .getValue()
+			      .flushCommits();
 		}
+	}
+
+	/**
+	 * 获取具有某种类型名称的表
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	public List<String> getAllTables(final String pattern) throws IOException {
+		HTableDescriptor[] tableDescriptors = this.hbaseAdmin.listTables(pattern);
+		if ((tableDescriptors == null) || (tableDescriptors.length == 0)) {
+			return null;
+		}
+		ArrayList<String> result = new ArrayList<String>();
+		for (HTableDescriptor table : tableDescriptors) {
+			String tableName = new String(table.getName());
+			result.add(tableName);
+		}
+		return result;
 	}
 
 	/**
@@ -198,8 +221,7 @@ public class WebDataTableConnector {
 	 * @throws IOException
 	 */
 	public Long[] getAvailableSiteIds() throws IOException {
-		HTableDescriptor[] tableDescriptors = this.hbaseAdmin
-				.listTables("site-\\d*");
+		HTableDescriptor[] tableDescriptors = this.hbaseAdmin.listTables("site-\\d*");
 		if ((tableDescriptors == null) || (tableDescriptors.length == 0)) {
 			return null;
 		}
@@ -207,10 +229,7 @@ public class WebDataTableConnector {
 		for (HTableDescriptor table : tableDescriptors) {
 			String tableName = new String(table.getName());
 			try {
-				long siteId = Long
-						.parseLong(tableName
-								.substring(WebDataTableConnector.TABLE_PREFIX
-										.length()));
+				long siteId = Long.parseLong(tableName.substring(WebDataTableConnector.TABLE_PREFIX.length()));
 				result.add(siteId);
 			} catch (NumberFormatException e) {
 				continue;
@@ -221,7 +240,7 @@ public class WebDataTableConnector {
 	}
 
 	public String[] getHtmlData(final String tableName, final int docid)
-			throws IOException {
+	        throws IOException {
 		if (!this.opened) {
 			throw new IOException("data base should be opened first.");
 		}
@@ -247,7 +266,7 @@ public class WebDataTableConnector {
 	}
 
 	public void open() throws MasterNotRunningException,
-	ZooKeeperConnectionException, IOException {
+	        ZooKeeperConnectionException, IOException {
 		if (this.opened) {
 			return;
 		}
@@ -255,23 +274,20 @@ public class WebDataTableConnector {
 		config.set("hbase.zookeeper.quorum", this.zookeeperQuorum);
 		this.hbaseConfig = HBaseConfiguration.create(config);
 		this.hbaseAdmin = new HBaseAdmin(this.hbaseConfig);
-		this.hConnection = HConnectionManager
-				.createConnection(this.hbaseConfig);
+		this.hConnection = HConnectionManager.createConnection(this.hbaseConfig);
 		this.opened = true;
 	}
 
 	public String[] resultToHtmlData(final Result result) {
 		if (result != null) {
 			String[] data = new String[2];
-			byte[] urlData = result.getValue(
-					Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-					Bytes.toBytes("url"));
+			byte[] urlData = result.getValue(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
+			                                 Bytes.toBytes("url"));
 			if (urlData != null) {
 				data[0] = Bytes.toString(urlData);
 			}
-			byte[] htmlData = result.getValue(
-					Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
-					Bytes.toBytes("html"));
+			byte[] htmlData = result.getValue(Bytes.toBytes(WebDataTableConnector.FAMILY_MAIN_DATA),
+			                                  Bytes.toBytes("html"));
 			if (htmlData != null) {
 				data[1] = Bytes.toString(htmlData);
 			}
@@ -288,8 +304,8 @@ public class WebDataTableConnector {
 	 * @throws IOException
 	 */
 	public ResultScanner scanTable(final long siteId) throws IOException {
-		HTableInterface iface = this
-				.loadTable(WebDataTableConnector.TABLE_PREFIX + siteId);
+		HTableInterface iface = this.loadTable(WebDataTableConnector.TABLE_PREFIX
+		        + siteId);
 		if (iface != null) {
 			ResultScanner scanner = iface.getScanner("data".getBytes());
 			return scanner;
