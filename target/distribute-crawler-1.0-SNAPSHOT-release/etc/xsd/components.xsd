@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	targetNamespace="http://guang.org/distributedCrawler/components"
+	xmlns:tns="http://guang.org/distributedCrawler/components"
+	elementFormDefault="qualified">
+	<element name="components-config">
+		<complexType>
+			<sequence>
+				<element name="component-defines">
+					<complexType>
+						<sequence>
+							<element name="component" minOccurs="0" maxOccurs="unbounded">
+								<complexType>
+									<sequence>
+										<element name="component-name" type="token" nillable="false"></element>
+										<element name="component-class" type="anyURI"
+											nillable="false"></element>
+										<element name="load-on-startup" type="boolean"
+											default="false" minOccurs="0"></element>
+									</sequence>
+								</complexType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+				<element name="component-mappings">
+					<complexType>
+						<sequence>
+							<element name="component-mapping" minOccurs="0"
+								maxOccurs="unbounded">
+								<complexType>
+									<sequence>
+										<element name="component-name" type="token" nillable="false"></element>
+										<element name="url-pattern" type="string" nillable="false"
+											maxOccurs="unbounded" minOccurs="1"></element>
+									</sequence>
+								</complexType>
+							</element>
+						</sequence>
+					</complexType>
+				</element>
+			</sequence>
+			<attribute name="version" default="1.0" type="double"></attribute>
+		</complexType>
+	</element>
+</schema>

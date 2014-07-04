@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.zookeeper.KeeperException;
 
 public class Test {
-
+	
 	public static void addSite() throws InterruptedException, IOException,
 	        KeeperException {
 		WebGatherNodeBean bean = new WebGatherNodeBean();
@@ -29,7 +29,7 @@ public class Test {
 		        .setHandled(false, false)
 		        .update();
 	}
-	
+
 	public static void clearCenterConfig() throws IOException,
 	        InterruptedException {
 		CenterConfig.me()
@@ -38,7 +38,7 @@ public class Test {
 		CenterConfig.me()
 		            .initPath();
 	}
-	
+
 	public static void clearTables() throws IOException {
 		WebDataTableConnector connector = new WebDataTableConnector(
 		        "ubuntu-3,ubuntu-6,ubuntu-8");
@@ -54,21 +54,20 @@ public class Test {
 		} finally {
 			connector.close();
 		}
-		
-	}
 
+	}
+	
 	public static void main(final String[] args) throws IOException,
 	        InterruptedException, ClassNotFoundException, KeeperException {
 		// 既然是模拟，设置一下环境变量
-		// System.setProperty("crawler.home",
-		// System.getProperty("user.home")
-		// +
-		// "/work/workspace/distributedCrawler/target/distribute-crawler-1.0-SNAPSHOT-release");
+		System.setProperty("crawler.home",
+		                   System.getProperty("user.home")
+		                           + "/work/workspace/distributedCrawler/target/distribute-crawler-1.0-SNAPSHOT-release");
 		// 仅为测试使用，重新配置中央配置器
 		// Test.clearCenterConfig();
 		// Test.addSite();
-		// CrawlerLauncherMain.main(args);
-		
-		Test.clearTables();
+		CrawlerLauncherMain.main(args);
+
+		// Test.clearTables();
 	}
 }

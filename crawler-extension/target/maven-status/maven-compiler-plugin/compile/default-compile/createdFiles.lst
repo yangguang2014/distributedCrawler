@@ -1,0 +1,9 @@
+guang/crawler/extension/urlExtractor/URLsExtractor.class
+guang/crawler/extension/urlExtractor/qq/QQNewsCommentURLsExtractor.class
+guang/crawler/extension/filedExtractor/DefaultFieldExtractor.class
+guang/crawler/extension/urlExtractor/qq/QQNewsURLsExtractor.class
+guang/crawler/extension/filedExtractor/qq/QQCommentFieldsExtractor.class
+guang/crawler/extension/urlExtractor/DefaultURLExtractor.class
+guang/crawler/extension/filedExtractor/qq/QQCommentCountFieldsExtractor.class
+guang/crawler/extension/urlExtractor/JSONParser.class
+guang/crawler/extension/filedExtractor/FieldsExtractor.class
