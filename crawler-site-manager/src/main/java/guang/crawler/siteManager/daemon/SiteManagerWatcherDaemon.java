@@ -9,98 +9,82 @@ import guang.crawler.siteManager.SiteManager;
 import java.io.IOException;
 import java.util.Date;
 
-import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.WatchedEvent;
 import org.apache.zookeeper.Watcher;
 
 /**
  * 监控中央配置中自己节点的信息，并根据这些信息决定自己的工作。
- * 
+ *
  * @author sun
- * 
+ *
  */
-public class SiteManagerWatcherDaemon implements Watcher, Runnable
-{
-	
+public class SiteManagerWatcherDaemon implements Watcher, Runnable {
+	/**
+	 * 事件发生的时间
+	 */
 	private Date	eventTime	= new Date();
-	
-	public SiteManagerWatcherDaemon()
-	{
+
+	public SiteManagerWatcherDaemon() {
 		// TODO Auto-generated constructor stub
 	}
-	
+
+	/**
+	 * 处理事件
+	 */
 	@Override
-	public void process(WatchedEvent event)
-	{
+	public void process(final WatchedEvent event) {
 		// 首先，立即注册一个事件监听
-		SiteManagerInfo siteManagerInfo = SiteConfig.me().getSiteManagerInfo();
-		try
-		{
+		SiteManagerInfo siteManagerInfo = SiteConfig.me()
+		                                            .getSiteManagerInfo();
+		try {
 			siteManagerInfo.watchNode(this);
-		} catch (InterruptedException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (KeeperException e)
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		if (event.getType() == Watcher.Event.EventType.NodeDataChanged)
-		{
+		if (event.getType() == Watcher.Event.EventType.NodeDataChanged) {
 			// 如果节点信息更改了
-			try
-			{
+			try {
 				siteManagerInfo.load();
-				synchronized (this.eventTime)
-				{
+				synchronized (this.eventTime) {
 					this.eventTime.setTime(System.currentTimeMillis());
 					this.eventTime.notifyAll();
 				}
-			} catch (InterruptedException e)
-			{
+			} catch (InterruptedException e) {
 				return;
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				return;
 			}
-			
+
 		}
 	}
-	
+
 	@Override
-	public void run()
-	{
+	public void run() {
 		// 首先，立即注册一个事件监听
 		SiteConfig siteConfig = SiteConfig.me();
 		SiteManagerInfo siteManagerInfo = siteConfig.getSiteManagerInfo();
-		try
-		{
+		try {
 			siteManagerInfo.watchNode(this);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		
+
 		SitesConfigInfo sitesConfigInfo;
-		try
-		{
-			sitesConfigInfo = CenterConfig.me().getSitesConfigInfo();
-		} catch (Exception e)
-		{
+		try {
+			sitesConfigInfo = CenterConfig.me()
+			                              .getSitesConfigInfo();
+		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		
-		while (true)
-		{
+
+		while (true) {
 			Date now = new Date();
-			try
-			{
+			try {
 				siteManagerInfo.load();
-			} catch (Exception e)
-			{
+			} catch (Exception e) {
 				e.printStackTrace();
 				return;
 			}
@@ -108,67 +92,59 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 			String siteToHandle = siteManagerInfo.getSiteToHandle();
 			// 判断是否需要停止
 			if (siteConfig.isDispatched()
-			        && ((!dispatched) || (!siteToHandle.equals(siteConfig
-			                .getSiteToHandle().getSiteId()))))
-			{
+			        && ((!dispatched) || (!siteToHandle.equals(siteConfig.getSiteToHandle()
+			                                                             .getSiteId())))) {
 				// 这种情况需要关闭当前已经运行的站点管理器
-				SiteManager.me().stopGathering();
+				SiteManager.me()
+				           .stopGathering();
 				siteConfig.setDispatched(false);
-				try
-				{
-					CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-					        .notifyChanged();
-				} catch (Exception e)
-				{
+				try {
+					CenterConfig.me()
+					            .getWorkersInfo()
+					            .getOnlineWorkers()
+					            .notifyChanged();
+				} catch (Exception e) {
 					e.printStackTrace();
 					// this should not happen
 				}
 			}
 			// 判断是否需要开启
-			if (dispatched && (!siteConfig.isDispatched()))
-			{
+			if (dispatched && (!siteConfig.isDispatched())) {
 				// 如果需要启动，而当前没有启动，那么启动之
 				// 然后使用新的配置
-				try
-				{
+				try {
 					siteConfig.setSiteToHandle(sitesConfigInfo.getSitesInfo()
-					        .getSite(siteManagerInfo.getSiteToHandle()));
-				} catch (Exception e)
-				{
+					                                          .getSite(siteManagerInfo.getSiteToHandle()));
+				} catch (Exception e) {
 					e.printStackTrace();
 					return;
 				}
 				// 使用新的配置启动系统
-				try
-				{
-					SiteManager.me().startGathering();
-				} catch (Exception e)
-				{
+				try {
+					SiteManager.me()
+					           .startGathering();
+				} catch (Exception e) {
 					e.printStackTrace();
 					return;
 				}
 				siteConfig.setDispatched(true);
-				try
-				{
-					CenterConfig.me().getWorkersInfo().getOnlineWorkers()
-					        .notifyChanged();
-				} catch (Exception e)
-				{
+				try {
+					CenterConfig.me()
+					            .getWorkersInfo()
+					            .getOnlineWorkers()
+					            .notifyChanged();
+				} catch (Exception e) {
 					e.printStackTrace();
 					// this should not happen
-					
+
 				}
 			}
-			
-			synchronized (this.eventTime)
-			{
-				if (now.after(this.eventTime))
-				{
-					try
-					{
+
+			synchronized (this.eventTime) {
+				if (now.after(this.eventTime)) {
+					try {
 						this.eventTime.wait();
-					} catch (InterruptedException e)
-					{
+					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 						return;
@@ -176,6 +152,6 @@ public class SiteManagerWatcherDaemon implements Watcher, Runnable
 				}
 			}
 		}
-		
+
 	}
 }

@@ -16,31 +16,57 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
- * 从组件配置xml中加载相关信息和类
+ * 从组件配置xml中加载相关信息和类.该过程类似于web.xml中定义servlet的过程.
  *
  * @author yang
  *
  */
 public class ComponentLoader<T> {
+	/**
+	 * 默认组件的名称
+	 */
 	private static final String	    DEFAULT_COMPONENT_NAME	= "default";
+	/**
+	 * 配置文件
+	 */
 	private File	                configFile;
-	private boolean	                loaded	               = false;	                                           ;
+	/**
+	 * 是否已经加载过了.只允许加载一次,不能重复加载
+	 */
+	private boolean	                loaded	               = false;
+	/**
+	 * 组件名称和类名的映射
+	 */
 	private HashMap<String, String>	nameToClass	           = new HashMap<String, String>();
+	/**
+	 * url与组件名称的映射
+	 */
 	private HashMap<String, String>	urlToName	           = new HashMap<String, String>();
+	/**
+	 * 组件名称和组件实例的映射
+	 */
 	private HashMap<String, T>	    nameToObj	           = new HashMap<String, T>();
-	
+
 	/**
 	 * XML元素的命名空間
 	 */
 	private static final String	    NS	                   = "http://guang.org/distributedCrawler/components";
-	
+
 	private File	                schemaFile;
-	
+
+	/**
+	 * 创建一个组件加载器
+	 *
+	 * @param configFile
+	 *            组件的配置文件
+	 * @param schemaFile
+	 *            XSD模板文件
+	 */
 	public ComponentLoader(final File configFile, final File schemaFile) {
 		this.configFile = configFile;
-		
+
 	}
-	
+
 	/**
 	 * 根据URL的值,找到匹配该URL的第一个组件.
 	 *
@@ -64,7 +90,7 @@ public class ComponentLoader<T> {
 		if (name == null) {
 			name = ComponentLoader.DEFAULT_COMPONENT_NAME;
 		}
-		
+
 		T component = this.nameToObj.get(name);
 		if (component == null) {
 			String className = this.nameToClass.get(name);
@@ -79,12 +105,22 @@ public class ComponentLoader<T> {
 			} catch (Exception e) {
 				return null;
 			}
-			
+
 		}
 		return component;
-		
+
 	}
-	
+
+	/**
+	 * 从配置文件中加载组件
+	 * 
+	 * @throws SAXException
+	 * @throws IOException
+	 * @throws ParserConfigurationException
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	public void load() throws SAXException, IOException,
 	        ParserConfigurationException, InstantiationException,
 	        IllegalAccessException, ClassNotFoundException {
@@ -105,7 +141,15 @@ public class ComponentLoader<T> {
 		this.loadComponentMappings(config);
 		this.loaded = true;
 	}
-	
+
+	/**
+	 * 加载配置文件中组件定义部分
+	 * 
+	 * @param config
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	private void loadComponentDefines(final Document config)
 	        throws InstantiationException, IllegalAccessException,
 	        ClassNotFoundException {
@@ -151,19 +195,27 @@ public class ComponentLoader<T> {
 						                       .newInstance();
 						this.nameToObj.put(name, component);
 					}
-					
+
 				}
 			}
 		}
-		
+
 	}
-	
+
+	/**
+	 * 加载组件配置文件中组件映射部分
+	 * 
+	 * @param config
+	 * @throws InstantiationException
+	 * @throws IllegalAccessException
+	 * @throws ClassNotFoundException
+	 */
 	private void loadComponentMappings(final Document config)
 	        throws InstantiationException, IllegalAccessException,
 	        ClassNotFoundException {
 		NodeList nodeList = config.getElementsByTagNameNS(ComponentLoader.NS,
 		                                                  "component-mappings");
-		
+
 		int size = nodeList.getLength();
 		if (size == 1) {
 			Element componentMappings = (Element) nodeList.item(0);
@@ -197,5 +249,5 @@ public class ComponentLoader<T> {
 			}
 		}
 	}
-	
+
 }

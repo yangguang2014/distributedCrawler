@@ -27,6 +27,12 @@ import java.util.Timer;
 
 import org.apache.zookeeper.KeeperException;
 
+/**
+ * 当前类是站点管理器,用来启动和关闭站点管理器
+ *
+ * @author sun
+ *
+ */
 public class SiteManager {
 	public static SiteManager me() {
 		if (SiteManager.siteManager == null) {
@@ -39,47 +45,112 @@ public class SiteManager {
 	 * 当前采集点正在运行
 	 */
 	private boolean	            running	= false;
-	
+	/**
+	 * 下一步将要爬取的URL列表
+	 */
 	private MapQueue<WebURL>	toDoTaskList;
+	/**
+	 * 正在爬取的URL列表
+	 */
 	private MapQueue<WebURL>	workingTaskList;
+	/**
+	 * 爬取失败的URL列表
+	 */
 	private MapQueue<WebURL>	failedTaskList;
+	/**
+	 * 定时对列表进行清理的后台线程
+	 */
 	private QueueCleannerDaemon	cleannerDaemon;
+	/**
+	 * 定时对站点管理器进行备份的后台线程
+	 */
 	private SiteBackupDaemon	backuperDaemon;
+	/**
+	 * 当前站点的本地配置信息
+	 */
 	private SiteConfig	        siteConfig;
-
+	/**
+	 * 用来产生文档ID的服务
+	 */
 	private DocidServer	        docidServer;
+	/**
+	 * 站点管理器启动的json服务器.爬虫工作者通过与该服务器通信完成各项业务.
+	 */
 	private JsonServer	        jsonServer;
+	/**
+	 * 当前类的单例对象
+	 */
 	private static SiteManager	siteManager;
+	/**
+	 * 用来过滤重复网页的过滤器
+	 */
 	private ObjectFilter	    urlsFilter;
+	/**
+	 * 站点管理器维护的定时器,所有的定时服务都应当绑定到该定时器中,不应当再单独创建定时器了.
+	 */
 	private Timer	            siteManagerTimer;
-	
+	/**
+	 * 用来监控中央配置器中当前站点管理器的节点的后台线程.
+	 */
 	private Thread	            siteManagerWatcherDaemon;
-	
+	/**
+	 * 中央配置器
+	 */
 	private CenterConfig	    centerConfig;
 	
 	private SiteManager() {
 	}
 	
+	/**
+	 * 获取定时备份后台线程
+	 *
+	 * @return
+	 */
 	public SiteBackupDaemon getBackuperDaemon() {
 		return this.backuperDaemon;
 	}
-	
+
+	/**
+	 * 获取产生文档ID的服务
+	 *
+	 * @return
+	 */
 	public DocidServer getDocidServer() {
 		return this.docidServer;
 	}
-	
+
+	/**
+	 * 获取失败的URL列表
+	 *
+	 * @return
+	 */
 	public MapQueue<WebURL> getFailedTaskList() {
 		return this.failedTaskList;
 	}
-	
+
+	/**
+	 * 获取将要爬取的URL列表
+	 *
+	 * @return
+	 */
 	public MapQueue<WebURL> getToDoTaskList() {
 		return this.toDoTaskList;
 	}
-	
+
+	/**
+	 * 获取URL过滤器
+	 *
+	 * @return
+	 */
 	public ObjectFilter getUrlsFilter() {
 		return this.urlsFilter;
 	}
-	
+
+	/**
+	 * 获取正在处理的URL列表
+	 *
+	 * @return
+	 */
 	public MapQueue<WebURL> getWorkingTaskList() {
 		return this.workingTaskList;
 	}
@@ -92,9 +163,10 @@ public class SiteManager {
 	 */
 	public SiteManager init() throws SiteManagerException {
 		try {
-			this.siteConfig = SiteConfig.me().init();
-			this.centerConfig = CenterConfig.me().init(
-			        this.siteConfig.getZookeeperQuorum());
+			this.siteConfig = SiteConfig.me()
+			                            .init();
+			this.centerConfig = CenterConfig.me()
+			                                .init(this.siteConfig.getZookeeperQuorum());
 			
 			return this;
 		} catch (Exception e) {
@@ -103,11 +175,17 @@ public class SiteManager {
 		
 	}
 	
+	/**
+	 * 初始化工作队列,创建相应的目录和数据结构
+	 *
+	 * @throws Exception
+	 */
 	private void initJobQueue() throws Exception {
 		// 每个不同的siteManager都有其自身的工作目录
 		File envHome = new File(this.siteConfig.getWorkDir() + "/"
-		        + SiteConfig.me().getSiteManagerInfo().getSiteToHandle()
-		        + "/je-queues");
+		        + SiteConfig.me()
+		                    .getSiteManagerInfo()
+		                    .getSiteToHandle() + "/je-queues");
 		if (envHome.exists()) {
 			IOHelper.deleteFolderContents(envHome);
 		}
@@ -127,6 +205,12 @@ public class SiteManager {
 		
 	}
 	
+	/**
+	 * 初始化JSON 服务器,JSON服务器将被启动
+	 *
+	 * @throws InterruptedException
+	 * @throws SiteManagerException
+	 */
 	private void initJSONServer() throws InterruptedException,
 	        SiteManagerException {
 		String configFileName = this.siteConfig.getCrawlerHome()
@@ -140,9 +224,11 @@ public class SiteManager {
 			        this.siteConfig.getJsonserverThreadNum(), configFile,
 			        schemaFile);
 			try {
-				this.siteConfig.getSiteManagerInfo().setManagerAddress(
-				        NetworkHelper.getIPAddress() + ":"
-				                + this.jsonServer.getPort(), true);
+				this.siteConfig.getSiteManagerInfo()
+				               .setManagerAddress(NetworkHelper.getIPAddress()
+				                                          + ":"
+				                                          + this.jsonServer.getPort(),
+				                                  true);
 			} catch (UnknownHostException e) {
 				throw new SiteManagerException(
 				        "can not regist the json server", e);
@@ -160,6 +246,11 @@ public class SiteManager {
 		}
 	}
 	
+	/**
+	 * 当前站点管理器是否被关闭了.
+	 *
+	 * @return
+	 */
 	public boolean isShutdown() {
 		if (this.jsonServer.isShutdown()) {
 			return true;
@@ -168,7 +259,9 @@ public class SiteManager {
 	}
 	
 	/**
-	 * 加载备份的数据
+	 * 装载工作队列.
+	 * <p>
+	 * 首先检查是否有备份的数据,如果有备份的数据,那么加载备份数据.然后将种子站点加入进去.
 	 *
 	 * @throws IOException
 	 * @throws InterruptedException
@@ -183,21 +276,22 @@ public class SiteManager {
 		}
 		// 将种子站点添加到todo List中
 		String seedsString = this.siteConfig.getSiteToHandle()
-		        .getWebGatherNodeInfo().getWgnEntryUrl().trim();
+		                                    .getWebGatherNodeInfo()
+		                                    .getWgnEntryUrl()
+		                                    .trim();
 		String seeds[] = seedsString.split(",");
 		for (String seed : seeds) {
 			seed = seed.trim();
 			if (seed.equals("")) {
 				continue;
 			}
-			WebURL url = WebURL
-					.newWebURL()
-					.setURL(seed)
-					.setDepth((short) 1)
-					.setSiteManagerId(
-							this.siteConfig.getSiteManagerInfo()
-							.getSiteManagerId())
-							.setSiteId(this.siteConfig.getSiteToHandle().getSiteId());
+			WebURL url = WebURL.newWebURL()
+			                   .setURL(seed)
+			                   .setDepth((short) 1)
+			                   .setSiteManagerId(this.siteConfig.getSiteManagerInfo()
+			                                                    .getSiteManagerId())
+			                   .setSiteId(this.siteConfig.getSiteToHandle()
+			                                             .getSiteId());
 			url.setDocid(this.docidServer.next(url));
 			this.toDoTaskList.put(url);
 		}
@@ -211,21 +305,19 @@ public class SiteManager {
 		SiteManagerInfo managerInfo = null;
 		try {
 			managerInfo = this.centerConfig.getSiteManagersConfigInfo()
-			        .getOnlineSiteManagers().registSiteManager();
+			                               .getOnlineSiteManagers()
+			                               .registSiteManager();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-			System.out
-			        .println("Error to start site manager: regist site manager failed.");
+			System.out.println("Error to start site manager: regist site manager failed.");
 			return;
 		} catch (IOException e) {
 			e.printStackTrace();
-			System.out
-			        .println("Error to start site manager: regist site manager failed.");
+			System.out.println("Error to start site manager: regist site manager failed.");
 			return;
 		} catch (KeeperException e) {
 			e.printStackTrace();
-			System.out
-			        .println("Error to start site manager: regist site manager failed.");
+			System.out.println("Error to start site manager: regist site manager failed.");
 			return;
 		}
 		
@@ -243,14 +335,19 @@ public class SiteManager {
 	private void startDaemon() {
 		this.siteManagerTimer = new Timer(true);
 		this.siteManagerTimer.schedule(this.cleannerDaemon,
-		        this.siteConfig.getJobTimeout(),
-		        this.siteConfig.getQueueCleanerPeriod());
+		                               this.siteConfig.getJobTimeout(),
+		                               this.siteConfig.getQueueCleanerPeriod());
 		this.siteManagerTimer.schedule(this.backuperDaemon,
-		        this.siteConfig.getBackupPeriod(),
-		        this.siteConfig.getBackupPeriod());
+		                               this.siteConfig.getBackupPeriod(),
+		                               this.siteConfig.getBackupPeriod());
 		this.jsonServer.start();
 	}
 	
+	/**
+	 * 开始爬取信息
+	 * 
+	 * @throws Exception
+	 */
 	public synchronized void startGathering() throws Exception {
 		if (!this.running) {
 			// 1. 初始化工作队列
@@ -260,7 +357,8 @@ public class SiteManager {
 			this.initJSONServer();
 			this.docidServer = new MD5UrlDocidServer();
 			this.cleannerDaemon = QueueCleannerDaemon.newDaemon();
-			this.backuperDaemon = SiteBackupDaemon.newDaemon().init();
+			this.backuperDaemon = SiteBackupDaemon.newDaemon()
+			                                      .init();
 			// 3. 加载备份数据
 			this.loadWorkQueue();
 			// 4. 启动这些后台线程
@@ -272,6 +370,9 @@ public class SiteManager {
 		
 	}
 	
+	/**
+	 * 关闭所有的后台线程
+	 */
 	private void stopDaemon() {
 		this.siteManagerTimer.cancel();
 		this.jsonServer.shutdown();

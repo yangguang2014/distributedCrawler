@@ -7,58 +7,84 @@ import java.io.IOException;
 import java.net.Socket;
 
 /**
- * 
- * @author yang
+ * 连接站点管理器启动的JSON 服务器的连接器.
+ *
+ * @author sun
+ *
  */
-public class JSONServerConnector
-{
-	
+public class JSONServerConnector {
+
+	/**
+	 * 底层套接字
+	 */
 	private Socket	socket;
+	/**
+	 * 主机名
+	 */
 	private String	host;
+	/**
+	 * 端口号
+	 */
 	private int	   port;
-	
-	public JSONServerConnector(String host, int port)
-	{
+
+	/**
+	 * 创建一个JSON服务器的连接器
+	 *
+	 * @param host
+	 * @param port
+	 */
+	public JSONServerConnector(final String host, final int port) {
 		this.host = host;
 		this.port = port;
-		
+
 	}
-	
-	public boolean open()
-	{
-		try
-		{
+
+	/**
+	 * 打开连接.在进行其他操作之前必须先进行当前操作.
+	 *
+	 * @return
+	 */
+	public boolean open() {
+		try {
 			this.socket = new Socket(this.host, this.port);
 			return true;
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			return false;
 		}
 	}
-	
-	public DataPacket read() throws IOException
-	{
+
+	/**
+	 * 从JSON服务器中读取一个数据包.
+	 *
+	 * @return
+	 * @throws IOException
+	 */
+	public DataPacket read() throws IOException {
 		return StreamHelper.readObject(this.socket.getInputStream(),
-		        DataPacket.class);
+		                               DataPacket.class);
 	}
-	
-	public void send(DataPacket packet) throws IOException
-	{
+
+	/**
+	 * 向JSON服务器发送一个数据包.
+	 *
+	 * @param packet
+	 * @throws IOException
+	 */
+	public void send(final DataPacket packet) throws IOException {
 		StreamHelper.writeObject(this.socket.getOutputStream(), packet);
 	}
-	
-	public void shutdown()
-	{
-		if (this.socket != null)
-		{
-			try
-			{
+
+	/**
+	 * 关闭连接.
+	 */
+	public void shutdown() {
+		if (this.socket != null) {
+			try {
 				this.socket.close();
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 				// skip
 			}
 		}
 	}
-	
+
 }

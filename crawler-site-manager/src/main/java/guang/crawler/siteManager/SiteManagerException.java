@@ -1,16 +1,19 @@
 package guang.crawler.siteManager;
 
-public class SiteManagerException extends Exception
-{
+/**
+ * 异常类,站点管理器出现的异常
+ *
+ * @author sun
+ *
+ */
+public class SiteManagerException extends Exception {
 	private static final long	serialVersionUID	= 1L;
 	
-	public SiteManagerException(String message)
-	{
+	public SiteManagerException(final String message) {
 		super(message);
 	}
 	
-	public SiteManagerException(String message, Throwable e)
-	{
+	public SiteManagerException(final String message, final Throwable e) {
 		super(message, e);
 	}
 }

@@ -9,12 +9,14 @@ import java.util.List;
 
 /**
  * 将采集得到的所有新的URL发送到站点管理器中
- * 
+ *
  * @author sun
  *
  */
 public class UploadExtractedLinksPlugin implements DownloadPlugin {
-	
+	/**
+	 * 站点管理器连接器的管理器
+	 */
 	private final SiteManagerConnectorManager	siteManagerConnectHelper;
 
 	public UploadExtractedLinksPlugin() {

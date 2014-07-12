@@ -14,9 +14,11 @@ import java.io.File;
  *
  */
 public class ExtractDataToSavePlugin implements DownloadPlugin {
-	
+	/**
+	 * FieldsExtractor的加载器,用来从指定配置文件中加载FieldsExtractor
+	 */
 	private ComponentLoader<FieldsExtractor>	fieldsExtractorLoader;
-
+	
 	public ExtractDataToSavePlugin() throws ConfigLoadException {
 		String configFileName = WorkerConfig.me()
 		                                    .getCrawlerHome()
@@ -35,7 +37,7 @@ public class ExtractDataToSavePlugin implements DownloadPlugin {
 			        "load fileds-extractors.xml file failed!", e);
 		}
 	}
-	
+
 	@Override
 	public boolean work(final Page page) {
 		if (page != null) {
@@ -50,5 +52,5 @@ public class ExtractDataToSavePlugin implements DownloadPlugin {
 		}
 		return false;
 	}
-
+	
 }

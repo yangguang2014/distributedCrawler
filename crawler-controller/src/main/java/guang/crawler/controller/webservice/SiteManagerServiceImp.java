@@ -10,6 +10,12 @@ import guang.crawler.controller.ControllerWorkThread;
 
 import javax.jws.WebService;
 
+/**
+ * 该类实现了对站点管理器进行管理的服务,详情查看接口了解内容.
+ *
+ * @author sun
+ *
+ */
 @WebService(targetNamespace = "http://guang.crawler.controller.webservice/", portName = "SiteManagerService", serviceName = "SiteManagerService", endpointInterface = "guang.crawler.commons.service.SiteManagerService")
 public class SiteManagerServiceImp implements SiteManagerService {
 

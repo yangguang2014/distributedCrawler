@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 /**
- * 需要存储在HBase中的数据字段集合
+ * 需要存储在HBase中的数据域的集合
  *
  * @author sun
  *
@@ -20,7 +20,7 @@ public class DataFields {
 	}
 
 	/**
-	 * 添加一个需要存储的数据
+	 * 添加一个需要存储的数据域.
 	 *
 	 * @param key
 	 * @param dataFamily
@@ -28,7 +28,7 @@ public class DataFields {
 	 * @param data
 	 */
 	public DataFields addFiled(final String key, final String dataFamily,
-			final String columnName, final String data) {
+	        final String columnName, final String data) {
 		LinkedList<DataField> filedList = this.fileds.get(key);
 		if (filedList == null) {
 			filedList = new LinkedList<DataField>();
@@ -39,6 +39,11 @@ public class DataFields {
 		return this;
 	}
 	
+	/**
+	 * 获取当前对象中存储的所有数据域.
+	 * 
+	 * @return
+	 */
 	public HashMap<String, LinkedList<DataField>> getAllFileds() {
 		return this.fileds;
 	}

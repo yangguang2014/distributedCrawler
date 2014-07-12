@@ -6,48 +6,70 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-public class NetworkHelper
-{
+/**
+ * 用来帮助网络操作的类
+ *
+ * @author sun
+ *
+ */
+public class NetworkHelper {
 	
-	public static String getIPAddress() throws UnknownHostException
-	{
-		return InetAddress.getLocalHost().getHostAddress();
+	/**
+	 * 获取当前主机的IP地址
+	 *
+	 * @return
+	 * @throws UnknownHostException
+	 */
+	public static String getIPAddress() throws UnknownHostException {
+		return InetAddress.getLocalHost()
+		                  .getHostAddress();
 	}
 	
-	public static String getLocalHostName() throws UnknownHostException
-	{
-		return InetAddress.getLocalHost().getCanonicalHostName();
+	/**
+	 * 获取当前主机的主机名
+	 *
+	 * @return
+	 * @throws UnknownHostException
+	 */
+	public static String getLocalHostName() throws UnknownHostException {
+		return InetAddress.getLocalHost()
+		                  .getCanonicalHostName();
 	}
 	
-	public static synchronized boolean isPortAvailable(int port)
-	{
+	/**
+	 * 检测某个端口是否可用
+	 *
+	 * @param port
+	 * @return
+	 */
+	public static synchronized boolean isPortAvailable(final int port) {
 		Socket socket = new Socket();
-		try
-		{
+		try {
 			socket.bind(new InetSocketAddress(port));
-		} catch (IOException e)
-		{
+		} catch (IOException e) {
 			return false;
-		} finally
-		{
-			try
-			{
+		} finally {
+			try {
 				socket.close();
-			} catch (IOException e)
-			{
+			} catch (IOException e) {
 			}
 		}
 		
 		return true;
 	}
 	
-	public synchronized static int nextAvailablePort(int from, int to)
-	{
-		for (int i = from; i < to; i++)
-		{
+	/**
+	 * 获取下一个可用的端口
+	 * 
+	 * @param from
+	 * @param to
+	 * @return
+	 */
+	public synchronized static int nextAvailablePort(final int from,
+	        final int to) {
+		for (int i = from; i < to; i++) {
 			int port = i;
-			if (NetworkHelper.isPortAvailable(port))
-			{
+			if (NetworkHelper.isPortAvailable(port)) {
 				return port;
 			}
 		}

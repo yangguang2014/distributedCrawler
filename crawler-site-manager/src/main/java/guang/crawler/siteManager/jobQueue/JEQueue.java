@@ -15,22 +15,50 @@ import com.sleepycat.je.OperationStatus;
 import com.sleepycat.je.Transaction;
 
 /**
- * 工作队列
- * 
+ * 基于JE(Berkeley DB Java Edition)构建的MapQueue.
+ *
  * @author yang
  */
 public class JEQueue<T> extends MapQueue<T> implements Sync {
-	protected Database urlsDB = null;
-	protected Environment env;
-	protected boolean resumable;
-	private final JEQueueElementTransfer<T> transfer;
-
-	private boolean shutdown = false;
-
-	public JEQueue(File envHome, String dbName, boolean resumable,
-			JEQueueElementTransfer<T> transfer) throws Exception {
+	/**
+	 * 存放URL的Database
+	 */
+	protected Database	                    urlsDB	 = null;
+	/**
+	 * Berkeley DB的配置环境
+	 */
+	protected Environment	                env;
+	/**
+	 * 是否是可以重复使用的数据库.如果是,那么程序退出后不删除数据文件,否则就清除所有的数据.类似于临时文件的deleteOnExit方式.
+	 */
+	protected boolean	                    resumable;
+	/**
+	 * 实现T类型数据的转换器,将T类型的数据转换成Berkeledy DB中的数据
+	 */
+	private final JEQueueElementTransfer<T>	transfer;
+	/**
+	 * 当前队列是否被关闭了.
+	 */
+	private boolean	                        shutdown	= false;
+	
+	/**
+	 * 在指定目录下创建JEQueue
+	 *
+	 * @param envHome
+	 *            JEQueue的本地文件目录
+	 * @param dbName
+	 *            数据库的名称
+	 * @param resumable
+	 *            数据库是否是可以被重复利用的;如果可以重复利用,那么在系统退出后并不删除数据文件,否则,所有的数据文件将被删除.
+	 * @param transfer
+	 *            T类型的数据对象转换成Berkeley DB中存放的数据类型.
+	 * @throws Exception
+	 */
+	public JEQueue(final File envHome, final String dbName,
+	        final boolean resumable, final JEQueueElementTransfer<T> transfer)
+	        throws Exception {
 		// 每个不同的siteManager都有其自身的工作目录
-
+		
 		EnvironmentConfig envConfig = new EnvironmentConfig();
 		envConfig.setAllowCreate(true);
 		envConfig.setTransactional(resumable);
@@ -44,7 +72,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 		this.urlsDB = this.env.openDatabase(null, dbName, dbConfig);
 		this.transfer = transfer;
 	}
-
+	
 	@Override
 	public synchronized void close() {
 		this.shutdown = true;
@@ -54,9 +82,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			e.printStackTrace();
 		}
 	}
-
+	
 	@Override
-	public synchronized boolean delete(T data) {
+	public synchronized boolean delete(final T data) {
 		boolean success = false;
 		DatabaseEntry value = new DatabaseEntry();
 		this.transfer.objectToEntry(data, value);
@@ -67,9 +95,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			txn = null;
 		}
 		OperationStatus status = this.urlsDB.delete(txn,
-				this.transfer.getDatabaseEntryKey(data));
+		                                            this.transfer.getDatabaseEntryKey(data));
 		if ((status == OperationStatus.SUCCESS)
-				|| (status == OperationStatus.NOTFOUND)) {
+		        || (status == OperationStatus.NOTFOUND)) {
 			success = true;
 		}
 		if (this.resumable) {
@@ -78,18 +106,18 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			}
 		}
 		return success;
-
+		
 	}
-
+	
 	/**
 	 * 最多获取max个元素
 	 */
 	@Override
-	public synchronized List<T> get(int max) throws DatabaseException {
-
+	public synchronized List<T> get(final int max) throws DatabaseException {
+		
 		int matches = 0;
 		List<T> results = new ArrayList<T>(max);
-
+		
 		Cursor cursor = null;
 		OperationStatus result;
 		DatabaseEntry key = new DatabaseEntry();
@@ -103,7 +131,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 		try {
 			cursor = this.urlsDB.openCursor(txn, null);
 			result = cursor.getFirst(key, value, null);
-
+			
 			while ((matches < max) && (result == OperationStatus.SUCCESS)) {
 				if (value.getData().length > 0) {
 					results.add(this.transfer.entryToObject(value));
@@ -127,9 +155,9 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			}
 		}
 		return results;
-
+		
 	}
-
+	
 	/**
 	 * 获取工作队列的长度，也就是DB中存储的条目。
 	 */
@@ -145,7 +173,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 		}
 		return -1;
 	}
-
+	
 	@Override
 	public MapQueueIterator<T> iterator() {
 		Cursor cursor = null;
@@ -157,11 +185,11 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 		}
 		cursor = this.urlsDB.openCursor(txn, null);
 		return new JECursorIterator<T>(cursor, this.transfer);
-
+		
 	}
-
+	
 	@Override
-	public synchronized void put(T data) {
+	public synchronized void put(final T data) {
 		DatabaseEntry value = new DatabaseEntry();
 		this.transfer.objectToEntry(data, value);
 		Transaction txn;
@@ -177,7 +205,7 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			}
 		}
 	}
-
+	
 	/**
 	 * 对数据进行一下同步，从而能够使数据与磁盘的同步。
 	 */
@@ -195,5 +223,5 @@ public class JEQueue<T> extends MapQueue<T> implements Sync {
 			e.printStackTrace();
 		}
 	}
-
+	
 }

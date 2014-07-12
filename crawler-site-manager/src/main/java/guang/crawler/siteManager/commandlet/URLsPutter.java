@@ -13,17 +13,38 @@ import java.util.regex.Pattern;
 
 import com.alibaba.fastjson.JSON;
 
+/**
+ * 爬虫工作者爬取了网页之后获得了一些URL列表,需要传输到站点管理器中,当前Commandlet将处理该请求.
+ *
+ * @author sun
+ *
+ */
 public class URLsPutter implements Commandlet {
+	/**
+	 * URL过滤器
+	 */
 	private final ObjectFilter	urlFilter;
-
+	/**
+	 * 该站点管理器管理的采集点配置的允许的URL的正则表达式
+	 */
 	private Pattern[]	       allowPatterns;
-
+	/**
+	 * 该站点管理器管理的采集点配置的拒绝的URL的正则表达式
+	 */
 	private Pattern[]	       denyPatterns;
+	/**
+	 * URL的限制深度
+	 */
 	private byte	           limitDepth;
-	
+
+	/**
+	 * 创建URLsPutter.
+	 */
 	public URLsPutter() {
+		// 获取URL过滤器
 		this.urlFilter = SiteManager.me()
 		                            .getUrlsFilter();
+		// 获取限制的深度
 		Byte wgnlimitDepth = SiteConfig.me()
 		                               .getSiteToHandle()
 		                               .getWebGatherNodeInfo()
@@ -33,6 +54,7 @@ public class URLsPutter implements Commandlet {
 		} else {
 			this.limitDepth = wgnlimitDepth;
 		}
+		// 获取允许的URL正则表达式格式
 		String allowRule = SiteConfig.me()
 		                             .getSiteToHandle()
 		                             .getWebGatherNodeInfo()
@@ -45,6 +67,7 @@ public class URLsPutter implements Commandlet {
 				this.allowPatterns[i] = Pattern.compile(allowRules[i]);
 			}
 		}
+		// 获取禁止的URL正则表达式格式
 		String denyRule = SiteConfig.me()
 		                            .getSiteToHandle()
 		                            .getWebGatherNodeInfo()
@@ -58,17 +81,19 @@ public class URLsPutter implements Commandlet {
 			}
 		}
 	}
-
+	
 	@Override
 	public DataPacket doCommand(final DataPacket request) {
-		
+
 		LinkedList<WebURL> filteredResult = null;
 		SiteManager siteManager = null;
 		siteManager = SiteManager.me();
 		WebURL parent = this.getParentURL(request);
 		int count = this.getURLListCount(request);
 		if (count > 0) {
+			// 过滤URL列表
 			filteredResult = this.filterURLs(request, parent, count);
+			// 添加URL列表
 			this.setAndAddURLs(filteredResult, siteManager);
 		}
 		if (parent != null) {
@@ -78,7 +103,7 @@ public class URLsPutter implements Commandlet {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 根据种种过滤条件过滤掉相关的URL
 	 *
@@ -119,7 +144,13 @@ public class URLsPutter implements Commandlet {
 		}
 		return filteredResult;
 	}
-	
+
+	/**
+	 * 获取当前URL的父URL
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private WebURL getParentURL(final DataPacket request) {
 		String parentJSON = request.getData()
 		                           .get("PARENT");
@@ -129,7 +160,13 @@ public class URLsPutter implements Commandlet {
 		}
 		return parent;
 	}
-	
+
+	/**
+	 * 获取请求添加的URL的数量
+	 * 
+	 * @param request
+	 * @return
+	 */
 	private int getURLListCount(final DataPacket request) {
 		String countStr = request.getData()
 		                         .get("COUNT");
@@ -143,7 +180,7 @@ public class URLsPutter implements Commandlet {
 		}
 		return count;
 	}
-	
+
 	/**
 	 * 检查URL的深度是否合法
 	 *
@@ -170,7 +207,7 @@ public class URLsPutter implements Commandlet {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 检查是否被允许
 	 *
@@ -189,9 +226,9 @@ public class URLsPutter implements Commandlet {
 			}
 		}
 		return false;
-		
-	}
 
+	}
+	
 	/**
 	 * 检查是否被拒绝
 	 *
@@ -213,7 +250,7 @@ public class URLsPutter implements Commandlet {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * 为原始的URL列表添加相关属性，然后加入todo队列中。
 	 *

@@ -18,10 +18,16 @@ import java.util.regex.Pattern;
  *
  */
 public class ExtractLinksToFollowPlugin implements DownloadPlugin {
+	/**
+	 * 需要过滤掉的URL的正则表达式样式
+	 */
 	private Pattern	                       filter	= Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g"
 	                                                      + "|png|tiff?|mid|mp2|mp3|mp4"
 	                                                      + "|wav|avi|mov|mpeg|ram|m4v|pdf"
 	                                                      + "|rm|smil|wmv|swf|wma|zip|rar|gz|ico))$");
+	/**
+	 * URLsExtractor的加载器,用来从指定配置文件中加载URLsExtractor.
+	 */
 	private ComponentLoader<URLsExtractor>	extractorLoader;
 
 	public ExtractLinksToFollowPlugin() throws ConfigLoadException {

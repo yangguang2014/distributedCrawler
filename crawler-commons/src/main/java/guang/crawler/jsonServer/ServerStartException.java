@@ -1,12 +1,16 @@
 package guang.crawler.jsonServer;
 
-public class ServerStartException extends Exception
-{
+/**
+ * 异常类,JSON服务器启动失败时抛出
+ * 
+ * @author sun
+ *
+ */
+public class ServerStartException extends Exception {
 	private static final long	serialVersionUID	= 1L;
-	
-	public ServerStartException(String msg, Throwable e)
-	{
+
+	public ServerStartException(final String msg, final Throwable e) {
 		super(msg, e);
 	}
-	
+
 }

@@ -15,7 +15,12 @@ import guang.crawler.connector.WebDataTableConnector;
  *
  */
 public class DefaultFieldExtractor implements FieldsExtractor {
-	
+
+	/**
+	 * 将整个页面内容作为域来存储.
+	 * 
+	 * @param page
+	 */
 	public static void extractPageBody(final Page page) {
 		WebURL webURL = page.getWebURL();
 		DataFields fields = page.getDataToSave();
@@ -29,7 +34,7 @@ public class DefaultFieldExtractor implements FieldsExtractor {
 			HtmlParseData data = (HtmlParseData) parseData;
 			fields.addFiled(docID, WebDataTableConnector.FAMILY_MAIN_DATA,
 			                "page", data.getHtml());
-			
+
 		} else if (page.getParseData() instanceof TextParseData) {
 			TextParseData textParseData = (TextParseData) page.getParseData();
 			String text = textParseData.getTextContent();
@@ -37,10 +42,10 @@ public class DefaultFieldExtractor implements FieldsExtractor {
 			                "page", text);
 		}
 	}
-	
+
 	@Override
 	public void extractFields(final Page page) {
 		DefaultFieldExtractor.extractPageBody(page);
 	}
-
+	
 }

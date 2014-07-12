@@ -20,32 +20,75 @@ import org.apache.zookeeper.Watcher.Event.EventType;
 
 import com.alibaba.fastjson.JSON;
 
+/**
+ * 由于站点管理器随时都有可能增加或者减少,因此应当及时的更新站点管理器的列表,从而有效的获取URL并处理.这里的方案是监听中央配置器中的相应节点,
+ * 在这些节点发生变化时得到通知,从而做出相应的调整.
+ *
+ * @author sun
+ *
+ */
 public class SiteManagerConnectorManager implements Watcher, Runnable {
+	/**
+	 * 当前类的单例
+	 */
 	private static SiteManagerConnectorManager	connectorManager;
-
+	
+	/**
+	 * 获取单例
+	 *
+	 * @return
+	 */
 	public static SiteManagerConnectorManager me() {
 		if (SiteManagerConnectorManager.connectorManager == null) {
 			SiteManagerConnectorManager.connectorManager = new SiteManagerConnectorManager();
 		}
 		return SiteManagerConnectorManager.connectorManager;
 	}
-
+	
+	/**
+	 * 缓存的有效的站点管理器的连接
+	 */
 	private HashMap<String, JSONServerConnector>	     connectors;
+	/**
+	 * 中央配置器
+	 */
 	private CenterConfig	                             centerConfig;
+	/**
+	 * 缓存的有效站点管理器的连接的遍历器
+	 */
 	private Iterator<Entry<String, JSONServerConnector>>	connectorIterator;
+	/**
+	 * 事件发生的时间
+	 */
 	private Date	                                     eventTime	= new Date();
+	/**
+	 * 管理线程
+	 */
 	private Thread	                                     managerThread;
-	boolean	                                             shutdown	= false;
+	/**
+	 * 当前线程是否需要被关闭了
+	 */
+	private boolean	                                     shutdown	= false;
 
 	private SiteManagerConnectorManager() {
 		this.centerConfig = CenterConfig.me();
 		this.connectors = new HashMap<String, JSONServerConnector>();
 	}
 
+	/**
+	 * 结束线程
+	 *
+	 * @throws IOException
+	 */
 	public void exit() throws IOException {
 		this.shutdown = true;
 	}
 
+	/**
+	 * 获取当前缓存的连接的数量
+	 *
+	 * @return
+	 */
 	public int getSiteManagerConnectorSize() {
 		synchronized (this.connectors) {
 			return this.connectors.size();
@@ -60,6 +103,7 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 	 * @throws InterruptedException
 	 */
 	public WebURL getURL() throws InterruptedException {
+		// 轮询方式获取下一个可用的站点管理器的连接器
 		JSONServerConnector connector = null;
 		synchronized (this.connectors) {
 			while (this.connectors.size() == 0) {
@@ -75,9 +119,8 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 		}
 		if (connector == null) {
 			return null;
-		} else {
-
 		}
+		// 向站点管理器发送请求,获取一个URL
 		DataPacket data = new DataPacket("/url/get", null, null);
 		HashMap<String, String> requestData = new HashMap<String, String>();
 		requestData.put("COUNT", "1");
@@ -95,6 +138,7 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 				connector.shutdown();
 			}
 		}
+		// 解析获取的数据并返回
 		if (result != null) {
 			int count = Integer.parseInt(result.getData()
 			                                   .get("COUNT"));
@@ -107,12 +151,20 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 		return null;
 	}
 
+	/**
+	 * 初始化当前类
+	 *
+	 * @return
+	 */
 	public SiteManagerConnectorManager init() {
 		this.managerThread = new Thread(this, "SiteManagerConnectorDaemon");
 		this.managerThread.setDaemon(true);
 		return this;
 	}
 
+	/**
+	 * 处理监听的事件
+	 */
 	@Override
 	public void process(final WatchedEvent event) {
 		// 首先继续注册事件监听器
@@ -146,9 +198,17 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 		}
 
 	}
-
+	
+	/**
+	 * 向站点管理器发送获取的新的URL列表
+	 *
+	 * @param parent
+	 * @param outGoings
+	 * @throws IOException
+	 */
 	public void putData(final WebURL parent, final List<WebURL> outGoings)
 	        throws IOException {
+		// 准备要发送的数据
 		DataPacket request = new DataPacket();
 		request.setTitle("/url/put");
 		HashMap<String, String> requestData = new HashMap<String, String>();
@@ -166,10 +226,12 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 		}
 		requestData.put("COUNT", String.valueOf(sendSize));
 		request.setData(requestData);
+		// 获取目的站点管理器
 		JSONServerConnector connector = null;
 		synchronized (this.connectors) {
 			connector = this.connectors.get(parent.getSiteManagerId());
 		}
+		// 发送
 		boolean success = connector.open();
 		if (success) {
 			try {
@@ -192,6 +254,7 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 	        KeeperException, IOException {
 		synchronized (this.connectors) {
 			this.connectors.clear();
+			this.connectorIterator = null;
 			List<SiteManagerInfo> dispatchedSiteManagers = this.centerConfig.getSiteManagersConfigInfo()
 			                                                                .getOnlineSiteManagers()
 			                                                                .getAllDispatchedSiteManagers();
@@ -218,6 +281,7 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 
 	@Override
 	public void run() {
+		// 注册监听器
 		try {
 			// 查看workers的通知信息
 			CenterConfig.me()
@@ -259,7 +323,10 @@ public class SiteManagerConnectorManager implements Watcher, Runnable {
 			}
 		}
 	}
-
+	
+	/**
+	 * 启动管理器线程
+	 */
 	public void start() {
 		if (this.managerThread != null) {
 			this.managerThread.start();

@@ -1,7 +1,7 @@
 package guang.crawler.centerConfig.sitesConfig;
 
 import guang.crawler.centerConfig.CenterConfigElement;
-import guang.crawler.connector.CenterConfigConnector;
+import guang.crawler.connector.ZookeeperConnector;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -10,9 +10,15 @@ import java.util.List;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
 
+/**
+ * 所有采集点的信息类
+ *
+ * @author sun
+ *
+ */
 public class SitesInfo extends CenterConfigElement {
 
-	public SitesInfo(final String path, final CenterConfigConnector connector) {
+	public SitesInfo(final String path, final ZookeeperConnector connector) {
 		super(path, connector);
 	}
 
@@ -20,7 +26,8 @@ public class SitesInfo extends CenterConfigElement {
 	 * 删除某个站点
 	 *
 	 * @param siteId
-	 * @return
+	 *            采集点的ID
+	 * @return 删除采集点,如果删除过程出错,则抛出异常,否则返回true.需要注意的是,如果该采集点本身不存在,那么也是返回true的.
 	 * @throws KeeperException
 	 * @throws InterruptedException
 	 */
